@@ -97,7 +97,7 @@ public class AgoraException extends AgoraError implements Serializable
   */
   public void signal()
     {
-      String msg = "Uncaught Agora96 Exception.\n\n";
+      var msg = "Uncaught Agora96 Exception.\n\n";
       this.setUpDialog(msg,null);
     }
 }

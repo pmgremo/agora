@@ -38,7 +38,7 @@ public class UserMessage extends Message implements Serializable
     try
       {
 	AgoraIO.checkEscape();
-	Client client     = this.pattern.makeClient(context,null);
+          var client     = this.pattern.makeClient(context,null);
 	client.actualsEval(context);
 	return this.receiver.eval(context).send(this.pattern.makePattern(context),client);
       }

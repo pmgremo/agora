@@ -67,15 +67,15 @@ abstract public class Expression implements Serializable
     */
   public static PrimGenerator generatorExpression() throws AgoraError
   {
-    Hashtable table = new Hashtable(40);
-    PrimGenerator result = new PrimGenerator("Expression",table,null);
+	  var table = new Hashtable(40);
+	  var result = new PrimGenerator("Expression",table,null);
     try
       {
-	Class[] argtypes1 = new Class[1];
-	Class[] argtypes2 = new Class[2];
-	Class[] argtypes3 = new Class[3];
-	Class[] argtypes4 = new Class[4];
-	Class[] argtypes5 = new Class[5];
+		  var argtypes1 = new Class[1];
+		  var argtypes2 = new Class[2];
+		  var argtypes3 = new Class[3];
+		  var argtypes4 = new Class[4];
+		  var argtypes5 = new Class[5];
 	argtypes1[0] = Class.forName("agora.runtime.Context");
 	argtypes2[0] = Class.forName("agora.runtime.Context");
 	argtypes2[1] = Class.forName("agora.grammar.Expression");
@@ -289,9 +289,9 @@ abstract public class Expression implements Serializable
     */
   public AgoraObject variable(Context context) throws AgoraError
     {
-      FormalsAndPattern  leftside= (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern thePattern = leftside.pattern;
-      int     theCat     = leftside.cat;
+		var leftside= (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
       // Validate Pattern
       if (!(thePattern instanceof UnaryPattern))
 	throw (new ReifierMisused("VARIABLE can only be sent to unary agora.patterns"));
@@ -302,18 +302,18 @@ abstract public class Expression implements Serializable
 	  (!Category.contains(theCat,Category.publik)))
 	theCat=theCat | Category.publik;
       // Install variable and initial value in the appropriate object part(s)
-      VariableContainer theVarCont = new VariableContainer(Up.glob.up(new Integer(0)));
-      VarSetAttribute varSetAtt = new VarSetAttribute(theVarCont);
-      VarGetAttribute varGetAtt = new VarGetAttribute(theVarCont);
+		var theVarCont = new VariableContainer(Up.glob.up(new Integer(0)));
+		var varSetAtt = new VarSetAttribute(theVarCont);
+		var varGetAtt = new VarGetAttribute(theVarCont);
       if (Category.contains(theCat,Category.publik))
 	{
-	  UnaryPattern getPat = (UnaryPattern)thePattern;
+		var getPat = (UnaryPattern)thePattern;
 	  context.getPub().installPattern(getPat.makeWritePattern(),varSetAtt);
 	  context.getPub().installPattern(getPat,varGetAtt);
 	}
       if (Category.contains(theCat,Category.local))
 	{
-	  UnaryPattern      getPat = (UnaryPattern)thePattern;
+		var getPat = (UnaryPattern)thePattern;
 	  context.getPrivate().installPattern(getPat.makeWritePattern(),varSetAtt);
 	  context.getPrivate().installPattern(getPat,varGetAtt);
 	}
@@ -331,9 +331,9 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject variableColon(Context context,Expression value) throws AgoraError
     {
-      FormalsAndPattern leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern thePattern = leftside.pattern;
-      int     theCat     = leftside.cat;
+		var leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
       // Validate Pattern
       if (!(thePattern instanceof UnaryPattern))
 	throw (new ReifierMisused("VARIABLE can only be sent to unary agora.patterns"));
@@ -344,19 +344,19 @@ abstract public class Expression implements Serializable
 	  (!Category.contains(theCat,Category.publik)))
 	theCat=theCat | Category.publik;
       //Install variable and initial value
-      AgoraObject initValue = value.eval(context);
-      VariableContainer theVarCont = new VariableContainer(initValue);
-      VarSetAttribute varSetAtt = new VarSetAttribute(theVarCont);
-      VarGetAttribute varGetAtt = new VarGetAttribute(theVarCont);
+		var initValue = value.eval(context);
+		var theVarCont = new VariableContainer(initValue);
+		var varSetAtt = new VarSetAttribute(theVarCont);
+		var varGetAtt = new VarGetAttribute(theVarCont);
       if (Category.contains(theCat,Category.publik))
 	{
-	  UnaryPattern      getPat = (UnaryPattern)thePattern;
+		var getPat = (UnaryPattern)thePattern;
 	  context.getPub().installPattern(getPat.makeWritePattern(),varSetAtt);
 	  context.getPub().installPattern(getPat,varGetAtt);
 	}
       if (Category.contains(theCat,Category.local))
 	{
-	  UnaryPattern      getPat = (UnaryPattern)thePattern;
+		var getPat = (UnaryPattern)thePattern;
 	  context.getPrivate().installPattern(getPat.makeWritePattern(),varSetAtt);
 	  context.getPrivate().installPattern(getPat,varGetAtt);
 	}
@@ -374,9 +374,9 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject constColon(Context context,Expression value) throws AgoraError
     {
-      FormalsAndPattern leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern thePattern = leftside.pattern;
-      int     theCat     = leftside.cat;
+		var leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
       // Validate Pattern
       if (!(thePattern instanceof UnaryPattern))
 	throw (new ReifierMisused("CONST can only be sent to unary agora.patterns"));
@@ -387,17 +387,17 @@ abstract public class Expression implements Serializable
 	  (!Category.contains(theCat,Category.publik)))
 	theCat=theCat | Category.publik;
       // Install variable and initial value in the appropriate object part(s)
-      AgoraObject initValue = value.eval(context);
-      VariableContainer theVarCont = new VariableContainer(initValue);
-      VarGetAttribute varGetAtt = new VarGetAttribute(theVarCont);
+		var initValue = value.eval(context);
+		var theVarCont = new VariableContainer(initValue);
+		var varGetAtt = new VarGetAttribute(theVarCont);
       if (Category.contains(theCat,Category.publik))
 	{
-	  UnaryPattern      getPat = (UnaryPattern)thePattern;
+		var getPat = (UnaryPattern)thePattern;
 	  context.getPub().installPattern(getPat,varGetAtt);
 	}
       if (Category.contains(theCat,Category.local))
 	{
-	  UnaryPattern      getPat = (UnaryPattern)thePattern;
+		var getPat = (UnaryPattern)thePattern;
 	  context.getPrivate().installPattern(getPat,varGetAtt);
 	}
       return initValue;
@@ -411,11 +411,11 @@ abstract public class Expression implements Serializable
    */
   public AgoraObject array(Context context) throws AgoraError
     {
-      int size = this.evalAsInteger(context);
-      Vector theArray = new Vector(size);
+		var size = this.evalAsInteger(context);
+		var theArray = new Vector(size);
       try
 	{
-	  for (int i=0;i<size;i++)
+	  for (var i = 0; i<size; i++)
 	    theArray.insertElementAt("empty",i);
 	}
       catch(ArrayIndexOutOfBoundsException e)
@@ -436,11 +436,11 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject arrayColon(Context context,Expression value) throws AgoraError
     {
-      int size = this.evalAsInteger(context);
-      Vector theArray = new Vector(size);
+		var size = this.evalAsInteger(context);
+		var theArray = new Vector(size);
       try
 	{
-	  for (int i=0;i<size;i++)
+	  for (var i = 0; i<size; i++)
 	    theArray.insertElementAt(value.eval(context).down(),i);
 	}
       catch(ArrayIndexOutOfBoundsException e)
@@ -462,10 +462,10 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject methodColon(Context context,Expression body) throws AgoraError
     {
-      FormalsAndPattern   leftside= (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern  thePattern = leftside.pattern;
-      int      theCat     = leftside.cat;
-      String[] formals    = leftside.formals;
+		var leftside= (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
+		var formals    = leftside.formals;
       // Validate Pattern
       if (!(Category.containsLessThan(theCat,Category.local | Category.publik)))
 	throw (new ReifierMisused("Illegal Adjectives Used With METHOD"));
@@ -495,10 +495,10 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject mixinColon(Context context,Expression body) throws AgoraError
     {
-      FormalsAndPattern   leftside= (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern  thePattern = leftside.pattern;
-      int      theCat     = leftside.cat;
-      String[] formals    = leftside.formals;
+		var leftside= (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
+		var formals    = leftside.formals;
       // Validate Pattern
       if (!(Category.containsLessThan(theCat,Category.local | 
 				      Category.publik)))
@@ -530,10 +530,10 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject viewColon(Context context,Expression body) throws AgoraError
     {
-      FormalsAndPattern   leftside= (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern  thePattern = leftside.pattern;
-      int      theCat     = leftside.cat;
-      String[] formals    = leftside.formals;
+		var leftside= (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
+		var formals    = leftside.formals;
       // Validate Pattern
       if (!(Category.containsLessThan(theCat,Category.local | Category.publik)))
 	throw (new ReifierMisused("Illegal Adjectives Used With VIEW"));
@@ -565,10 +565,10 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject cloningColon(Context context,Expression body) throws AgoraError
     {
-      FormalsAndPattern   leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern   thePattern = leftside.pattern;
-      int      theCat     = leftside.cat;
-      String[] formals    = leftside.formals;
+		var leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
+		var formals    = leftside.formals;
       // Validate Pattern
       if (!(Category.containsLessThan(theCat,Category.local | Category.publik)))
 	throw (new ReifierMisused("Illegal Adjectives Used With CLONING"));
@@ -597,7 +597,7 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject publik(Context context) throws AgoraError
     {
-      FormalsAndPattern   leftside = (FormalsAndPattern)this.eval(context).down();
+		var leftside = (FormalsAndPattern)this.eval(context).down();
       leftside.cat = leftside.cat | Category.publik;
       return Up.glob.up(leftside);
     }
@@ -610,7 +610,7 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject local(Context context) throws AgoraError
     {
-      FormalsAndPattern   leftside   = (FormalsAndPattern)this.eval(context).down();
+		var leftside   = (FormalsAndPattern)this.eval(context).down();
       leftside.cat = leftside.cat | Category.local;
       return Up.glob.up(leftside);
     }
@@ -631,26 +631,26 @@ abstract public class Expression implements Serializable
 			     Expression to, 
 			     Expression doblock) throws AgoraError
     {
-      int init = from.evalAsInteger(context);
-      int term = to.evalAsInteger(context);
+		var init = from.evalAsInteger(context);
+		var term = to.evalAsInteger(context);
       // Determine unary receiverless pattern
-      FormalsAndPattern   leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern thePattern = leftside.pattern;
-      int             theCat     = leftside.cat;
+		var leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
       // Validate Pattern
       if (!(thePattern instanceof UnaryPattern))
 	throw (new ReifierMisused("FOR:TO:DO: can only be sent to unary agora.patterns"));
       // Extend Private Temporarily and install variable and initial value in the new private object part
-      InternalGenerator    newPriv = (InternalGenerator)(context.getPrivate().funcAddLayer("FOR:TO:DO: scope"));
+		var newPriv = (InternalGenerator)(context.getPrivate().funcAddLayer("FOR:TO:DO: scope"));
       newPriv.setPrivate(newPriv);
-      VariableContainer theVarCont = new VariableContainer(Up.glob.up(new Integer(init)));
-      VarGetAttribute   varGetAtt  = new VarGetAttribute(theVarCont);
-      UnaryPattern         getPat  = new UnaryPattern(((UnaryPattern)thePattern).getUnaryPattern());
+		var theVarCont = new VariableContainer(Up.glob.up(new Integer(init)));
+		var varGetAtt  = new VarGetAttribute(theVarCont);
+		var getPat  = new UnaryPattern(((UnaryPattern)thePattern).getUnaryPattern());
       newPriv.installPattern(getPat,varGetAtt);
       // Do the Looping
-      Context locCont = context.setPrivate(newPriv);
-      AgoraObject result = AgoraGlobals.glob.uppedNull;
-      for (int current=init;current<=term;current++)
+		var locCont = context.setPrivate(newPriv);
+		var result = AgoraGlobals.glob.uppedNull;
+      for (var current = init; current<=term; current++)
 	{
 	  theVarCont.write(Up.glob.up(new Integer(current)));
 	  result = doblock.eval(locCont);
@@ -667,27 +667,27 @@ abstract public class Expression implements Serializable
 				 Expression downto, 
 				 Expression doblock) throws AgoraError
     {
-      int init = from.evalAsInteger(context);
-      int term = downto.evalAsInteger(context);
+		var init = from.evalAsInteger(context);
+		var term = downto.evalAsInteger(context);
       // Determine unary receiverless pattern
-      FormalsAndPattern   leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern   thePattern = leftside.pattern;
-      int     theCat     = leftside.cat;
+		var leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
       // Validate Pattern
       if (!(thePattern instanceof UnaryPattern))
 	throw (new ReifierMisused("FOR:DOWNTO:DO: can only be sent to unary agora.patterns"));
       // Extend Private Temporarily and install variable and initial value in the new private object part
-      InternalGenerator    newPriv = (InternalGenerator)context.getPrivate().funcAddLayer("FOR:DOWNTO:DO: scope");
+		var newPriv = (InternalGenerator)context.getPrivate().funcAddLayer("FOR:DOWNTO:DO: scope");
       newPriv.setPrivate(newPriv);
-      VariableContainer theVarCont = new VariableContainer(Up.glob.up(new Integer(init)));
-      VarGetAttribute   varGetAtt  = new VarGetAttribute(theVarCont);
-      UnaryPattern         getPat  
+		var theVarCont = new VariableContainer(Up.glob.up(new Integer(init)));
+		var varGetAtt  = new VarGetAttribute(theVarCont);
+		var getPat
 	= new UnaryPattern(((UnaryPattern)thePattern).getUnaryPattern());
       newPriv.installPattern(getPat,varGetAtt);
       // Do the Looping
-      Context locCont = context.setPrivate(newPriv);
-      AgoraObject result = AgoraGlobals.glob.uppedNull;
-      for (int current=init; current>=term;current--)
+		var locCont = context.setPrivate(newPriv);
+		var result = AgoraGlobals.glob.uppedNull;
+      for (var current = init; current>=term; current--)
 	{
 	  theVarCont.write(Up.glob.up(new Integer(current)));
 	  result = doblock.eval(locCont);
@@ -711,27 +711,27 @@ abstract public class Expression implements Serializable
 			       Expression by, 
 			       Expression doblock) throws AgoraError
     {
-      int init = from.evalAsInteger(context);
-      int term = to.evalAsInteger(context);
-      int step = by.evalAsInteger(context);
+		var init = from.evalAsInteger(context);
+		var term = to.evalAsInteger(context);
+		var step = by.evalAsInteger(context);
       // Determine unary receiverless pattern
-      FormalsAndPattern   leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern thePattern = leftside.pattern;
-      int     theCat     = leftside.cat;
+		var leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
       // Validate Pattern
       if (!(thePattern instanceof UnaryPattern))
 	throw (new ReifierMisused("FOR:TO:BY:DO: can only be sent to unary agora.patterns"));
       // Extend Private Temporarily and Install variable and initial value in the new private object part
-      InternalGenerator    newPriv = (InternalGenerator)context.getPrivate().funcAddLayer("FOR:TO:BY:DO: scope");
+		var newPriv = (InternalGenerator)context.getPrivate().funcAddLayer("FOR:TO:BY:DO: scope");
       newPriv.setPrivate(newPriv);
-      VariableContainer theVarCont = new VariableContainer(Up.glob.up(new Integer(init)));
-      VarGetAttribute   varGetAtt  = new VarGetAttribute(theVarCont);
-      UnaryPattern         getPat  = new UnaryPattern(((UnaryPattern)thePattern).getUnaryPattern());
+		var theVarCont = new VariableContainer(Up.glob.up(new Integer(init)));
+		var varGetAtt  = new VarGetAttribute(theVarCont);
+		var getPat  = new UnaryPattern(((UnaryPattern)thePattern).getUnaryPattern());
       newPriv.installPattern(getPat,varGetAtt);
       // Do the Looping
-      Context locCont = context.setPrivate(newPriv);
-      AgoraObject result = AgoraGlobals.glob.uppedNull;
-      for (int current=init; current<=term; current=current + step)
+		var locCont = context.setPrivate(newPriv);
+		var result = AgoraGlobals.glob.uppedNull;
+      for (var current = init; current<=term; current=current + step)
 	{
 	  theVarCont.write(Up.glob.up(new Integer(current)));
 	  result = doblock.eval(locCont);
@@ -749,27 +749,27 @@ abstract public class Expression implements Serializable
 				   Expression by, 
 				   Expression doblock) throws AgoraError
     {
-      int init = from.evalAsInteger(context);  
-      int term = downto.evalAsInteger(context);
-      int step = by.evalAsInteger(context);
+		var init = from.evalAsInteger(context);
+		var term = downto.evalAsInteger(context);
+		var step = by.evalAsInteger(context);
       // Determine unary receiverless pattern
-      FormalsAndPattern leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern thePattern = leftside.pattern;
-      int     theCat     = leftside.cat;
+		var leftside = (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
       // Validate Pattern
       if (!(thePattern instanceof UnaryPattern))
 	throw (new ReifierMisused("FOR:DOWNTO:BY:DO: can only be sent to unary agora.patterns"));
       // Install variable and initial value in the new private object part
-      InternalGenerator    newPriv = (InternalGenerator)context.getPrivate().funcAddLayer("FOR:DOWNTO:BY:DO: scope");
+		var newPriv = (InternalGenerator)context.getPrivate().funcAddLayer("FOR:DOWNTO:BY:DO: scope");
       newPriv.setPrivate(newPriv);
-      VariableContainer theVarCont = new VariableContainer(Up.glob.up(new Integer(init)));
-      VarGetAttribute   varGetAtt  = new VarGetAttribute(theVarCont);
-      UnaryPattern          getPat = new UnaryPattern(((UnaryPattern)thePattern).getUnaryPattern());
+		var theVarCont = new VariableContainer(Up.glob.up(new Integer(init)));
+		var varGetAtt  = new VarGetAttribute(theVarCont);
+		var getPat = new UnaryPattern(((UnaryPattern)thePattern).getUnaryPattern());
       newPriv.installPattern(getPat,varGetAtt);
       // Do the Looping
-      Context      locCont = context.setPrivate(newPriv);
-      AgoraObject result = AgoraGlobals.glob.uppedNull;
-      for (int current=init; current>=term;current=current-step)
+		var locCont = context.setPrivate(newPriv);
+		var result = AgoraGlobals.glob.uppedNull;
+      for (var current = init; current>=term; current=current-step)
 	{
 	  theVarCont.write(Up.glob.up(new Integer(current)));
 	  result = doblock.eval(locCont);
@@ -844,7 +844,7 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject whileTrue(Context context,Expression body) throws AgoraError
     {
-      AgoraObject result = AgoraGlobals.glob.uppedNull;
+		var result = AgoraGlobals.glob.uppedNull;
       while(this.evalAsBoolean(context))
 	result = body.eval(context);
       return result;
@@ -856,7 +856,7 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject whileFalse(Context context,Expression body) throws AgoraError
     {
-      AgoraObject result = AgoraGlobals.glob.uppedNull;
+		var result = AgoraGlobals.glob.uppedNull;
       while(!this.evalAsBoolean(context))
 	result = body.eval(context);
       return result;
@@ -872,7 +872,7 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject untilTrue(Context context,Expression testExp) throws AgoraError
     {
-      AgoraObject result = AgoraGlobals.glob.uppedNull;
+		var result = AgoraGlobals.glob.uppedNull;
       do
 	{
 	  result = this.eval(context);
@@ -886,7 +886,7 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject untilFalse(Context context,Expression testExp) throws AgoraError
     {
-      AgoraObject result = AgoraGlobals.glob.uppedNull;
+		var result = AgoraGlobals.glob.uppedNull;
       do
 	{
 	  result = this.eval(context);
@@ -924,14 +924,14 @@ abstract public class Expression implements Serializable
 	{
 	  if (pattern instanceof UserPattern)
 	    {
-	      UserPattern pat = (UserPattern)pattern;
-	      AbstractPattern formalPattern = pat.makePattern(context);
-	      AbstractPattern actualPattern = ex.getPattern();
+			var pat = (UserPattern)pattern;
+			var formalPattern = pat.makePattern(context);
+			var actualPattern = ex.getPattern();
 	      if (formalPattern.equals(actualPattern))
 		{
-		  String[] formals = pat.makeFormals(context);
-		  Client   actuals = ex.getClient();
-		  MethAttribute theAtt = new MethAttribute (formals,catchcode);
+			var formals = pat.makeFormals(context);
+			var actuals = ex.getClient();
+			var theAtt = new MethAttribute (formals,catchcode);
 		  return theAtt.doAttributeValue(actualPattern,actuals,context);
 		}
 	      else
@@ -944,17 +944,17 @@ abstract public class Expression implements Serializable
 	{
 	  if (pattern instanceof UserPattern)
 	    {
-	      UserPattern pat = (UserPattern)pattern;
-	      KeywordPattern agoError = new KeywordPattern(1);
+			var pat = (UserPattern)pattern;
+			var agoError = new KeywordPattern(1);
 	      agoError.atPut(0,"agoraError:");
-	      AbstractPattern formalPattern = pat.makePattern(context);
+			var formalPattern = pat.makePattern(context);
 	      if (formalPattern.equals(agoError))
 		{
-		  String[] formals = pat.makeFormals(context);
-		  Object[] args    = new Object[1];
+			var formals = pat.makeFormals(context);
+			var args    = new Object[1];
 		  args[0] = Up.glob.up(ex);
-		  Client   actuals = context.newClient(args);
-		  MethAttribute theAtt = new MethAttribute(formals,catchcode);
+			var actuals = context.newClient(args);
+			var theAtt = new MethAttribute(formals,catchcode);
 		  return theAtt.doAttributeValue(agoError,actuals,context);
 		}
 	      throw ex;
@@ -972,7 +972,7 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject java(Context context) throws AgoraError
     {
-      String res = this.evalAsString(context);
+		var res = this.evalAsString(context);
       try
 	{
 	  return Up.glob.up(Class.forName(res));
@@ -1003,7 +1003,7 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject unquote(Context context) throws AgoraError
     {
-      Object code =  this.eval(context).down();
+		var code =  this.eval(context).down();
       if (code instanceof Expression)
 	return ((Expression)code).eval(context);
       else
@@ -1033,7 +1033,7 @@ abstract public class Expression implements Serializable
   */
   public AgoraObject down(Context context) throws AgoraError
     {
-      Object res  = this.eval(context).down();
+		var res  = this.eval(context).down();
       if (res instanceof AgoraObject)
 	return (AgoraObject)res;
       else
@@ -1054,10 +1054,10 @@ abstract public class Expression implements Serializable
 			       Expression contextParameter,
 			       Expression bodyparameter) throws  AgoraError
     {
-      FormalsAndPattern   leftside= (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
-      AbstractPattern  thePattern = leftside.pattern;
-      int      theCat     = leftside.cat;
-      String[] formals    = leftside.formals;
+		var leftside= (FormalsAndPattern)this.eval(context.setCat(Category.flags)).down();
+		var thePattern = leftside.pattern;
+		var theCat     = leftside.cat;
+		var formals    = leftside.formals;
       // Validate Pattern
       if (!(Category.containsLessThan(theCat,Category.local | Category.publik)))
 	throw (new ReifierMisused("Illegal Adjectives Used With REIFIER:IS:"));
@@ -1065,7 +1065,7 @@ abstract public class Expression implements Serializable
 	throw (new ReifierMisused("REIFIER:IS: can only be sent to a reifier pattern."));
       if (!(contextParameter instanceof UserUnaryPattern))
 	throw (new ReifierMisused("Context parameter of REIFIER:IS: should be an ordinary identifier"));
-      UnaryPattern contextNamePattern 
+		var contextNamePattern
 	= (UnaryPattern)((FormalsAndPattern)contextParameter.eval(context.setCat(Category.flags)).down()).pattern;
       // Fill In Default Values
       if ((!Category.contains(theCat,Category.local))&&
@@ -1093,7 +1093,7 @@ abstract public class Expression implements Serializable
   */
   public int evalAsInteger(Context context) throws AgoraError
     {
-      AgoraObject resValue = this.eval(context);
+		var resValue = this.eval(context);
       int res;
       if (resValue.down() instanceof Integer)
 	res = ((Integer)resValue.down()).intValue();
@@ -1108,7 +1108,7 @@ abstract public class Expression implements Serializable
   */
   public boolean evalAsBoolean(Context context) throws AgoraError
     {
-      AgoraObject resValue = this.eval(context);
+		var resValue = this.eval(context);
       boolean res;
       if (resValue.down() instanceof Boolean)
 	res = ((Boolean)resValue.down()).booleanValue();
@@ -1123,7 +1123,7 @@ abstract public class Expression implements Serializable
   */
   public String evalAsString(Context context) throws AgoraError
     {
-      AgoraObject resValue = (AgoraObject)this.eval(context);
+		var resValue = (AgoraObject)this.eval(context);
       if (!(resValue.down() instanceof String))
 	throw (new ProgramError("String Expected !"));
       return (String)resValue.down();

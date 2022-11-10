@@ -91,7 +91,7 @@ public class AgoraIO implements Serializable
 	return (char)0;
       else
 	{
-	  char ret = theInput.charAt(count);
+      var ret = theInput.charAt(count);
 	  count++;
 	  return ret;
 	}

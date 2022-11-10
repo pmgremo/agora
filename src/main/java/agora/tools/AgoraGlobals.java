@@ -85,10 +85,10 @@ public class AgoraGlobals implements Serializable
       glob = this;
 
       // Construct The Root Object
-      EmptyGenerator pubTop = new EmptyGenerator("Root Public Super");
-      EmptyGenerator priTop = new EmptyGenerator("Root Private Super");
-      InternalGenerator pubRoot = new InternalGenerator("Root Public",new Hashtable(3),null,pubTop);
-      InternalGenerator priRoot = new InternalGenerator("Root Private",new Hashtable(3),null,priTop);
+      var pubTop = new EmptyGenerator("Root Public Super");
+      var priTop = new EmptyGenerator("Root Private Super");
+      var pubRoot = new InternalGenerator("Root Public",new Hashtable(3),null,pubTop);
+      var priRoot = new InternalGenerator("Root Private",new Hashtable(3),null,priTop);
       pubRoot.setPrivate(priRoot);
       priRoot.setPrivate(priRoot);
       this.rootPublic = pubRoot;
@@ -101,7 +101,7 @@ public class AgoraGlobals implements Serializable
 
       // Create heavily used constants (cache them for efficiency reasons)
       this.uppedNull = Up.glob.up(null);
-      JV_Nil dummy = new JV_Nil(); // This must be here to force class loading!!!
+      var dummy = new JV_Nil(); // This must be here to force class loading!!!
       this.ttrue = new Boolean(true);
       this.ffalse = new Boolean(false);
       this.uppedTrue = Up.glob.up(ttrue);
@@ -123,52 +123,52 @@ public class AgoraGlobals implements Serializable
   private void standardMethods(Applet agora) throws AgoraError
     {
       // java
-      UnaryPattern java = new UnaryPattern("java");
-      VariableContainer javaPackage = new VariableContainer(Up.glob.up(new JV_Package("java")));
+      var java = new UnaryPattern("java");
+      var javaPackage = new VariableContainer(Up.glob.up(new JV_Package("java")));
       Attribute javaReader = new VarGetAttribute(javaPackage);
       this.rootPrivate.installPattern(java,javaReader);
       
       //null
-      UnaryPattern nil = new UnaryPattern("null");
-      VariableContainer nilobject = new VariableContainer(uppedNull);
+      var nil = new UnaryPattern("null");
+      var nilobject = new VariableContainer(uppedNull);
       Attribute nilReader = new VarGetAttribute(nilobject);
       this.rootPrivate.installPattern(nil,nilReader);
       
       //true
-      UnaryPattern trueP = new UnaryPattern("true");
-      VariableContainer trueObject = new VariableContainer(uppedTrue);
+      var trueP = new UnaryPattern("true");
+      var trueObject = new VariableContainer(uppedTrue);
       Attribute trueReader = new VarGetAttribute(trueObject);
       this.rootPrivate.installPattern(trueP,trueReader);
       
       //false
-      UnaryPattern falseP = new UnaryPattern("false");
-      VariableContainer falseObject = new VariableContainer(uppedFalse);
+      var falseP = new UnaryPattern("false");
+      var falseObject = new VariableContainer(uppedFalse);
       Attribute falseReader = new VarGetAttribute(falseObject);
       this.rootPrivate.installPattern(falseP,falseReader);
       
       //agora
-      UnaryPattern agoraP = new UnaryPattern("agora");
-      VariableContainer agoraObject = new VariableContainer(rootIdentity.wrap());
+      var agoraP = new UnaryPattern("agora");
+      var agoraObject = new VariableContainer(rootIdentity.wrap());
       Attribute agoraReader = new VarGetAttribute(agoraObject);
       this.rootPrivate.installPattern(agoraP,agoraReader);
       
       //applet
-      UnaryPattern appletP = new UnaryPattern("applet");
-      VariableContainer appletObject = new VariableContainer(Up.glob.up(agora));
+      var appletP = new UnaryPattern("applet");
+      var appletObject = new VariableContainer(Up.glob.up(agora));
       Attribute appletReader = new VarGetAttribute(appletObject);
       this.rootPrivate.installPattern(appletP,appletReader);
 
       //primitive
-      UnaryPattern primitiveP = new UnaryPattern("primitive");
+      var primitiveP = new UnaryPattern("primitive");
       this.rootPublic.installPattern(primitiveP,falseReader);
       
       //SELF
-      UnaryPattern selfP = new UnaryPattern("SELF");
+      var selfP = new UnaryPattern("SELF");
       selfP.setReifier();
       Attribute selfMeth = null;
       try
 	{
-	  Class[] args = new Class[1];
+      var args = new Class[1];
 	  args[0]     =  Class.forName("agora.runtime.Context");
 	  selfMeth = new PrimReifierMethAttribute(Class.forName("agora.runtime.Context").getMethod("Self",args));
 	  this.rootPrivate.installPattern(selfP,selfMeth);
@@ -179,11 +179,11 @@ public class AgoraGlobals implements Serializable
 	}
       
       // inspect
-      UnaryPattern inspect = new UnaryPattern("inspect");
+      var inspect = new UnaryPattern("inspect");
       Attribute inspectMeth = null;
       try
 	{
-	  Class[] args = new Class[0];
+      var args = new Class[0];
 	  inspectMeth = new PrimReifierMethAttribute(Class.forName("agora.runtime.Context").getMethod("inspectPrimitive",args));
 	  this.rootPublic.installPattern(inspect,inspectMeth);
 	}
@@ -233,9 +233,9 @@ public class AgoraGlobals implements Serializable
    {
     try
     {
-      UnaryPattern appletPat = new UnaryPattern("applet");
-      UnaryPattern appletP = new UnaryPattern("applet");
-      VariableContainer appletObject = new VariableContainer(Up.glob.up(applet));
+      var appletPat = new UnaryPattern("applet");
+      var appletP = new UnaryPattern("applet");
+      var appletObject = new VariableContainer(Up.glob.up(applet));
       Attribute appletReader = new VarGetAttribute(appletObject);
       this.rootPrivate.getHashTable().put(appletPat,appletReader);
     }

@@ -66,7 +66,7 @@ public class ReifUnaryPattern extends ReifPattern implements Serializable
     */
   public AbstractPattern makePattern(Context context)
     {
-      UnaryPattern unary = new UnaryPattern(this.unary);
+      var unary = new UnaryPattern(this.unary);
       unary.setReifier();
       return unary;
     }

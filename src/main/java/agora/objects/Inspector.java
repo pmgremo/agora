@@ -46,31 +46,31 @@ public class Inspector extends Dialog implements Serializable
       this.parentPart = parentPart;
       this.methods = methods;
       this.primObject = primObject;
-      BorderLayout l  = new BorderLayout();
+		var l  = new BorderLayout();
       this.setLayout(l);
-      Panel texts = new Panel();
+		var texts = new Panel();
       texts.setLayout(new BorderLayout());
-      final TextArea text = new TextArea("",2,60,TextArea.SCROLLBARS_NONE);
-      final TextArea selection = new TextArea("",15,60,TextArea.SCROLLBARS_BOTH);
+      final var text = new TextArea("",2,60,TextArea.SCROLLBARS_NONE);
+      final var selection = new TextArea("",15,60,TextArea.SCROLLBARS_BOTH);
       this.add("North",text);
       texts.add("South",selection);
       this.add("Center",texts);
-      Panel buttons = new Panel();
+		var buttons = new Panel();
       buttons.setLayout(new FlowLayout(FlowLayout.CENTER,15,15));
       if (myPart != null)
 	{
-	  final List li = new List(7,false);
+	  final var li = new List(7,false);
 	  texts.add("North",li);
-	  
-	  Enumeration es = myPart.elements();
-	  Enumeration ks = myPart.keys();
-	  final Hashtable items = new Hashtable(5);
+
+		var es = myPart.elements();
+		var ks = myPart.keys();
+	  final var items = new Hashtable(5);
 	  try
 	    {
 	      while (es.hasMoreElements())
 		{
-		  String key = ks.nextElement().toString();
-		  Object att = es.nextElement();
+			var key = ks.nextElement().toString();
+			var att = es.nextElement();
 		  items.put(key,att);
 		}
 	    }
@@ -85,7 +85,7 @@ public class Inspector extends Dialog implements Serializable
 				   if (e.getStateChange() == ItemEvent.SELECTED)
 				     try
 				       {
-					 Attribute att = (Attribute)items.get(li.getItem(((Integer)e.getItem()).intValue()));
+						   var att = (Attribute)items.get(li.getItem(((Integer)e.getItem()).intValue()));
 					 selection.setText(att.inspect(context));
 				       }
 				   catch(AgoraError ex)
@@ -113,7 +113,7 @@ public class Inspector extends Dialog implements Serializable
 	}
       if (privPart != null)
 	{
-	  Button b2 = new Button("Private");
+		var b2 = new Button("Private");
 	  b2.addActionListener(new ActionListener()
 			       {
 				 public void actionPerformed(ActionEvent e)
@@ -125,7 +125,7 @@ public class Inspector extends Dialog implements Serializable
 	}
       if (parentPart != null)
 	{
-	  Button b3 = new Button("Parent");
+		var b3 = new Button("Parent");
 	  b3.addActionListener(new ActionListener ()
 			       {
 				 public void actionPerformed(ActionEvent e)
@@ -144,15 +144,15 @@ public class Inspector extends Dialog implements Serializable
 	}
       if (primObject != null)
 	{
-	  String nat = "Native Object: '" + (primObject.toString()) + "'";
+		var nat = "Native Object: '" + (primObject.toString()) + "'";
 	  text.append(nat);
 	}
       else
 	{
 	  text.append("Inspector For " + title);
 	}
-      
-      Button b6 = new Button("Done");
+
+		var b6 = new Button("Done");
       b6.addActionListener(new ActionListener()
 			   {
 			     public void actionPerformed(ActionEvent e)

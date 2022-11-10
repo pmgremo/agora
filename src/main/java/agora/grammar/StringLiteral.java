@@ -50,15 +50,15 @@ public class StringLiteral extends Literal implements Serializable
     */
   public static PrimGenerator generatorStringLiteral() throws AgoraError
   {
-    Hashtable table = new Hashtable(4);
-    PrimGenerator result = new PrimGenerator("StringLiteral",table,null);
+    var table = new Hashtable(4);
+    var result = new PrimGenerator("StringLiteral",table,null);
     try
       {
-	Class[] argtypes1 = new Class[1];
+        var argtypes1 = new Class[1];
 	argtypes1[0] = Class.forName("agora.runtime.Context");
 	Class thisOne = Class.forName("agora.grammar.StringLiteral");
-	
-	UnaryPattern unary = new UnaryPattern("HALT");
+
+        var unary = new UnaryPattern("HALT");
 	unary.setReifier();
 	table.put(unary,new PrimMethAttribute(thisOne.getMethod("halt",argtypes1)));
       }

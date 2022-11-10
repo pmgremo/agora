@@ -62,7 +62,7 @@ public class PrimGenerator extends MethodsGenerator implements Serializable
   */
   public void inspect(Context context) throws AgoraError
     {
-      Inspector d = new Inspector(AgoraGlobals.glob.agoraWindow,
+      var d = new Inspector(AgoraGlobals.glob.agoraWindow,
 				  this.name,
 				  this.theMethodTable,
 				  null,

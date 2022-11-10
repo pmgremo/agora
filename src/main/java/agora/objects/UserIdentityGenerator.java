@@ -41,8 +41,8 @@ public class UserIdentityGenerator extends IdentityGenerator implements Serializ
      *                                 thrown.
      */
     public IdentityGenerator funcAddLayer(String nameOfFrame) throws AgoraError {
-        InternalGenerator newMe = this.myMethods.funcAddLayer(nameOfFrame);
-        UserIdentityGenerator newID = new UserIdentityGenerator("Object", newMe, null);
+        var newMe = this.myMethods.funcAddLayer(nameOfFrame);
+        var newID = new UserIdentityGenerator("Object", newMe, null);
         return newID;
     }
 
@@ -70,7 +70,7 @@ public class UserIdentityGenerator extends IdentityGenerator implements Serializ
         if (cachedclone != null)
             return cachedclone;
         else {
-            UserIdentityGenerator newClone = new UserIdentityGenerator(this.getFrameName(), null, null);
+            var newClone = new UserIdentityGenerator(this.getFrameName(), null, null);
             cloneMap.put(this, newClone);
             newClone.myMethods = (MethodsGenerator) (this.myMethods.copy(cloneMap));
             return newClone;

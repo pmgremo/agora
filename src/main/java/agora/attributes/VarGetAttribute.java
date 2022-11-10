@@ -72,7 +72,7 @@ public class VarGetAttribute extends Attribute implements Serializable {
         if (myclone != null)
             return myclone;
         else {
-            VarGetAttribute clonedAttribute = new VarGetAttribute(null);
+            var clonedAttribute = new VarGetAttribute(null);
             cloneMap.put(this, clonedAttribute);
             clonedAttribute.theContents = (VariableContainer) (this.theContents.copy(cloneMap));
             //We cannot avoid this type cast because of the genericity of clone maps.

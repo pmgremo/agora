@@ -28,8 +28,8 @@ public class PrimVarSetAttribute extends PrimAttribute implements Serializable
     {
 	try
 	{
-           Class decl = (Class)stream.readObject();
-           String nme = (String)stream.readObject();
+        var decl = (Class)stream.readObject();
+        var nme = (String)stream.readObject();
 	   f = decl.getDeclaredField(nme);
 	}
 	catch(NoSuchFieldException e)

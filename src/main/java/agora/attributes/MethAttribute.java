@@ -45,8 +45,8 @@ public class MethAttribute extends Attribute implements Serializable
   */
   public AgoraObject doAttributeValue(AbstractPattern msg,Client client,Context context) throws AgoraError
     {
-      InternalGenerator localPriv = this.bind(client.getActuals(),context.getPrivate());
-      InternalGenerator localPub  = context.getPub().funcAddLayer("Calling Frame of:"+msg.toString());
+        var localPriv = this.bind(client.getActuals(),context.getPrivate());
+        var localPub  = context.getPub().funcAddLayer("Calling Frame of:"+msg.toString());
       localPub.setPrivate(localPriv);
       return this.methodCode.eval(context.setMultiple(context.getSelf(),
 						      localPriv,
@@ -66,17 +66,17 @@ public class MethAttribute extends Attribute implements Serializable
   */
   public InternalGenerator bind(Object[] actuals,InternalGenerator privPart) throws AgoraError
     {
-      int size = actuals.length;
-      InternalGenerator bindingsPriv = privPart.funcAddLayer("Formals Actuals Frame");
+        var size = actuals.length;
+        var bindingsPriv = privPart.funcAddLayer("Formals Actuals Frame");
       bindingsPriv.setPrivate(bindingsPriv);
-      for (int i=0; i<size; i++)
+      for (var i = 0; i<size; i++)
 	{
-	  VariableContainer var     = new VariableContainer((AgoraObject)(actuals[i]));
+        var var     = new VariableContainer((AgoraObject)(actuals[i]));
 	  // Impossible to avoid ugly type cast, unless clients become horribly inefficient (see 'doAttributeValue')
-	  VarGetAttribute   readatt = new VarGetAttribute(var);
-	  VarSetAttribute   writeatt= new VarSetAttribute(var);
-	  UnaryPattern      readpat = new UnaryPattern(this.formals[i]);
-	  KeywordPattern    writepat= readpat.makeWritePattern();
+        var readatt = new VarGetAttribute(var);
+        var writeatt= new VarSetAttribute(var);
+        var readpat = new UnaryPattern(this.formals[i]);
+        var writepat= readpat.makeWritePattern();
 	  bindingsPriv.installPattern(readpat,readatt);
 	  bindingsPriv.installPattern(writepat,writeatt);
 	}

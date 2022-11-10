@@ -129,7 +129,7 @@ public class Scanner extends Object implements Serializable
   
   private int scan_string() // return value is a token as defined above
     {
-      StringBuffer result = new StringBuffer();
+		var result = new StringBuffer();
       this.nextChar();
       if (this.lastChar==0)
 	return _ERROR_;
@@ -166,7 +166,7 @@ public class Scanner extends Object implements Serializable
   
   private int scan_operator() //return value is a token as defined above
     {
-      StringBuffer result = new StringBuffer();
+		var result = new StringBuffer();
       result.append(this.lastChar);
       this.nextChar();
       while (this.operatorchar())
@@ -180,10 +180,10 @@ public class Scanner extends Object implements Serializable
   
   private int scan_number() // return value is a token as defined above
     {
-      int i= 0 ;
+		var i= 0 ;
       float f = 0;
-      int exp=0;
-      int len = 0;
+		var exp=0;
+		var len = 0;
       i = (this.lastChar) - '0';
       this.nextChar();
       while (this.digit())
@@ -206,7 +206,7 @@ public class Scanner extends Object implements Serializable
 	  f = 10*f + ((this.lastChar) - '0');
 	  this.nextChar();
 	}
-      for (int j=0;j<len;j++)
+      for (var j = 0; j<len; j++)
 	f =f /10;
       f = i+f;
       if (this.lastChar=='e')
@@ -214,7 +214,7 @@ public class Scanner extends Object implements Serializable
 	  this.nextChar();
 	  if ((this.lastChar!='+')&&(this.lastChar!='-'))
 	    return _ERROR_;
-	  boolean positive = (this.lastChar=='+');
+		var positive = (this.lastChar=='+');
 	  this.nextChar();
 	  if (!this.digit())
 	    return _ERROR_;
@@ -224,7 +224,7 @@ public class Scanner extends Object implements Serializable
 	    return _ERROR_;
 	  exp = 10*exp + ((this.lastChar) - '0');
 	  this.nextChar();
-	  for (int j=0;j<exp;j++)
+	  for (var j = 0; j<exp; j++)
 	    if (positive)
 	      f = f * 10;
 	    else
@@ -271,8 +271,8 @@ public class Scanner extends Object implements Serializable
   
   private int scan_identifier() // return value is a token as defined above
     {
-      StringBuffer result = new StringBuffer();
-      boolean allCaps = this.caps();
+		var result = new StringBuffer();
+		var allCaps = this.caps();
       result.append(this.lastChar);
       this.nextChar();
       while (this.letter()||this.digit()||(this.lastChar=='_'))
@@ -281,14 +281,14 @@ public class Scanner extends Object implements Serializable
 	  allCaps = allCaps && this.caps();
 	  this.nextChar();
 	}
-      boolean keyword = false;
+		var keyword = false;
       if ((this.lastChar)== ':')
 	{
 	  result.append(this.lastChar);
 	  this.nextChar();
 	  keyword= true;
 	}
-      String theIdent = result.toString();
+		var theIdent = result.toString();
       if (allCaps)
 	{
 	  if (keyword)

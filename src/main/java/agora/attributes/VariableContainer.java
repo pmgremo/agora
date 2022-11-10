@@ -49,12 +49,12 @@ public class VariableContainer extends Object implements Serializable
   */
   public Object copy(Hashtable cloneMap)
     {
-      Object myclone = cloneMap.get(this);
+        var myclone = cloneMap.get(this);
       if (myclone != null)
 	return myclone;
       else
 	{
-	  VariableContainer newclone = new VariableContainer(this.variableValue);
+        var newclone = new VariableContainer(this.variableValue);
 	  cloneMap.put(this,newclone);
 	  return newclone;
 	}

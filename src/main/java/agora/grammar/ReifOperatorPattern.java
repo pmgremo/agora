@@ -44,14 +44,14 @@ public class ReifOperatorPattern extends ReifPattern implements Serializable
     
   public Client makeClient(Context context,AgoraObject receiver)
     {
-      Object[] actuals = new Object[1];
+        var actuals = new Object[1];
       actuals[0] = this.operand;
       return context.newReifierClient(actuals);
     }
   
   public AbstractPattern makePattern(Context context)
     {
-      OperatorPattern pattern = new OperatorPattern(this.operator);
+        var pattern = new OperatorPattern(this.operator);
       pattern.setReifier();
       return pattern;
     }
@@ -64,13 +64,13 @@ public class ReifOperatorPattern extends ReifPattern implements Serializable
     {
       if (this.operand instanceof UserUnaryPattern)
 	{
-	  String[] f = new String[1];
+        var f = new String[1];
 	  f[0] = ((UserUnaryPattern)this.operand).getUnary();
 	  return f;
 	}
       else
 	{
-	  ProgramError ex = new ProgramError("Formal parameters must be identifiers");
+        var ex = new ProgramError("Formal parameters must be identifiers");
 	  ex.setCode(this);
 	  throw ex;
 	}

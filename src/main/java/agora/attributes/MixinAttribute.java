@@ -37,10 +37,10 @@ public class MixinAttribute extends MethAttribute implements Serializable
   */
   public AgoraObject doAttributeValue(AbstractPattern msg,Client client,Context context) throws AgoraError
     {
-      InternalGenerator     mixinPriv = this.bind(client.getActuals(),context.getPrivate());
+      var mixinPriv = this.bind(client.getActuals(),context.getPrivate());
       mixinPriv = mixinPriv.funcAddLayer("Local part of mixin " + msg.toString());
       mixinPriv.setPrivate(mixinPriv);
-      InternalGenerator     mixinPub = context.getSelf().getMe().funcAddLayer("Public part of mixin " + msg.toString());
+      var mixinPub = context.getSelf().getMe().funcAddLayer("Public part of mixin " + msg.toString());
       context.getSelf().Change(mixinPub);
       mixinPub.setPrivate(mixinPriv);
       this.methodCode.eval(context.setMultiple(context.getSelf(),

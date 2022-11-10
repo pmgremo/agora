@@ -66,7 +66,7 @@ public class MessageNotUnderstood extends AgoraError implements Serializable
   */
   public void signal()
     {
-      String msg = "";
+      var msg = "";
       if (this.msg.isReifier())
 	msg = msg + "Reifier ";
       msg = msg + "Message Not Understood";

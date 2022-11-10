@@ -37,7 +37,7 @@ public class UnaryPattern extends AbstractPattern implements Serializable
     */
   public KeywordPattern makeWritePattern()
   {
-    KeywordPattern    writePat  = new KeywordPattern(1);
+    var writePat  = new KeywordPattern(1);
     writePat.atPut (0,pattern.concat(":"));
     return writePat;
   }
@@ -48,9 +48,9 @@ public class UnaryPattern extends AbstractPattern implements Serializable
    */
   protected int doHash()
   {
-    int i=0;
-    String ss = pattern;
-    for (int j = 0; j<pattern.length(); j++)
+    var i=0;
+    var ss = pattern;
+    for (var j = 0; j<pattern.length(); j++)
       i = i + this.pattern.charAt(j);
     return i;
   }

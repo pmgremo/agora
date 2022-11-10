@@ -44,10 +44,10 @@ public class PrimFunctionAttribute extends PrimMethAttribute implements Serializ
     {
       try
 	{
-	  Object[] realActuals = client.getActuals();
-	  Object[] fakedActuals = new Object[realActuals.length + 1];
+        var realActuals = client.getActuals();
+        var fakedActuals = new Object[realActuals.length + 1];
 	  fakedActuals[0] = context.getSelf().down();
-	  for (int j=0;j<realActuals.length; j++)
+	  for (var j = 0; j<realActuals.length; j++)
 	    fakedActuals[j+1] = ((AgoraObject)realActuals[j]).down();
 	  return Up.glob.up(this.m.invoke(null,fakedActuals));
 	}

@@ -40,11 +40,11 @@ public class ViewAttribute extends MethAttribute implements Serializable
 				      Client client, 
 				      Context context) throws AgoraError
     {
-      InternalGenerator viewPriv = this.bind(client.getActuals(),context.getPrivate());
+      var viewPriv = this.bind(client.getActuals(),context.getPrivate());
       viewPriv = viewPriv.funcAddLayer("Local part of view " + msg.toString());
       viewPriv.setPrivate(viewPriv);
-      IdentityGenerator viewSelf = context.getSelf().funcAddLayer("Public part of view " + msg.toString());
-      MethodsGenerator  viewPub  = viewSelf.getMe();
+      var viewSelf = context.getSelf().funcAddLayer("Public part of view " + msg.toString());
+      var viewPub  = viewSelf.getMe();
       //We cannot avoid this cast. Normally, the public is a methodsgenerator, but in a view,
       //we know it is an internal generator, because only user created agora.objects can be extended.
       viewPub.setPrivate(viewPriv);

@@ -29,7 +29,7 @@ public class KeywordPattern extends AbstractPattern implements Serializable {
     public KeywordPattern(int size) {
         super();
         keywords = new String[size];
-        for (int i = 0; i < size; i++)
+        for (var i = 0; i < size; i++)
             keywords[i] = null;
     }
 
@@ -69,8 +69,8 @@ public class KeywordPattern extends AbstractPattern implements Serializable {
      * @return The string representation of this keyword pattern.
      */
     public String toString() {
-        String result = "";
-        for (int i = 0; i < keywords.length; i++)
+        var result = "";
+        for (var i = 0; i < keywords.length; i++)
             result = result.concat(keywords[i]);
         return result;
     }
@@ -81,13 +81,13 @@ public class KeywordPattern extends AbstractPattern implements Serializable {
      * @return The hash value of this pattern.
      */
     protected int doHash() {
-        int result = 0;
+        var result = 0;
         String s = null;
         if (keywords.length > 1)
             s = keywords[1];
         else
             s = keywords[0];
-        for (int i = 0; i < s.length(); i++)
+        for (var i = 0; i < s.length(); i++)
             result = result + s.charAt(i);
         return result;
     }
@@ -106,7 +106,7 @@ public class KeywordPattern extends AbstractPattern implements Serializable {
             if (super.equals(object))
                 if (object instanceof KeywordPattern)
                     if (keywords.length == ((KeywordPattern) object).size()) {
-                        for (int i = 0; i < keywords.length; i++)
+                        for (var i = 0; i < keywords.length; i++)
                             if (!(keywords[i].equals(((KeywordPattern) object).at(i))))
                                 return false;
                         return true;

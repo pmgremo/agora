@@ -106,10 +106,10 @@ public class Up extends Object implements Serializable
   */
   private PrimGenerator generatorFor(Class c,boolean isInstance) throws AgoraError
     {
-      String name = c.getName();
+		var name = c.getName();
       if (!isInstance)
 	name = name + "CLASS";
-      Object  methodTableOfc = uptable.get(name);
+		var methodTableOfc = uptable.get(name);
       if (methodTableOfc == null)
 	{
 	  methodTableOfc = createGeneratorFor(c,isInstance);
@@ -146,13 +146,13 @@ public class Up extends Object implements Serializable
       
       if ((generatorCreator != null)&isInstance) // 1) If there is an ad hoc generator creator, call it!
 	{
-	  int modifiers = generatorCreator.getModifiers();
+		var modifiers = generatorCreator.getModifiers();
 	  if (!(Modifier.isPublic(modifiers)&&Modifier.isStatic(modifiers)))
 	    throw (new ProgramError("'generator"+c.getName()+"' method must be public static"));
 	  try
 	    {
 	      methodTableOfc = (PrimGenerator)generatorCreator.invoke(null,new Object[0]);
-	      PrimGenerator asIsTable = constructGeneratorFor(c,isInstance);
+			var asIsTable = constructGeneratorFor(c,isInstance);
 	      asIsTable.setParent(superMethodTable);
 	      superMethodTable = asIsTable;
 	    }
@@ -178,30 +178,30 @@ public class Up extends Object implements Serializable
       //Natives have special wrappers that contain operations not supported in java.lang
       if (c.getName().equals("java.lang.Object")) // Hack to make all upped agora.objects primitive.
 	{
-	  UnaryPattern unary = new UnaryPattern("primitive");
+		var unary = new UnaryPattern("primitive");
 	  if (primitive == null)
 	    primitive = new VariableContainer(null); // make a reference, because the container has to be adjusted later.
-	  VarGetAttribute getter = new VarGetAttribute(primitive);
+		var getter = new VarGetAttribute(primitive);
 	  methodTableOfc.installPattern(unary,getter);
 	}
 	  
       if (c.getName().equals("java.lang.Integer")) // Treat integers
 	{
-	  PrimGenerator operators = JV_Integer.generatorJV_Integer();
+		var operators = JV_Integer.generatorJV_Integer();
 	  operators.setParent(methodTableOfc);
 	  return operators;
 	}
       else
 	if (c.getName().equals("java.lang.Float")) // Treat floats
 	  {
-	    PrimGenerator operators = JV_Float.generatorJV_Float();
+		  var operators = JV_Float.generatorJV_Float();
 	    operators.setParent(methodTableOfc);
 	    return operators;
 	  }
 	else
 	  if (c.getName().equals("java.lang.Boolean")) // Treat booleans
 	    {
-	      PrimGenerator operators = JV_Boolean.generatorJV_Boolean();
+			var operators = JV_Boolean.generatorJV_Boolean();
 	      operators.setParent(methodTableOfc);
 	      return operators;
 	    }
@@ -216,16 +216,16 @@ public class Up extends Object implements Serializable
   */
   private PrimGenerator constructGeneratorFor(Class c,boolean isInstance) throws AgoraError
     {
-      JV_Queue q = new JV_Queue();  // Make a new Queue
+		var q = new JV_Queue();  // Make a new Queue
       putFieldsInQueue(c,q,isInstance);        // Insert agora.patterns and fields
       putMethodsInQueue(c,q,isInstance);       // Insert agora.patterns and methods
       putConstructorsInQueue(c,q,isInstance);  // Insert agora.patterns and constructors
-      int sz = q.size() / 2;        // queue = (pat,att)(pat,att)....(pat,att)
-      Hashtable theTable = new Hashtable(sz+1);//The size may not be zero, so add one
-      for (int j=0; j<sz; j++)
+		var sz = q.size() / 2;        // queue = (pat,att)(pat,att)....(pat,att)
+		var theTable = new Hashtable(sz+1);//The size may not be zero, so add one
+      for (var j = 0; j<sz; j++)
 	{
-	  Object pattern = q.deQueue(); // These statements are really necessary because
-	  Object attrib  = q.deQueue(); // if we would simply write put(q.deQueue(),q.deQeueue)
+		var pattern = q.deQueue(); // These statements are really necessary because
+		var attrib  = q.deQueue(); // if we would simply write put(q.deQueue(),q.deQeueue)
 	  theTable.put(pattern,attrib); // the wrong order could be used (if Java does it right to left)
 	}
       return (new PrimGenerator(c.getName(),theTable,null));    // Create a new generator with the members
@@ -238,8 +238,8 @@ public class Up extends Object implements Serializable
   */
   private void putFieldsInQueue(Class c,JV_Queue q,boolean isInstance)
     { // Create a pattern and an attribute for every publically accessible field
-      Field[] fields   = c.getFields();
-      for (int j=0; j<fields.length ; j++)
+		var fields   = c.getFields();
+      for (var j = 0; j<fields.length ; j++)
 	{
 	  if (Modifier.isPublic(fields[j].getModifiers())&& 
 	      (!Modifier.isAbstract(fields[j].getModifiers()))&&
@@ -267,8 +267,8 @@ public class Up extends Object implements Serializable
   */
   private void putMethodsInQueue(Class c,JV_Queue q,boolean isInstance)
     { // Create a pattern and a method attribute for every publically accessible method
-      Method[] methods = c.getMethods();
-      for (int j=0; j<methods.length ; j++)
+		var methods = c.getMethods();
+      for (var j = 0; j<methods.length ; j++)
 	{
 	  if (Modifier.isPublic(methods[j].getModifiers())&&
 	      (!Modifier.isAbstract(methods[j].getModifiers()))&&
@@ -291,8 +291,8 @@ public class Up extends Object implements Serializable
   */
   private void putConstructorsInQueue(Class c,JV_Queue q,boolean isInstance)
     { // Create a pattern and a cloning method for every publically accessible constructor
-      Constructor[] constructors = c.getConstructors();
-      for (int j=0; j<constructors.length ; j++)
+		var constructors = c.getConstructors();
+      for (var j = 0; j<constructors.length ; j++)
 	{
 	  if (Modifier.isPublic(constructors[j].getModifiers())&&
 	      (!Modifier.isNative(constructors[j].getModifiers()))&&
@@ -330,7 +330,7 @@ public class Up extends Object implements Serializable
   */
   private AbstractPattern createVariableWritePatFor(Field f)
     {
-      KeywordPattern writePat = new KeywordPattern(1);
+		var writePat = new KeywordPattern(1);
       writePat.atPut(0,decaps(f.getName()) + ":");
       return writePat;
     }
@@ -356,9 +356,9 @@ public class Up extends Object implements Serializable
 	return  new UnaryPattern(m.getName());
       else
 	{
-	  KeywordPattern pat = new KeywordPattern(types.length);
+		var pat = new KeywordPattern(types.length);
 	  pat.atPut(0,decaps(m.getName())+typeNameFor(types[0])+":");
-	  for (int j=1 ; j<types.length; j++)
+	  for (var j = 1; j<types.length; j++)
 	    pat.atPut(j,typeNameFor(types[j])+":");
 	  return pat;
 	}
@@ -381,7 +381,7 @@ public class Up extends Object implements Serializable
   private AbstractPattern createConstructorPatFor(Constructor c)
     {
       AbstractPattern pat = null;
-      Class[] types = c.getParameterTypes();
+		var types = c.getParameterTypes();
       if (types.length ==0)
 	pat = new UnaryPattern("new");
       else 
@@ -395,7 +395,7 @@ public class Up extends Object implements Serializable
 	    {
 	      pat = new KeywordPattern(types.length);
 	      ((KeywordPattern)pat).atPut(0,"new"+typeNameFor(types[0])+":");
-	      for (int j=1; j<types.length; j++)
+	      for (var j = 1; j<types.length; j++)
 		((KeywordPattern)pat).atPut(j,typeNameFor(types[j])+":");
 	    }
 	}
@@ -426,7 +426,7 @@ public class Up extends Object implements Serializable
     {
       if (s.length() == 0)
 	return s;
-      int pos = s.length()-1;
+		var pos = s.length()-1;
       while (s.charAt(pos) != '.')
 	{
 	  pos--;
@@ -456,9 +456,9 @@ public class Up extends Object implements Serializable
   */
   private String decaps(String s)
     {
-      char[] arr = s.toCharArray();
-      boolean allcaps = true;
-      for (int i = 0; i<arr.length; i++)
+		var arr = s.toCharArray();
+		var allcaps = true;
+      for (var i = 0; i<arr.length; i++)
 	allcaps = allcaps & (((arr[i] >= 'A') & (arr[i] <= 'Z')) | (arr[i] == '_'));
       if (allcaps)
 	return "j" + s;

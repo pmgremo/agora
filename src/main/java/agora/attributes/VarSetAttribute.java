@@ -45,7 +45,7 @@ public class VarSetAttribute extends Attribute implements Serializable {
     public AgoraObject doAttributeValue(AbstractPattern msg,
                                         Client client,
                                         Context context) throws AgoraError {
-        AgoraObject parameter = (AgoraObject) (client.getActuals()[0]);
+        var parameter = (AgoraObject) (client.getActuals()[0]);
         this.theContents.write(parameter);
         return parameter;
     }
@@ -61,7 +61,7 @@ public class VarSetAttribute extends Attribute implements Serializable {
         if (myclone != null)
             return myclone;
         else {
-            VarSetAttribute clonedAttribute = new VarSetAttribute(null);
+            var clonedAttribute = new VarSetAttribute(null);
             cloneMap.put(this, clonedAttribute);
             clonedAttribute.theContents = (VariableContainer) (this.theContents.copy(cloneMap));
             // We cannot avoid this type cast because of the genericity of clone maps.

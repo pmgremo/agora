@@ -114,7 +114,7 @@ public class Client extends Object implements Serializable
     */
   public void actualsUp() throws AgoraError
     {
-      for (int j =0 ; j<actuals.length ; j++)
+      for (var j = 0; j<actuals.length ; j++)
 	actuals[j] = Up.glob.up(actuals[j]);
     }
 
@@ -123,7 +123,7 @@ public class Client extends Object implements Serializable
     */
   public void actualsDown()
     {
-      for (int j=0 ; j<actuals.length ; j++)
+      for (var j = 0; j<actuals.length ; j++)
 	actuals[j] = ((AgoraObject)actuals[j]).down();
     }
 
@@ -135,7 +135,7 @@ public class Client extends Object implements Serializable
     */
   public void actualsEval(Context context) throws AgoraError
     {
-      for (int j=0 ; j<actuals.length ; j++)
+      for (var j = 0; j<actuals.length ; j++)
 	actuals[j] = ((Expression)actuals[j]).eval(context);
     }
 

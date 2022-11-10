@@ -21,23 +21,23 @@ public class PrimCloningAttribute extends PrimAttribute implements Serializable
   private void writeObject(ObjectOutputStream stream) throws IOException
     {
        stream.writeObject(c.getDeclaringClass().getName());
-       Class[] types = c.getParameterTypes();
+		var types = c.getParameterTypes();
        stream.writeInt(types.length);
-       for ( int i=0;i<types.length ;i++ )
+       for (var i = 0; i<types.length ; i++ )
 	  stream.writeObject(types[i].getName());
     }
   private void readObject(ObjectInputStream stream) throws IOException
     {
-	String argName = "";
+		var argName = "";
 	Class[] sig = null;
 	Class decl = null;
-	int ln = 0;
+		var ln = 0;
 	try
 	  {
 	    decl    = Class.forName((String)stream.readObject());
 	    ln      = stream.readInt();
 	    sig     = new Class[ln];
-	    for ( int i=0;i<ln ;i++ )
+	    for (var i = 0; i<ln ; i++ )
 	    {
 		argName = (String)stream.readObject();
 	        if (argName.equals("int"))

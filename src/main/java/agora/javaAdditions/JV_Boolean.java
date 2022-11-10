@@ -28,11 +28,11 @@ public class JV_Boolean extends Object  implements Serializable
     */
   public static PrimGenerator generatorJV_Boolean() throws AgoraError
     {
-      Hashtable table = new Hashtable(5);
-      PrimGenerator result = new PrimGenerator("JV_Boolean",table,null);
+		var table = new Hashtable(5);
+		var result = new PrimGenerator("JV_Boolean",table,null);
       try
 	{
-	  Class[] argtypes2 = new Class[2];
+		var argtypes2 = new Class[2];
 	  argtypes2[1] = Class.forName("java.lang.Object");
 	  argtypes2[0] = Class.forName("java.lang.Boolean");
 	  Class thisOne = Class.forName("agora.javaAdditions.JV_Boolean");
@@ -42,7 +42,7 @@ public class JV_Boolean extends Object  implements Serializable
 		    new PrimFunctionAttribute(thisOne.getMethod("orB",argtypes2)));
 	  table.put(new OperatorPattern("="),
 		    new PrimFunctionAttribute(thisOne.getMethod("equalsB",argtypes2)));
-	  Class[] argtypes1 = new Class[1];
+		var argtypes1 = new Class[1];
 	  argtypes1[0] = Class.forName("java.lang.Boolean");
 	  table.put(new UnaryPattern("not"),
 		    new PrimFunctionAttribute(thisOne.getMethod("notB",argtypes1)));

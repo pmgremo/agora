@@ -40,18 +40,18 @@ public class Agorette extends java.applet.Applet {
      */
     public void init() {
         window = new Frame();
-        Button b1 = new Button("Eval");
-        Button b2 = new Button("Dump Image");
-        Button b3 = new Button("Read Image");
-        Panel p = new Panel();
-        FlowLayout f = new FlowLayout();
+        var b1 = new Button("Eval");
+        var b2 = new Button("Dump Image");
+        var b3 = new Button("Read Image");
+        var p = new Panel();
+        var f = new FlowLayout();
         p.setLayout(f);
         p.add(b1);
         p.add(b2);
         p.add(b3);
         textArea = new TextArea(xval, yval);
         textArea.setEditable(true);
-        BorderLayout l = new BorderLayout();
+        var l = new BorderLayout();
         this.setLayout(l);
         this.add("Center", textArea);
         this.add("South", p);
@@ -71,10 +71,10 @@ public class Agorette extends java.applet.Applet {
                     input = textArea.getSelectedText();
                 } catch (StringIndexOutOfBoundsException exc) {
                     // THIS WORKS IN THE APPLETVIEWER!!!!!!!!!!!!!!!
-                    String str = textArea.getText();
-                    StringBuffer strbuff = new StringBuffer(str);
-                    int j = 0;
-                    for (int i = 0; i < str.length(); i++) {
+                    var str = textArea.getText();
+                    var strbuff = new StringBuffer(str);
+                    var j = 0;
+                    for (var i = 0; i < str.length(); i++) {
                         if ((str.charAt(i) == '\n') | (str.charAt(i) == '\r')) {
                             j++;
                             strbuff.insert((i + j), '\r');
@@ -86,7 +86,7 @@ public class Agorette extends java.applet.Applet {
                 // ... TO HERE
                 // Due to a bug in the JDK Java interpreter and appletviewer.
                 AgoraIO.init(input, textArea);
-                Expression selectedExpression = (new Parser(new Scanner())).parseExpression();
+                var selectedExpression = (new Parser(new Scanner())).parseExpression();
                 try {
                     if (selectedExpression != null)
                         selectedExpression.defaultEval();
@@ -99,17 +99,17 @@ public class Agorette extends java.applet.Applet {
         });
         b2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                FileDialog fd = new FileDialog(new Frame(), "DUMP IMAGE", FileDialog.SAVE);
+                var fd = new FileDialog(new Frame(), "DUMP IMAGE", FileDialog.SAVE);
                 fd.show();
-                String fileName = fd.getFile();
+                var fileName = fd.getFile();
                 if (fileName != null) //User didnot click 'Cancel'
                 {
                     try {
-                        Cursor oldCursor = window.getCursor();
+                        var oldCursor = window.getCursor();
                         window.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        FileOutputStream fos = new FileOutputStream(fileName);
-                        GZIPOutputStream gos = new GZIPOutputStream(fos);
-                        ObjectOutputStream os = new ObjectOutputStream(gos);
+                        var fos = new FileOutputStream(fileName);
+                        var gos = new GZIPOutputStream(fos);
+                        var os = new ObjectOutputStream(gos);
                         os.writeObject(new SingleRoot(AgoraGlobals.glob, Up.glob));
                         os.flush();
                         os.close();
@@ -122,18 +122,18 @@ public class Agorette extends java.applet.Applet {
         });
         b3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                FileDialog fd = new FileDialog(new Frame(), "READ IMAGE", FileDialog.LOAD);
+                var fd = new FileDialog(new Frame(), "READ IMAGE", FileDialog.LOAD);
                 fd.show();
-                String fileName = fd.getFile();
+                var fileName = fd.getFile();
                 if (fileName != null) //User didnot click 'Cancel'
                 {
                     try {
-                        Cursor oldCursor = window.getCursor();
+                        var oldCursor = window.getCursor();
                         window.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        FileInputStream fis = new FileInputStream(fileName);
-                        GZIPInputStream gis = new GZIPInputStream(fis);
-                        ObjectInputStream s = new ObjectInputStream(gis);
-                        SingleRoot newRoot = (SingleRoot) s.readObject();
+                        var fis = new FileInputStream(fileName);
+                        var gis = new GZIPInputStream(fis);
+                        var s = new ObjectInputStream(gis);
+                        var newRoot = (SingleRoot) s.readObject();
                         AgoraGlobals.glob = newRoot.globalStructures;
                         Up.glob = newRoot.reflectionWrappers;
                         s.close();

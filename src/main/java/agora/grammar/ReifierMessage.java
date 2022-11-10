@@ -35,9 +35,9 @@ public class ReifierMessage extends Message implements Serializable
       try
 	{
 	  AgoraIO.checkEscape();
-	  AgoraObject     receiver = Up.glob.up(this.receiver);
-	  Client          client   = this.pattern.makeClient(context,receiver);
-	  AbstractPattern pattern  = this.pattern.makePattern(context);
+		var receiver = Up.glob.up(this.receiver);
+		var client   = this.pattern.makeClient(context,receiver);
+		var pattern  = this.pattern.makePattern(context);
 	  client.actualsUp();
 	  return (AgoraObject)receiver.send(pattern,client).down();
 	  //The result of downing the result is surely an Agora object. This is where the dynamic

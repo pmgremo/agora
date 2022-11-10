@@ -32,8 +32,8 @@ public class OperatorPattern extends AbstractPattern implements Serializable
     */
   protected int doHash()
   {
-    int i=0;
-    for (int j = 0; j<this.operator.length(); j++)
+    var i=0;
+    for (var j = 0; j<this.operator.length(); j++)
       i = i + this.operator.charAt(j);
     return i;
   }

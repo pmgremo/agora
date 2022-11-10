@@ -42,16 +42,16 @@ public class CloningAttribute extends MethAttribute implements Serializable
 	return this.methodCode.eval(context);
       else
 	{
-	  Hashtable cloningMap = new Hashtable(3);
+        var cloningMap = new Hashtable(3);
 	  // Prevent root from beeing cloned
 	  cloningMap.put(AgoraGlobals.glob.rootParent,AgoraGlobals.glob.rootParent);
 	  cloningMap.put(AgoraGlobals.glob.rootPrivate,AgoraGlobals.glob.rootPrivate);
 	  cloningMap.put(AgoraGlobals.glob.rootIdentity,AgoraGlobals.glob.rootIdentity);
 	  // clone object and temporary scopes (may be added to the object in the method body)
-	  IdentityGenerator clone      = (IdentityGenerator)context.getSelf().copy(cloningMap);
-	  InternalGenerator privclone  = (InternalGenerator)context.getPrivate().copy(cloningMap);
-	  MethodsGenerator  pubclone   = (MethodsGenerator)context.getPub().copy(cloningMap);
-	  AbstractGenerator superclone = (AbstractGenerator)context.getParent().copy(cloningMap);
+        var clone      = (IdentityGenerator)context.getSelf().copy(cloningMap);
+        var privclone  = (InternalGenerator)context.getPrivate().copy(cloningMap);
+        var pubclone   = (MethodsGenerator)context.getPub().copy(cloningMap);
+        var superclone = (AbstractGenerator)context.getParent().copy(cloningMap);
 	  // actual parameters binding
 	  privclone = this.bind(client.getActuals(),privclone);
 	  // evaluate cloning method

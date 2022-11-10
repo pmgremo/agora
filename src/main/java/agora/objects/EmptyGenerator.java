@@ -73,7 +73,7 @@ public class EmptyGenerator extends AbstractGenerator implements Serializable {
      *                                 thrown. This would be a bug somewhere in the implementation.
      */
     public void inspect(Context context) throws AgoraError {
-        Inspector d = new Inspector(AgoraGlobals.glob.agoraWindow,
+        var d = new Inspector(AgoraGlobals.glob.agoraWindow,
                 "Empty Method Frame",
                 null,
                 null,
@@ -97,7 +97,7 @@ public class EmptyGenerator extends AbstractGenerator implements Serializable {
         if (myclone != null)
             return myclone;
         else {
-            EmptyGenerator newclone = new EmptyGenerator(this.getFrameName());
+            var newclone = new EmptyGenerator(this.getFrameName());
             cloneMap.put(this, newclone);
             return newclone;
         }

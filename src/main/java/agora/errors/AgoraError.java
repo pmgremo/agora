@@ -25,11 +25,11 @@ class DoUnparseCommand implements ActionListener, Serializable
   
   public void actionPerformed(ActionEvent e)
     {
-      Dialog unparseD = new Dialog(new Frame(),"Program Text",true);
-      BorderLayout l = new BorderLayout();
+      var unparseD = new Dialog(new Frame(),"Program Text",true);
+      var l = new BorderLayout();
       unparseD.setLayout(l);
-      TextArea t = new TextArea(((ErrorDialog)d).code.unparse(0),15,20,TextArea.SCROLLBARS_BOTH);
-      Button b = new Button("Done");
+      var t = new TextArea(((ErrorDialog)d).code.unparse(0),15,20,TextArea.SCROLLBARS_BOTH);
+      var b = new Button("Done");
       unparseD.add("Center",t);
       unparseD.add("South",b);
       b.addActionListener(new DoOKCommand(unparseD));
@@ -48,8 +48,8 @@ class DoInspectCommand implements ActionListener
   
   public void actionPerformed(ActionEvent e)
     {
-      UnaryPattern p = new UnaryPattern("inspect");
-      Client c = new Client(new Object[0],null);
+      var p = new UnaryPattern("inspect");
+      var c = new Client(new Object[0],null);
       try
 	{
 	  Object ignore = ((ErrorDialog)this.d).receiver.send(p,c);
@@ -89,25 +89,25 @@ class ErrorDialog extends Dialog
       this.message = message;
       this.code = code;
       this.receiver = receiver;
-      BorderLayout l  = new BorderLayout();
+      var l  = new BorderLayout();
       this.setLayout(l);
-      TextArea text =  new TextArea(message,15,20,TextArea.SCROLLBARS_NONE);
+      var text =  new TextArea(message,15,20,TextArea.SCROLLBARS_NONE);
       this.add("North", text);
-      Panel p = new Panel();
+      var p = new Panel();
       p.setLayout(new FlowLayout(FlowLayout.CENTER,15,15));
       if (code != null)
 	{
-	  Button b1 = new Button("Program Text");
+      var b1 = new Button("Program Text");
 	  b1.addActionListener(new DoUnparseCommand(this));
 	  p.add(b1);
 	}
       if (receiver != null)
 	{
-	  Button b2 = new Button("Inspect Receiver");
+      var b2 = new Button("Inspect Receiver");
 	  b2.addActionListener(new DoInspectCommand(this));
 	  p.add(b2);
 	}
-      Button b3 = new Button("Done");
+      var b3 = new Button("Done");
       b3.addActionListener(new DoOKCommand(this));
       p.add(b3);
       this.add("South",p);
@@ -166,9 +166,9 @@ public abstract class AgoraError extends Throwable
   */
   protected void setUpDialog(String message, AgoraObject receiver)
     {
-      Frame window = new Frame();
+      var window = new Frame();
       window.setSize(AgoraIO.inspectorX,AgoraIO.inspectorY);
-      ErrorDialog dg = new ErrorDialog(window,"ERROR",message,code,receiver);
+      var dg = new ErrorDialog(window,"ERROR",message,code,receiver);
       window.pack();
       dg.pack();
       dg.show();

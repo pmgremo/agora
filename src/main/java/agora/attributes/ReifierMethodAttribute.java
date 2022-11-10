@@ -44,14 +44,14 @@ public class ReifierMethodAttribute extends MethAttribute implements Serializabl
   */
   public AgoraObject doAttributeValue(AbstractPattern msg, Client client,Context context) throws AgoraError
     {
-      InternalGenerator localPriv  = this.bind(client.getActuals(),context.getPrivate());
-      InternalGenerator localPub   = context.getPub().funcAddLayer("Formals-Actuals Frame");
+        var localPriv  = this.bind(client.getActuals(),context.getPrivate());
+        var localPub   = context.getPub().funcAddLayer("Formals-Actuals Frame");
       localPub.setPrivate(localPriv);
       localPriv.installPattern(this.contextPattern,
 			       new VarGetAttribute(new VariableContainer(Up.glob.up(client.newContext()))));
       // We ask the client for a context. Because this is a reifier method, the client
       // is a reifier client, and thus client.newContext() is the context of invocation
-      AgoraObject result = this.methodCode.eval(context.setMultiple(context.getSelf(),
+        var result = this.methodCode.eval(context.setMultiple(context.getSelf(),
 								    localPriv,
 								    localPub,
 								    context.getCategory(),

@@ -40,9 +40,9 @@ public class JV_Package extends Object implements Serializable
   */
   public static PrimGenerator generatorJV_Package()
     {
-      Hashtable table = new Hashtable(5);
-      PrimGenerator result = new PrimGenerator("JV_Package",table,null);
-      Class[] argtypes = new Class[1];
+        var table = new Hashtable(5);
+        var result = new PrimGenerator("JV_Package",table,null);
+        var argtypes = new Class[1];
       Class thisOne = null;
       try
 	{
@@ -76,7 +76,7 @@ public class JV_Package extends Object implements Serializable
   */
   public  Object more(String s)
     {
-      String newName = this.packageName.concat(".".concat(s)); // Determine new name
+        var newName = this.packageName.concat(".".concat(s)); // Determine new name
       try
 	{
 	  return Class.forName(newName);                // Try to return the class of that name

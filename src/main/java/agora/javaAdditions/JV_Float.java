@@ -36,11 +36,11 @@ public class JV_Float extends Object  implements Serializable
   */
   public static PrimGenerator generatorJV_Float() throws AgoraError
     {
-      Hashtable table = new Hashtable(25);
-      PrimGenerator result = new PrimGenerator("JV_Float",table,null);
+		var table = new Hashtable(25);
+		var result = new PrimGenerator("JV_Float",table,null);
       try
 	{
-	  Class[] argtypes2 = new Class[2];
+		var argtypes2 = new Class[2];
 	  argtypes2[1] = Class.forName("java.lang.Object");
 	  argtypes2[0] = Class.forName("java.lang.Float");
 	  Class thisOne = Class.forName("agora.javaAdditions.JV_Float");
@@ -64,7 +64,7 @@ public class JV_Float extends Object  implements Serializable
 		    new PrimFunctionAttribute(thisOne.getMethod("smeF",argtypes2)));
 	  table.put(new OperatorPattern(">="),
 		    new PrimFunctionAttribute(thisOne.getMethod("gteF",argtypes2)));
-	  Class[] argtypes1 = new Class[1];
+		var argtypes1 = new Class[1];
 	  argtypes1[0] = Class.forName("java.lang.Float");
 	  table.put(new UnaryPattern("abs"),
 		    new PrimFunctionAttribute(thisOne.getMethod("abs",argtypes1)));

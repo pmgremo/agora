@@ -38,11 +38,11 @@ public class JV_Integer extends Object implements Serializable
   */
   public static PrimGenerator generatorJV_Integer() throws AgoraError
     {
-      Hashtable table = new Hashtable(25);
-      PrimGenerator result = new PrimGenerator("JV_Integer",table,null);
+		var table = new Hashtable(25);
+		var result = new PrimGenerator("JV_Integer",table,null);
       try
 	{
-	  Class[] argtypes2 = new Class[2];
+		var argtypes2 = new Class[2];
 	  argtypes2[1] = Class.forName("java.lang.Object");
 	  argtypes2[0] = Class.forName("java.lang.Integer");
 	  Class thisOne = Class.forName("agora.javaAdditions.JV_Integer");
@@ -74,7 +74,7 @@ public class JV_Integer extends Object implements Serializable
 		    new PrimFunctionAttribute(thisOne.getMethod("orI",argtypes2)));
 	  table.put(new OperatorPattern("&"),
 		    new PrimFunctionAttribute(thisOne.getMethod("andI",argtypes2)));
-	  Class[] argtypes1 = new Class[1];
+		var argtypes1 = new Class[1];
 	  argtypes1[0] = Class.forName("java.lang.Integer");
 	  table.put(new UnaryPattern("abs"),
 		    new PrimFunctionAttribute(thisOne.getMethod("abs",argtypes1)));

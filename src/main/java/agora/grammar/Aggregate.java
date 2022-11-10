@@ -76,24 +76,24 @@ public class Aggregate extends Expression implements Serializable
     {
       if (this.leftDel=='[')
 	{
-	  IdentityGenerator exnihiloSelf = AgoraGlobals.glob.rootIdentity.funcAddLayer("public of ex nihilo");
-	  InternalGenerator exnihiloPriv = context.getPrivate().funcAddLayer("private of ex nihilo");
+        var exnihiloSelf = AgoraGlobals.glob.rootIdentity.funcAddLayer("public of ex nihilo");
+        var exnihiloPriv = context.getPrivate().funcAddLayer("private of ex nihilo");
 	  exnihiloSelf.getMe().setPrivate(exnihiloPriv);
 	  exnihiloPriv.setPrivate(exnihiloPriv);
-	  Context exnihiloCont = context.setMultiple(exnihiloSelf,
+        var exnihiloCont = context.setMultiple(exnihiloSelf,
 						     exnihiloPriv,
 						     exnihiloSelf.getMe(),
 						     context.getCategory(),
 						     AgoraGlobals.glob.rootIdentity);
 	  AgoraObject dummy = null;
-	  for (int i = 0 ; i < expressions.length ; i++)
+	  for (var i = 0; i < expressions.length ; i++)
 	    dummy = expressions[i].eval(exnihiloCont);
 	  return exnihiloSelf.wrap();
 	}
       else // leftDel=='{'
 	{
-	  AgoraObject result = AgoraGlobals.glob.uppedNull;
-	  for (int i = 0 ; i < expressions.length ; i++)
+        var result = AgoraGlobals.glob.uppedNull;
+	  for (var i = 0; i < expressions.length ; i++)
 	    result = expressions[i].eval(context);
 	  return result;
 	} 
@@ -126,13 +126,13 @@ public class Aggregate extends Expression implements Serializable
   */
   public String unparse(int hor)
     {
-      String msg = AgoraIO.makeSpaces(hor);
+        var msg = AgoraIO.makeSpaces(hor);
       msg = msg + (new Character(this.leftDel)).toString();
       if (this.expressions.length == 0)
 	msg = msg + (new Character(this.rightDel)).toString();
       else
 	{
-	  for(int i = 0; i< this.expressions.length; i++)
+	  for(var i = 0; i< this.expressions.length; i++)
 	    {
 	      if (i==0) msg = msg + this.expressions[i].unparse(hor);
 	      else msg = msg + this.expressions[i].unparse(hor+2);

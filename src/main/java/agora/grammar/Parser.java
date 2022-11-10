@@ -46,9 +46,9 @@ public class Parser extends Object implements Serializable
   
   private ReifKeywordPattern makeReifierKeywordPattern(JV_Queue contents)
     {
-      int sz = contents.size() / 2;
+        var sz = contents.size() / 2;
       int i;
-      ReifKeywordPattern result = new ReifKeywordPattern(sz);
+        var result = new ReifKeywordPattern(sz);
       for (i=0 ; i<sz ; i++)
 	result.atPut(i,(String)(contents.deQueue()),(Expression)(contents.deQueue()));
       return result;
@@ -56,9 +56,9 @@ public class Parser extends Object implements Serializable
   
   private UserKeywordPattern makeUserKeywordPattern(JV_Queue contents)
     {
-      int sz = contents.size() / 2;
+        var sz = contents.size() / 2;
       int i;
-      UserKeywordPattern result = new UserKeywordPattern(sz);
+        var result = new UserKeywordPattern(sz);
       for (i=0 ; i<sz ; i++)
 	result.atPut(i,(String)(contents.deQueue()),(Expression)(contents.deQueue()));
       return result;
@@ -66,9 +66,9 @@ public class Parser extends Object implements Serializable
   
   private Aggregate makeAggregate(char l,char r,JV_Queue contents)
     {
-      int sz = contents.size();
+        var sz = contents.size();
       int i;
-      Aggregate result = new Aggregate(sz,l,r);
+        var result = new Aggregate(sz,l,r);
       for(i=0 ; i<sz ; i++)
 	result.atPut(i,(Expression)contents.deQueue());
       return result;
@@ -78,12 +78,12 @@ public class Parser extends Object implements Serializable
     {
       if (lastToken== Scanner._MKEYWORD_)
 	return this.parse_Rkeywordpattern();
-      Expression opmsg = this.parse_Roperatormessage();
+        var opmsg = this.parse_Roperatormessage();
       if (opmsg == null)
 	return null;
       if (this.lastToken == Scanner._MKEYWORD_)
 	{
-	  ReifKeywordPattern pat = this.parse_Rkeywordpattern();
+        var pat = this.parse_Rkeywordpattern();
 	  return new ReifierMessage(opmsg,pat);
 	}
       else
@@ -94,12 +94,12 @@ public class Parser extends Object implements Serializable
     {
       if (lastToken == Scanner._MOPERATOR_)
 	return this.parse_Roperatorpattern();
-      Expression unarymsg = this.parse_Runarymessage();
+        var unarymsg = this.parse_Runarymessage();
       if (unarymsg == null)
 	return null;
       while (this.lastToken == Scanner._MOPERATOR_)
 	{
-	  ReifOperatorPattern pat = this.parse_Roperatorpattern();
+        var pat = this.parse_Roperatorpattern();
 	  if (pat == null)
 	    return null;
 	  unarymsg = new ReifierMessage(unarymsg,pat);
@@ -109,12 +109,12 @@ public class Parser extends Object implements Serializable
   
   private Expression parse_Runarymessage()
     {
-      Expression keywordmsg = this.parse_Keywordmessage();
+        var keywordmsg = this.parse_Keywordmessage();
       if (keywordmsg == null)
 	return null;
       while (this.lastToken == Scanner._MUNARY_)
 	{
-	  ReifUnaryPattern pat = this.parse_Runarypattern();
+        var pat = this.parse_Runarypattern();
 	  if (pat == null)
 	    return null;
 	  keywordmsg = new ReifierMessage(keywordmsg,pat);
@@ -126,12 +126,12 @@ public class Parser extends Object implements Serializable
     {
       if (this.lastToken == Scanner._KEYWORD_)
 	return this.parse_Keywordpattern();
-      Expression opmsg = this.parse_Operatormessage();
+        var opmsg = this.parse_Operatormessage();
       if (opmsg == null)
 	return null;
       if (lastToken == Scanner._KEYWORD_)
 	{
-	  UserKeywordPattern pat = this.parse_Keywordpattern();
+        var pat = this.parse_Keywordpattern();
 	  return new UserMessage(opmsg,pat);
 	}
       else
@@ -142,12 +142,12 @@ public class Parser extends Object implements Serializable
     {
       if (this.lastToken == Scanner._OPERATOR_)
 	return this.parse_Operatorpattern();
-      Expression unarymsg = this.parse_Unarymessage();
+        var unarymsg = this.parse_Unarymessage();
       if (unarymsg == null)
 	return null;
       while (lastToken == Scanner._OPERATOR_)
 	{
-	  UserOperatorPattern pat = this.parse_Operatorpattern();
+        var pat = this.parse_Operatorpattern();
 	  if (pat == null)
 	    return null;
 	  unarymsg = new UserMessage(unarymsg,pat);
@@ -157,12 +157,12 @@ public class Parser extends Object implements Serializable
   
   private Expression parse_Unarymessage()
     {
-      Expression factor = this.parse_Factor();
+        var factor = this.parse_Factor();
       if (factor == null)
 	return null;
       while (this.lastToken == Scanner._UNARY_)
 	{
-	  UserUnaryPattern pat = this.parse_Unarypattern();
+        var pat = this.parse_Unarypattern();
 	  if (pat == null)
 	    return null;
 	  factor = new UserMessage(factor,pat);
@@ -181,7 +181,7 @@ public class Parser extends Object implements Serializable
 	  if ((this.lastToken == Scanner._ERROR_) || 
 	      (this.lastToken == Scanner._EOFTOKEN_))
 	    return null;
-	  Expression exp = this.parseExpression();
+        var exp = this.parseExpression();
 	  if (lastToken != Scanner._RPAR_)
 	    return null;
 	  this.scan();
@@ -229,12 +229,12 @@ public class Parser extends Object implements Serializable
   
   private Expression parse_Aggregate()
     {
-      int begin = this.lastToken;
+        var begin = this.lastToken;
       this.scan();
       if ((this.lastToken == Scanner._ERROR_)||
 	  (this.lastToken == Scanner._EOFTOKEN_))
 	return null;
-      JV_Queue exps = this.parse_Expressionsequence();
+        var exps = this.parse_Expressionsequence();
       if (exps == null)
 	return null;
       if ((begin == Scanner._LBRACK_) && 
@@ -252,11 +252,11 @@ public class Parser extends Object implements Serializable
   
   private JV_Queue parse_Expressionsequence()
     {
-      JV_Queue q = new JV_Queue();
+        var q = new JV_Queue();
       while (!((this.lastToken == Scanner._RBRACE_)||
 	       (this.lastToken == Scanner._RBRACK_)))
-	{	
-	  Expression exp = this.parseExpression();
+	{
+        var exp = this.parseExpression();
 	  if (exp == null)
 	    return null;
 	  q.enQueue(exp);
@@ -282,13 +282,13 @@ public class Parser extends Object implements Serializable
   
   private ReifKeywordPattern parse_Rkeywordpattern()
     {
-      JV_Queue q = new JV_Queue();
-      String key = this.s.lastRKeyword;
+        var q = new JV_Queue();
+        var key = this.s.lastRKeyword;
       this.scan();
       if ((this.lastToken == Scanner._ERROR_)||
 	  (this.lastToken == Scanner._EOFTOKEN_))
-	return null;	
-      Expression exp = this.parse_Roperatormessage();
+	return null;
+        var exp = this.parse_Roperatormessage();
       if (exp != null)
 	{
 	  q.enQueue(key);
@@ -319,7 +319,7 @@ public class Parser extends Object implements Serializable
     {
       if (this.lastToken!=Scanner._MUNARY_)
 	return null;
-      ReifUnaryPattern result =  new ReifUnaryPattern(this.s.lastRUnary);
+        var result =  new ReifUnaryPattern(this.s.lastRUnary);
       this.scan();
       return result;
     }
@@ -328,9 +328,9 @@ public class Parser extends Object implements Serializable
     {
       if (this.lastToken!=Scanner._MOPERATOR_)
 	return null;
-      String result = this.s.lastROperator;
+        var result = this.s.lastROperator;
       this.scan();
-      Expression Runarymsg = this.parse_Runarymessage();
+        var Runarymsg = this.parse_Runarymessage();
       if (Runarymsg == null)
 	return null;
       return (new ReifOperatorPattern(result,Runarymsg));
@@ -338,13 +338,13 @@ public class Parser extends Object implements Serializable
   
   private UserKeywordPattern parse_Keywordpattern()
     {
-      JV_Queue q = new JV_Queue();
-      String key = this.s.lastUKeyword;
+        var q = new JV_Queue();
+        var key = this.s.lastUKeyword;
       this.scan();
       if ((this.lastToken == Scanner._ERROR_)||
 	  (this.lastToken == Scanner._EOFTOKEN_))
-	return null;	
-      Expression exp = this.parse_Operatormessage();
+	return null;
+        var exp = this.parse_Operatormessage();
       if (exp != null)
 	{
 	  q.enQueue(key);
@@ -375,7 +375,7 @@ public class Parser extends Object implements Serializable
     {
       if (this.lastToken!=Scanner._UNARY_)
 	return null;
-      UserUnaryPattern result =  new UserUnaryPattern(this.s.lastUUnary);
+        var result =  new UserUnaryPattern(this.s.lastUUnary);
       this.scan();
       return result;
     }
@@ -384,9 +384,9 @@ public class Parser extends Object implements Serializable
     {
       if (this.lastToken!=Scanner._OPERATOR_)
 	return null;
-      String result = this.s.lastUOperator;
+        var result = this.s.lastUOperator;
       this.scan();
-      Expression unarymsg = parse_Unarymessage();
+        var unarymsg = parse_Unarymessage();
       if (unarymsg == null)
 	return null;
       return (new UserOperatorPattern(result,unarymsg));

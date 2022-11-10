@@ -41,11 +41,11 @@ public class JV_Nil extends Object implements Serializable
      */
   public static PrimGenerator generatorJV_Nil() throws AgoraError
   {
-    Hashtable table = new Hashtable(1);
-    PrimGenerator result = new PrimGenerator("Public",table,null);
+    var table = new Hashtable(1);
+    var result = new PrimGenerator("Public",table,null);
     try
       {
-	Class[] argtypes = new Class[1];
+        var argtypes = new Class[1];
 	argtypes[0] = Class.forName("java.lang.Object");
 	Class thisOne = Class.forName("agora.javaAdditions.JV_Nil");
 	table.put(new OperatorPattern("="),new PrimMethAttribute(thisOne.getMethod("equals",argtypes)));

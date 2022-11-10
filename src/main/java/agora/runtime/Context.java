@@ -129,7 +129,7 @@ public class Context extends Object implements Serializable
     */
   public Context setSelf(IdentityGenerator self)
     {
-      Context newC = this.newContext(this);
+      var newC = this.newContext(this);
       newC.currentSelf = self;
       return newC;
     }
@@ -141,7 +141,7 @@ public class Context extends Object implements Serializable
     */
   public Context setCat (int cat)
     {
-      Context newC = this.newContext(this);
+      var newC = this.newContext(this);
       newC.currentCategory=cat;
       return newC;
     }
@@ -153,7 +153,7 @@ public class Context extends Object implements Serializable
     */
   public Context setPub (MethodsGenerator pub)
     {
-      Context newC = this.newContext(this);
+      var newC = this.newContext(this);
       newC.currentPub = pub;
       return newC;
     }
@@ -165,7 +165,7 @@ public class Context extends Object implements Serializable
     */
   public Context setParent (AbstractGenerator parent)
     {
-      Context newC =this.newContext(this);
+      var newC =this.newContext(this);
       newC.currentParent=parent;
       return newC;
     }
@@ -177,7 +177,7 @@ public class Context extends Object implements Serializable
     */
   public Context setPrivate(InternalGenerator priv)
     {
-      Context newC = this.newContext(this);
+      var newC = this.newContext(this);
       newC.currentPriv=priv;
       return newC;
     }
@@ -189,7 +189,7 @@ public class Context extends Object implements Serializable
     */
   public Context setException(AgoraException except)
     {
-      Context newC = this.newContext(this);
+      var newC = this.newContext(this);
       newC.currentException=except;
       return newC;
     }
@@ -251,7 +251,7 @@ public class Context extends Object implements Serializable
 			      InternalGenerator priv,
 			      AbstractGenerator parent)
     {
-      Context newC = this.newContext(this);
+      var newC = this.newContext(this);
       newC.currentParent=parent;
       newC.currentPriv=priv;
       newC.currentSelf=self;
@@ -268,7 +268,7 @@ public class Context extends Object implements Serializable
   public Context setMultiple (IdentityGenerator self,
 			      int cat)
     {
-      Context newC = this.newContext(this);
+      var newC = this.newContext(this);
       newC.currentSelf = self;
       newC.currentCategory=cat;
       return newC;
@@ -286,7 +286,7 @@ public class Context extends Object implements Serializable
 			      int cat,
 			      AbstractGenerator parent)
     {
-      Context newC = this.newContext(this);
+      var newC = this.newContext(this);
       newC.currentPriv=priv;
       newC.currentParent=parent;
       newC.currentCategory = cat;
@@ -309,7 +309,7 @@ public class Context extends Object implements Serializable
 			       int cat,
 			       AbstractGenerator parent)
     {
-      Context newC = this.newContext(this);
+      var newC = this.newContext(this);
       newC.currentSelf = self;
       newC.currentPriv=priv;
       newC.currentPub = pub;

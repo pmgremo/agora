@@ -68,8 +68,8 @@ public class UserKeywordPattern extends UserPattern implements Serializable
     */
   public String unparse(int hor)
     {
-      String msg = AgoraIO.makeSpaces(hor);
-      for(int i=0;i<this.size;i++)
+        var msg = AgoraIO.makeSpaces(hor);
+      for(var i = 0; i<this.size; i++)
 	{
 	  msg = msg + keywords[i];
 	  msg = msg + arguments[i].unparse(0);
@@ -88,8 +88,8 @@ public class UserKeywordPattern extends UserPattern implements Serializable
     */
   public Client makeClient(Context context,AgoraObject receiver)
     {
-      Object[] actuals = new Object[size];
-      for(int i = 0;i<size;i++)
+        var actuals = new Object[size];
+      for(var i = 0; i<size; i++)
 	actuals[i] = this.arguments[i];
       return (context.newClient(actuals));
     }
@@ -102,8 +102,8 @@ public class UserKeywordPattern extends UserPattern implements Serializable
     */
   public AbstractPattern makePattern(Context context)
     {
-      KeywordPattern pattern = new KeywordPattern(size);
-      for(int i = 0;i<size;i++)
+        var pattern = new KeywordPattern(size);
+      for(var i = 0; i<size; i++)
 	pattern.atPut (i,keywords[i]);
       return pattern;
     }
@@ -119,14 +119,14 @@ public class UserKeywordPattern extends UserPattern implements Serializable
     */
   public String[] makeFormals(Context context) throws AgoraError
     {
-      String[] formals = new String[size];
-      for(int i=0; i<size; i++)
+        var formals = new String[size];
+      for(var i = 0; i<size; i++)
 	{
 	  if (arguments[i] instanceof UserUnaryPattern)
 	    formals[i] = ((UserUnaryPattern)arguments[i]).getUnary();
 	  else
 	    {
-	      ProgramError ex = new ProgramError("Formal parameters must be identifiers");
+            var ex = new ProgramError("Formal parameters must be identifiers");
 	      ex.setCode(this);
 	      throw ex;
 	    }

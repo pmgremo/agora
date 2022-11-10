@@ -41,7 +41,7 @@ public class JV_Queue implements Serializable
   */
   public void enQueue(Object object)
     {
-      QueueNode n = new QueueNode();
+        var n = new QueueNode();
       n.obj = object;
       n.next = null;
       this.size++;
@@ -69,7 +69,7 @@ public class JV_Queue implements Serializable
       else
 	{
 	  this.size--;
-	  Object obj = this.first.obj;
+        var obj = this.first.obj;
 	  if (this.first == this.last)
 	    this.last = null;
 	  this.first = this.first.next;

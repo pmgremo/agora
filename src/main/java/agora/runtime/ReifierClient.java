@@ -71,9 +71,9 @@ public class ReifierClient extends Client implements Serializable
   public Object[] makeNativeArguments() throws AgoraError
     {
       this.actualsDown();
-      Object[] result = new Object[this.actuals.length + 1];
+      var result = new Object[this.actuals.length + 1];
       result[0] = this.context;
-      for (int j=0; j<this.actuals.length; j++)
+      for (var j = 0; j<this.actuals.length; j++)
 	result[j+1] = this.actuals[j];
       return result;
     }

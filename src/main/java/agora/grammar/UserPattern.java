@@ -27,14 +27,14 @@ abstract public class UserPattern extends Pattern implements Serializable
   */
   public static PrimGenerator generatorUserPattern() throws AgoraError
     {
-      Hashtable table = new Hashtable(4);
-      PrimGenerator result = new PrimGenerator("UserPattern",table,null);
+        var table = new Hashtable(4);
+        var result = new PrimGenerator("UserPattern",table,null);
       try
 	{
-	  Class[] argtypes1 = new Class[1];
+        var argtypes1 = new Class[1];
 	  argtypes1[0] = Class.forName("agora.runtime.Context");
 	  Class thisOne = Class.forName("agora.grammar.UserPattern");
-	  UnaryPattern unary = new UnaryPattern("RAISE");
+        var unary = new UnaryPattern("RAISE");
 	  unary.setReifier();
 	  table.put(unary,new PrimMethAttribute(thisOne.getMethod("raise",argtypes1)));
 	  unary = new UnaryPattern("SUPER");
@@ -58,14 +58,14 @@ abstract public class UserPattern extends Pattern implements Serializable
     */
   public AgoraObject raise(Context context) throws AgoraError
   {
-    KeywordPattern agoError = new KeywordPattern(1);
+      var agoError = new KeywordPattern(1);
     agoError.atPut(0,"agoraError:");
-    AbstractPattern runtimePat= this.makePattern(context);
-    Client          theClient = this.makeClient(context,null);
+      var runtimePat= this.makePattern(context);
+      var theClient = this.makeClient(context,null);
     theClient.actualsEval(context);
     if (agoError.equals(runtimePat))
       {
-	Object[] actuals = theClient.getActuals();
+          var actuals = theClient.getActuals();
 	if (((AgoraObject)actuals[0]).down() instanceof AgoraError)
 	  {
 	    throw (AgoraError)((AgoraObject)actuals[0]).down();
@@ -75,7 +75,7 @@ abstract public class UserPattern extends Pattern implements Serializable
       }
     else
       {
-	AgoraException theException = context.getException();
+          var theException = context.getException();
 	theException.setPattern(runtimePat);
 	theException.setClient(theClient);
 	throw theException;
@@ -102,7 +102,7 @@ abstract public class UserPattern extends Pattern implements Serializable
 	  // Patterns in Other Categories Denote Accesses in the Local Part of An Object
 	  else
 	    {
-	      Client client    = this.makeClient(context,context.getSelf().wrap());
+            var client    = this.makeClient(context,context.getSelf().wrap());
 	      client.actualsEval(context);
 	      return context.getPrivate().delegate(this.makePattern(context),client,context);
 	    }
@@ -122,8 +122,8 @@ abstract public class UserPattern extends Pattern implements Serializable
     */
   public AgoraObject superReifier(Context context) throws AgoraError
   {
-    Client client           = this.makeClient(context,context.getSelf().wrap());
-    AbstractPattern pattern = this.makePattern(context);
+      var client           = this.makeClient(context,context.getSelf().wrap());
+      var pattern = this.makePattern(context);
     client.actualsEval(context);
     return context.getParent().delegate(pattern,client,context);
   }

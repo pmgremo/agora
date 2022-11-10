@@ -20,14 +20,14 @@ abstract public class ReifPattern extends Pattern implements Serializable
   */
   public static PrimGenerator generatorReifPattern() throws AgoraError
     {
-      Hashtable table = new Hashtable(4);
-      PrimGenerator result = new PrimGenerator("ReifPattern",table,null);
+		var table = new Hashtable(4);
+		var result = new PrimGenerator("ReifPattern",table,null);
       try
 	{
-	  Class[] argtypes1 = new Class[1];
+		var argtypes1 = new Class[1];
 	  argtypes1[0] = Class.forName("agora.runtime.Context");
 	  Class thisOne = Class.forName("agora.grammar.ReifPattern");
-	  UnaryPattern unary = new UnaryPattern("SUPER");
+		var unary = new UnaryPattern("SUPER");
 	  unary.setReifier();
 	  table.put(unary,new PrimMethAttribute(thisOne.getMethod("superReifier",argtypes1)));
 	}
@@ -57,7 +57,7 @@ abstract public class ReifPattern extends Pattern implements Serializable
 	  // Patterns in Other Categories Denote Accesses in the Local Part of An Object
 	  else
 	    {
-	      Client client    = this.makeClient(context,Up.glob.up(context));
+			var client    = this.makeClient(context,Up.glob.up(context));
 	      client.actualsUp();
 	      return (AgoraObject)context.getPrivate().delegate(this.makePattern(context),client,context).down();
 	      //The result of downing the result is surely an Agora object. This is where the dynamic
@@ -79,8 +79,8 @@ abstract public class ReifPattern extends Pattern implements Serializable
   */
   public AgoraObject  superReifier(Context context) throws AgoraError
     {
-      Client client    = this.makeClient(context,Up.glob.up(context));
-      AbstractPattern pattern  = this.makePattern(context);
+		var client    = this.makeClient(context,Up.glob.up(context));
+		var pattern  = this.makePattern(context);
       client.actualsUp();
       return context.getParent().delegate(pattern,client,context);
     }
