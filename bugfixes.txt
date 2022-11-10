@@ -1,0 +1,20 @@
+BUGFIXES
+--------
+
+Since First appearance (10 november 1997)
+-----------------------------------------
+* The doc files of JV_Float showed traces of copy pasting from
+JV_Float. At some places Integer has been replaced by Float
+* The wrapper of floats was wrongly generated because it refered
+to JV_Integer. It was therefore not possible to invoke abs,sqrt
+and sqr on floats
+* Sending SUPER to reifier messages didn't work (like SELF
+SUPER).
+* Worked around the bug in the JDK Java interpreter. Multiple
+lines of text can now also be evaluated.
+
+Version 14 nov97 -> Version 17 nov97
+-------------------------------------
+* Now it *should* be possible to have multiple lines of text in every VM.
+Fixed the bug in the workaround of the bug :-)
+* Implemented a DumpImage and ReadImage. Agora can now be serialized.
