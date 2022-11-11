@@ -1,8 +1,8 @@
 package agora.grammar;
 
-import agora.javaAdditions.JV_Queue;
-
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * This class implements a simple top-down parser for Agora. At the time
@@ -43,30 +43,30 @@ public class Parser implements Serializable {
         this.lastToken = this.s.scan();
     }
 
-    private ReifKeywordPattern makeReifierKeywordPattern(JV_Queue contents) {
+    private ReifKeywordPattern makeReifierKeywordPattern(Queue<Object> contents) {
         var sz = contents.size() / 2;
         int i;
         var result = new ReifKeywordPattern(sz);
         for (i = 0; i < sz; i++)
-            result.atPut(i, (String) (contents.deQueue()), (Expression) (contents.deQueue()));
+            result.atPut(i, (String) contents.poll(), (Expression) contents.poll());
         return result;
     }
 
-    private UserKeywordPattern makeUserKeywordPattern(JV_Queue contents) {
+    private UserKeywordPattern makeUserKeywordPattern(Queue<Object> contents) {
         var sz = contents.size() / 2;
         int i;
         var result = new UserKeywordPattern(sz);
         for (i = 0; i < sz; i++)
-            result.atPut(i, (String) (contents.deQueue()), (Expression) (contents.deQueue()));
+            result.atPut(i, (String) contents.poll(), (Expression) contents.poll());
         return result;
     }
 
-    private Aggregate makeAggregate(char l, char r, JV_Queue contents) {
+    private Aggregate makeAggregate(char l, char r, Queue<Object> contents) {
         var sz = contents.size();
         int i;
         var result = new Aggregate(sz, l, r);
         for (i = 0; i < sz; i++)
-            result.atPut(i, (Expression) contents.deQueue());
+            result.atPut(i, (Expression) contents.poll());
         return result;
     }
 
@@ -178,7 +178,7 @@ public class Parser implements Serializable {
     }
 
     private Expression parse_Literal() {
-        Expression lit = null;
+        Expression lit;
         if (this.lastToken == Scanner._STRING_) {
             lit = this.s.lastString;
             this.scan();
@@ -224,14 +224,14 @@ public class Parser implements Serializable {
             return this.makeAggregate('{', '}', exps);
     }
 
-    private JV_Queue parse_Expressionsequence() {
-        var q = new JV_Queue();
+    private Queue<Object> parse_Expressionsequence() {
+        var q = new LinkedList<>();
         while (!((this.lastToken == Scanner._RBRACE_) ||
                 (this.lastToken == Scanner._RBRACK_))) {
             var exp = this.parseExpression();
             if (exp == null)
                 return null;
-            q.enQueue(exp);
+            q.offer(exp);
             if (this.lastToken != Scanner._SEMI_) {
                 if ((this.lastToken != Scanner._RBRACE_) &&
                         (this.lastToken != Scanner._RBRACK_))
@@ -250,7 +250,7 @@ public class Parser implements Serializable {
     }
 
     private ReifKeywordPattern parse_Rkeywordpattern() {
-        var q = new JV_Queue();
+        var q = new LinkedList<>();
         var key = this.s.lastRKeyword;
         this.scan();
         if ((this.lastToken == Scanner._ERROR_) ||
@@ -258,8 +258,8 @@ public class Parser implements Serializable {
             return null;
         var exp = this.parse_Roperatormessage();
         if (exp != null) {
-            q.enQueue(key);
-            q.enQueue(exp);
+            q.offer(key);
+            q.offer(exp);
             while (lastToken == Scanner._MKEYWORD_) {
                 key = this.s.lastRKeyword;
                 this.scan();
@@ -268,8 +268,8 @@ public class Parser implements Serializable {
                     return null;
                 exp = this.parse_Roperatormessage();
                 if (exp != null) {
-                    q.enQueue(key);
-                    q.enQueue(exp);
+                    q.offer(key);
+                    q.offer(exp);
                 } else
                     return null;
             }
@@ -298,7 +298,7 @@ public class Parser implements Serializable {
     }
 
     private UserKeywordPattern parse_Keywordpattern() {
-        var q = new JV_Queue();
+        var q = new LinkedList<>();
         var key = this.s.lastUKeyword;
         this.scan();
         if ((this.lastToken == Scanner._ERROR_) ||
@@ -306,8 +306,8 @@ public class Parser implements Serializable {
             return null;
         var exp = this.parse_Operatormessage();
         if (exp != null) {
-            q.enQueue(key);
-            q.enQueue(exp);
+            q.offer(key);
+            q.offer(exp);
             while (this.lastToken == Scanner._KEYWORD_) {
                 key = this.s.lastUKeyword;
                 this.scan();
@@ -316,8 +316,8 @@ public class Parser implements Serializable {
                     return null;
                 exp = this.parse_Operatormessage();
                 if (exp != null) {
-                    q.enQueue(key);
-                    q.enQueue(exp);
+                    q.offer(key);
+                    q.offer(exp);
                 } else
                     return null;
             }

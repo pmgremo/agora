@@ -17,6 +17,8 @@ import agora.tools.AgoraGlobals;
 import java.io.Serializable;
 import java.lang.reflect.*;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * This class consists of procedural code. Normally, the Agora design requires that
@@ -192,15 +194,15 @@ public class Up implements Serializable {
      * for every class in the hierarchy.
      */
     private PrimGenerator constructGeneratorFor(Class<?> c, boolean isInstance) throws AgoraError {
-        var q = new JV_Queue();  // Make a new Queue
+        var q = new LinkedList<>();  // Make a new Queue
         putFieldsInQueue(c, q, isInstance);        // Insert agora.patterns and fields
         putMethodsInQueue(c, q, isInstance);       // Insert agora.patterns and methods
         putConstructorsInQueue(c, q, isInstance);  // Insert agora.patterns and constructors
         var sz = q.size() / 2;        // queue = (pat,att)(pat,att)....(pat,att)
         var theTable = new Hashtable<>(sz + 1);//The size may not be zero, so add one
         for (var j = 0; j < sz; j++) {
-            var pattern = q.deQueue(); // These statements are really necessary because
-            var attrib = q.deQueue(); // if we would simply write put(q.deQueue(),q.deQeueue)
+            var pattern = q.poll(); // These statements are really necessary because
+            var attrib = q.poll(); // if we would simply write put(q.deQueue(),q.deQeueue)
             theTable.put(pattern, attrib); // the wrong order could be used (if Java does it right to left)
         }
         return new PrimGenerator(c.getName(), theTable, null);    // Create a new generator with the members
@@ -211,7 +213,7 @@ public class Up implements Serializable {
      * It creates appropriate read and write Agora agora.attributes and puts them
      * all in a queue.
      */
-    private void putFieldsInQueue(Class<?> c, JV_Queue q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
+    private void putFieldsInQueue(Class<?> c, Queue<Object> q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
         var fields = c.getFields();
         for (Field field : fields) {
             if (Modifier.isPublic(field.getModifiers()) &&
@@ -222,11 +224,11 @@ public class Up implements Serializable {
                     (field.getDeclaringClass().equals(c)) &&
                     (isInstance | (Modifier.isStatic(field.getModifiers())))) // not isInstance -> isStatic
             {
-                q.enQueue(createVariableReadPatFor(field));
-                q.enQueue(createVariableReadAttFor(field));
+                q.offer(createVariableReadPatFor(field));
+                q.offer(createVariableReadAttFor(field));
                 if (!(Modifier.isFinal(field.getModifiers()))) { // Only a write pattern if the field is non-final (i.e. not constant)
-                    q.enQueue(createVariableWritePatFor(field));
-                    q.enQueue(createVariableWriteAttFor(field));
+                    q.offer(createVariableWritePatFor(field));
+                    q.offer(createVariableWriteAttFor(field));
                 }
             }
         }
@@ -237,7 +239,7 @@ public class Up implements Serializable {
      * Agora attribute and puts a pattern for the methods together with the attribute in
      * a queue.
      */
-    private void putMethodsInQueue(Class<?> c, JV_Queue q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
+    private void putMethodsInQueue(Class<?> c, Queue<Object> q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
         var methods = c.getMethods();
         for (Method method : methods) {
             if (Modifier.isPublic(method.getModifiers()) &&
@@ -248,8 +250,8 @@ public class Up implements Serializable {
                     method.getDeclaringClass().equals(c) &&
                     isInstance | Modifier.isStatic(method.getModifiers())) // not isInstance -> isStatic
             {
-                q.enQueue(createMethodPatFor(method));
-                q.enQueue(createMethodAttFor(method));
+                q.offer(createMethodPatFor(method));
+                q.offer(createMethodAttFor(method));
             }
         }
     }
@@ -259,7 +261,7 @@ public class Up implements Serializable {
      * a pattern 'new' is created and the appropriate Agora attribute is constructed.
      * All the agora.patterns and the agora.attributes are gathered together in a queue.
      */
-    private void putConstructorsInQueue(Class<?> c, JV_Queue q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
+    private void putConstructorsInQueue(Class<?> c, Queue<Object> q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
         var constructors = c.getConstructors();
         for (Constructor<?> constructor : constructors) {
             if (Modifier.isPublic(constructor.getModifiers()) &&
@@ -270,8 +272,8 @@ public class Up implements Serializable {
                     !Modifier.isInterface(constructor.getModifiers()) &&
                     constructor.getDeclaringClass().equals(c) &&
                     !isInstance) {
-                q.enQueue(createConstructorPatFor(constructor));
-                q.enQueue(createConstructorAttFor(constructor));
+                q.offer(createConstructorPatFor(constructor));
+                q.offer(createConstructorAttFor(constructor));
             }
         }
     }
