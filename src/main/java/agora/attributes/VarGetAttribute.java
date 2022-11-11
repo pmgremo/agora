@@ -16,7 +16,7 @@ import java.util.Hashtable;
  * @author Wolfgang De Meuter(Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:35 am
  */
-public class VarGetAttribute extends Attribute implements Serializable {
+public class VarGetAttribute implements Attribute {
     protected VariableContainer theContents;
 
     /**
@@ -67,7 +67,7 @@ public class VarGetAttribute extends Attribute implements Serializable {
      * @param cloneMap A table of already-copied-things such that nothing is copied twice.
      * @return A clone of this attribute.
      */
-    public VarGetAttribute copy(Hashtable cloneMap) {
+    public VarGetAttribute copy(Hashtable<Object, Object> cloneMap) {
         var myclone = (VarGetAttribute) cloneMap.get(this);
         if (myclone != null)
             return myclone;

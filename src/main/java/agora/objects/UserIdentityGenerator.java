@@ -65,7 +65,7 @@ public class UserIdentityGenerator extends IdentityGenerator implements Serializ
      * @param cloneMap A table of already-copied-things such that nothing gets copied twice.
      * @return A deep copy of the receiver.
      */
-    public UserIdentityGenerator copy(Hashtable cloneMap) {
+    public UserIdentityGenerator copy(Hashtable<Object, Object> cloneMap) {
         var cachedclone = (UserIdentityGenerator) cloneMap.get(this);
         if (cachedclone != null)
             return cachedclone;

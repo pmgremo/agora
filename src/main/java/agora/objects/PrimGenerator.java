@@ -73,18 +73,7 @@ public class PrimGenerator extends MethodsGenerator implements Serializable
       d.pack();
       d.show();
     }
-  
-  /**
-     Makes a deep clone of the primitive generator by copying all the constituents of the
-     generator. The parameter is a clone map such that a thing is not copied twice.
-     @param cloneMap A table of already-copied-things such that nothing gets copied twice.
-     @return A deep copy of the receiver.
-  */
-  public PrimGenerator copy(Hashtable cloneMap)
-    {
-      return this;
-    } 
-  
+
   /**
      Throws an exception since there is no private part.
      @param newPrivate A private part.

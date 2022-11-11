@@ -36,16 +36,6 @@ public abstract class AbstractPattern implements Serializable, Copyable<Abstract
     this.reifierPattern = false;
     hashValue=0;
   }
-  
-  /** 
-    Creates a clone of the pattern. In this case, this is the pattern itself.
-    @param cloneMap A table of already-copied things such that nothing is copied twice.
-    @return A copy of the pattern (this is actually the pattern itself).
-   */
-  public AbstractPattern copy(Hashtable cloneMap)
-  {
-    return this;
-  }
 
   /**
     Sets the 'reifierPattern' variable to 'true'.

@@ -17,25 +17,8 @@ import agora.objects.*;
    @author Wolfgang De Meuter(Programming Technology Lab).
 	Last change:  E    16 Nov 97    1:34 am
 */
-public abstract class Attribute implements Serializable, Copyable<Attribute>
+public interface Attribute extends Serializable, Copyable<Attribute>
 {
-  
-  /**
-     Default constructor: does nothing.
-  */
-  public Attribute ()
-    {
-      super();
-    }
-  
-  /**
-     To copy an attribute in a given clone map. The clone map takes care an attribute is copied only
-     once. Must be overriden.
-     @param cloneMap A table of already-copied-things such that nothing is copied twice.
-     @return A copy of the attribute.
-  */
-  public abstract Attribute copy(Hashtable cloneMap);
-  
   /**
      Each attribute must implement how 'to do itself'. For example, doing methods
      will evaluate their body, doing variableread agora.attributes will read their variable,
@@ -45,7 +28,7 @@ public abstract class Attribute implements Serializable, Copyable<Attribute>
      @param context The context of the object in which this attribute resides.
      @exception agora.errors.AgoraError When something goes wrong during evaluation.
   */
-  public abstract AgoraObject doAttributeValue(AbstractPattern msg, Client client, Context context) throws AgoraError;
+  AgoraObject doAttributeValue(AbstractPattern msg, Client client, Context context) throws AgoraError;
 
   /**
      Inspects the attribute in a given context.
@@ -53,5 +36,5 @@ public abstract class Attribute implements Serializable, Copyable<Attribute>
      @exception agora.errors.AgoraError When something goes wrong while inspecting.
      @return The attribute as a string, ready to be displayed in the inspector.
   */
-  public abstract String inspect(Context context) throws AgoraError;
+  String inspect(Context context) throws AgoraError;
 }

@@ -9,7 +9,7 @@ import java.io.*;
    @author Wolfgang De Meuter (Programming Technology Lab).
 	Last change:  E    16 Nov 97    1:34 am
 */
-public abstract class PrimAttribute extends Attribute implements Serializable
+public abstract class PrimAttribute implements Attribute
 {
   /**
      Default constructor: does nothing but caaling the super.
@@ -18,16 +18,5 @@ public abstract class PrimAttribute extends Attribute implements Serializable
   public PrimAttribute ()
     {
       super();
-    }
-  
-  /**
-     Characteristic for primitive agora.attributes is that copying them is a trivial operation.
-     Just return the attribute.
-     @param cloneMap The table of already-copied-things such that nothing gets copied twice.
-     @return A copy of the attribute.
-  */
-  public final PrimAttribute copy(Hashtable cloneMap)
-    {
-      return this;
     }
 }

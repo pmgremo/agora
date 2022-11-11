@@ -92,7 +92,7 @@ public class EmptyGenerator extends AbstractGenerator implements Serializable {
      * @param cloneMap A table of already-copied-things such that nothing gets copied twice.
      * @return A deep copy of the receiver.
      */
-    public EmptyGenerator copy(Hashtable cloneMap) {
+    public EmptyGenerator copy(Hashtable<Object, Object> cloneMap) {
         var myclone = (EmptyGenerator) cloneMap.get(this);
         if (myclone != null)
             return myclone;

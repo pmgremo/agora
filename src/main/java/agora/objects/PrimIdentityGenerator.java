@@ -68,15 +68,4 @@ public class PrimIdentityGenerator extends IdentityGenerator implements Serializ
       d.pack();
       d.show();
     }
-  
-  /**
-     Makes a deep clone of the identity by copying all the constituents of the 
-     identity. The parameter is a clone map such that a thing is not copied twice.
-     @param cloneMap A table of already-copied-things such that nothing gets copied twice.
-     @return A deep copy of the receiver.
-  */
-  public PrimIdentityGenerator copy(Hashtable cloneMap)
-    {
-      return this;
-    }
 }

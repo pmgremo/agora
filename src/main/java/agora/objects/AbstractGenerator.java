@@ -1,12 +1,12 @@
 package agora.objects;
 
 import agora.Copyable;
-import agora.patterns.*;
-import java.util.*;
-import agora.runtime.*;
-import agora.errors.*;
+import agora.errors.AgoraError;
+import agora.patterns.AbstractPattern;
+import agora.runtime.Client;
+import agora.runtime.Context;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
   Internally, an Agora object is considered as a list of frames each containing
@@ -62,15 +62,7 @@ public abstract class AbstractGenerator implements Serializable, Copyable<Abstra
     {
       return this.name;
     }
-  
-  /**
-     Makes a deep clone of the generator by copying all the constituents of the
-     identity. The parameter is a clone map such that a thing is not copied twice.
-     @param cloneMap A table of already-copied-things such that nothing gets copied twice.
-     @return A deep copy of the receiver.
-  */
-  public abstract AbstractGenerator copy(Hashtable cloneMap);
-  
+
   /**
      Opens an inspector for the object.
      @param context The context in which the inspect is sent. This is needed to show

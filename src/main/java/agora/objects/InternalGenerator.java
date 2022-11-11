@@ -138,7 +138,7 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
      * @return A deep copy of the receiver.
      */
 
-    public InternalGenerator copy(Hashtable cloneMap) {
+    public InternalGenerator copy(Hashtable<Object, Object> cloneMap) {
         var myclone = (InternalGenerator) cloneMap.get(this);
         if (myclone != null)
             return myclone;

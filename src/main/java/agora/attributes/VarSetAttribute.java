@@ -6,7 +6,6 @@ import agora.patterns.AbstractPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
-import java.io.Serializable;
 import java.util.Hashtable;
 
 
@@ -17,7 +16,7 @@ import java.util.Hashtable;
  * @author Wolfgang De Meuter (Programming Technology Lab)
  * Last change:  E    16 Nov 97    1:35 am
  */
-public class VarSetAttribute extends Attribute implements Serializable {
+public class VarSetAttribute implements Attribute {
     protected VariableContainer theContents;
 
     /**
@@ -56,7 +55,7 @@ public class VarSetAttribute extends Attribute implements Serializable {
      * @param cloneMap A table of already-copied-things such that nothing is copied twice.
      * @return A copy of this attribute.
      */
-    public VarSetAttribute copy(Hashtable cloneMap) {
+    public VarSetAttribute copy(Hashtable<Object, Object> cloneMap) {
         var myclone = (VarSetAttribute) cloneMap.get(this);
         if (myclone != null)
             return myclone;
