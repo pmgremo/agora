@@ -3,18 +3,22 @@ package agora;
 import agora.errors.AgoraError;
 import agora.errors.PrimException;
 import agora.errors.ProgramError;
-import agora.grammar.Expression;
 import agora.grammar.Parser;
 import agora.grammar.Scanner;
 import agora.reflection.Up;
 import agora.tools.AgoraGlobals;
-import agora.tools.AgoraIO;
+import agora.tools.AwtIo;
 import agora.tools.SingleRoot;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import static java.awt.Cursor.*;
+import static java.awt.FileDialog.*;
 
 public class Agorique implements Serializable {
 
@@ -25,7 +29,7 @@ public class Agorique implements Serializable {
     private static final int xval = 15; // Text area in which we type Agora code
     private static final int yval = 75; // Text area in which we type Agora code
 
-    public static void main(String[] argv) {
+    public static void main(String... argv) {
         window = new Frame("agora.Agorique");
         var b1 = new Button("Eval");
         var b2 = new Button("Dump Image");
@@ -49,6 +53,12 @@ public class Agorique implements Serializable {
         textArea.append("\nhttp://progwww.vub.ac.be/");
         textArea.append("\n\nIf you find bugs, PLEASE, mail them to wdmeuter@vub.ac.be");
         textArea.append("\n\n\nType in an expression, select it and press the eval button!");
+        window.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                window.dispose();
+            }
+        });
         b1.addActionListener(e -> {
             // FROM HERE TO ....
             String input;
@@ -58,7 +68,7 @@ public class Agorique implements Serializable {
             } catch (StringIndexOutOfBoundsException exc) {
                 // THIS WORKS IN THE APPLETVIEWER!!!!!!!!!!!!!!!
                 var str = textArea.getText();
-                var strbuff = new StringBuffer(str);
+                var strbuff = new StringBuilder(str);
                 var j = 0;
                 for (var i = 0; i < str.length(); i++) {
                     if ((str.charAt(i) == '\n') | (str.charAt(i) == '\r')) {
@@ -71,26 +81,25 @@ public class Agorique implements Serializable {
             }
 			// ... TO HERE
 			// Due to a bug in the JDK Java interpreter and appletviewer.
-            AgoraIO.init(input, textArea);
-            var selectedExpression = (new Parser(new Scanner())).parseExpression();
+            var selectedExpression = new Parser(new Scanner(new AwtIo(input, textArea))).parseExpression();
             try {
                 if (selectedExpression != null)
                     selectedExpression.defaultEval();
                 else
-                    throw (new ProgramError("Parse Error"));
+                    throw new ProgramError("Parse Error");
             } catch (AgoraError error) {
                 error.signal();
             }
         });
         b2.addActionListener(e -> {
-            var fd = new FileDialog(window, "DUMP IMAGE", FileDialog.SAVE);
-			fd.show();
+            var fd = new FileDialog(window, "DUMP IMAGE", SAVE);
+            fd.setVisible(true);
             var fileName = fd.getFile();
-			if (fileName != null) //User didnot click 'Cancel'
+			if (fileName != null) //User did not click 'Cancel'
 			{
 				try {
                     var oldCursor = window.getCursor();
-					window.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					window.setCursor(new Cursor(WAIT_CURSOR));
                     var fos = new FileOutputStream(fileName);
                     var gos = new GZIPOutputStream(fos);
                     var os = new ObjectOutputStream(gos);
@@ -99,19 +108,19 @@ public class Agorique implements Serializable {
 					os.close();
 					window.setCursor(oldCursor);
 				} catch (IOException error) {
-					(new PrimException(error, "Save Image ActionListener")).signal();
+					new PrimException(error, "Save Image ActionListener").signal();
 				}
 			}
 		});
         b3.addActionListener(e -> {
-            var fd = new FileDialog(window, "READ IMAGE", FileDialog.LOAD);
-			fd.show();
+            var fd = new FileDialog(window, "READ IMAGE", LOAD);
+			fd.setVisible(true);
             var fileName = fd.getFile();
-			if (fileName != null) //User didnot click 'Cancel'
+			if (fileName != null) //User did not click 'Cancel'
 			{
 				try {
                     var oldCursor = window.getCursor();
-					window.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					window.setCursor(new Cursor(WAIT_CURSOR));
                     var fis = new FileInputStream(fileName);
                     var gis = new GZIPInputStream(fis);
                     var s = new ObjectInputStream(gis);
@@ -122,16 +131,15 @@ public class Agorique implements Serializable {
 					window.setCursor(oldCursor);
 					AgoraGlobals.glob.agoraWindow = window;
 				} catch (IOException error) {
-					(new PrimException(error, "Load Image ActionListener")).signal();
+					new PrimException(error, "Load Image ActionListener").signal();
 				} catch (ClassNotFoundException error2) {
-					(new ProgramError("Image of Wrong Version")).signal();
+					new ProgramError("Image of Wrong Version").signal();
 				}
 			}
 		});
         try {
-            AgoraIO.init("", textArea);
             AgoraGlobals.glob = new AgoraGlobals(null, window);
-            window.show();
+            window.setVisible(true);
         } catch (AgoraError ex) {
             ex.signal();
         } catch (IllegalArgumentException e) {

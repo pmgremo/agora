@@ -21,7 +21,7 @@ import java.io.*;
    @author Wolfgang De Meuter (Programming Technology Lab).
 	Last change:  E    16 Nov 97    1:52 am
    */
-public class Category extends Object implements Serializable
+public class Category implements Serializable
 {
   /**
    The empty category (= ordinary evaluation)

@@ -3,12 +3,11 @@ package agora;
 import agora.errors.AgoraError;
 import agora.errors.PrimException;
 import agora.errors.ProgramError;
-import agora.grammar.Expression;
 import agora.grammar.Parser;
 import agora.grammar.Scanner;
 import agora.reflection.Up;
 import agora.tools.AgoraGlobals;
-import agora.tools.AgoraIO;
+import agora.tools.AwtIo;
 import agora.tools.SingleRoot;
 
 import java.awt.*;
@@ -85,8 +84,7 @@ public class Agorette extends java.applet.Applet {
                 }
                 // ... TO HERE
                 // Due to a bug in the JDK Java interpreter and appletviewer.
-                AgoraIO.init(input, textArea);
-                var selectedExpression = (new Parser(new Scanner())).parseExpression();
+                var selectedExpression = (new Parser(new Scanner(new AwtIo(input, textArea)))).parseExpression();
                 try {
                     if (selectedExpression != null)
                         selectedExpression.defaultEval();
@@ -149,7 +147,6 @@ public class Agorette extends java.applet.Applet {
             }
         });
         try {
-            AgoraIO.init("", textArea);
             AgoraGlobals.glob = new AgoraGlobals(this, window);
         } catch (AgoraError ex) // All normal agora.errors are trapped and displayed to
         {                  // Agora programmer.

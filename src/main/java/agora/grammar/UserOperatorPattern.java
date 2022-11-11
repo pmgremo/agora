@@ -54,7 +54,7 @@ public class UserOperatorPattern extends UserPattern implements Serializable
     */
   public String unparse(int hor)
     {
-      return AgoraIO.makeSpaces(hor) + this.operator + " " + this.operand.unparse(0);
+      return AwtIo.makeSpaces(hor) + this.operator + " " + this.operand.unparse(0);
     }
 
   /**

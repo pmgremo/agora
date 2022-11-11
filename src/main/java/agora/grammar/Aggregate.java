@@ -126,7 +126,7 @@ public class Aggregate extends Expression implements Serializable
   */
   public String unparse(int hor)
     {
-        var msg = AgoraIO.makeSpaces(hor);
+        var msg = AwtIo.makeSpaces(hor);
       msg = msg + (new Character(this.leftDel)).toString();
       if (this.expressions.length == 0)
 	msg = msg + (new Character(this.rightDel)).toString();
@@ -138,7 +138,7 @@ public class Aggregate extends Expression implements Serializable
 	      else msg = msg + this.expressions[i].unparse(hor+2);
 	      if (i<this.expressions.length-1) msg = msg + ";\n";
 	    }
-	  msg = msg + AgoraIO.makeSpaces(hor);
+	  msg = msg + AwtIo.makeSpaces(hor);
 	  msg = msg + (new Character(this.rightDel)).toString();
 	}
       return msg;

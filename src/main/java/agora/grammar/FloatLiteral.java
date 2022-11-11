@@ -36,7 +36,7 @@ public class FloatLiteral extends Literal implements Serializable
     */
   public String unparse(int hor)
   {
-    return AgoraIO.makeSpaces(hor) + (new Float(theReal)).toString();
+    return AwtIo.makeSpaces(hor) + theReal;
   }
   
   /**
@@ -48,7 +48,7 @@ public class FloatLiteral extends Literal implements Serializable
     */
   public AgoraObject eval(Context context) throws AgoraError
   { 
-    return Up.glob.up(new Float(this.theReal));
+    return Up.glob.up(this.theReal);
   }
   
   /**

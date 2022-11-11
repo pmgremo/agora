@@ -39,7 +39,7 @@ public class ReifOperatorPattern extends ReifPattern implements Serializable
 
   public String unparse(int hor)
     {
-      return AgoraIO.makeSpaces(hor) + this.operator + " " + this.operand.unparse(0);
+      return AwtIo.makeSpaces(hor) + this.operator + " " + this.operand.unparse(0);
     }
     
   public Client makeClient(Context context,AgoraObject receiver)

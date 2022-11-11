@@ -68,7 +68,7 @@ public class UserKeywordPattern extends UserPattern implements Serializable
     */
   public String unparse(int hor)
     {
-        var msg = AgoraIO.makeSpaces(hor);
+        var msg = AwtIo.makeSpaces(hor);
       for(var i = 0; i<this.size; i++)
 	{
 	  msg = msg + keywords[i];

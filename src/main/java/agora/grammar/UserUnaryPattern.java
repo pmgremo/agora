@@ -43,7 +43,7 @@ public class UserUnaryPattern extends UserPattern implements Serializable
     */
   public String unparse(int hor)
     {
-      return AgoraIO.makeSpaces(hor) + this.unary;
+      return AwtIo.makeSpaces(hor) + this.unary;
     }
 
   /**

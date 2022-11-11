@@ -1,7 +1,6 @@
 package agora.grammar;
 
 import agora.reflection.*;
-import agora.patterns.*;
 import agora.objects.*;
 import agora.errors.*;
 import agora.runtime.*;
@@ -34,7 +33,7 @@ public class ReifierMessage extends Message implements Serializable
     { 
       try
 	{
-	  AgoraIO.checkEscape();
+	  AwtIo.checkEscape();
 		var receiver = Up.glob.up(this.receiver);
 		var client   = this.pattern.makeClient(context,receiver);
 		var pattern  = this.pattern.makePattern(context);

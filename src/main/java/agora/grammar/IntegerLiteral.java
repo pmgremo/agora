@@ -37,7 +37,7 @@ public class IntegerLiteral extends Literal implements Serializable
     */
   public String unparse(int hor)
   {
-    return AgoraIO.makeSpaces(hor) + ((new Integer(theInt)).toString());
+    return AwtIo.makeSpaces(hor) + ((new Integer(theInt)).toString());
   }
   
   /**

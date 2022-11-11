@@ -37,7 +37,7 @@ public class CharLiteral extends Literal implements Serializable
     */
   public String unparse(int hor)
   {
-      var msg = AgoraIO.makeSpaces(hor);
+      var msg = AwtIo.makeSpaces(hor);
     if(this.theChar=='\n')
       {
 	msg = msg + "'eoln'";

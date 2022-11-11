@@ -120,7 +120,7 @@ class ErrorDialog extends Dialog
 	Last change:  E    16 Nov 97    1:46 am
 */
 
-public abstract class AgoraError extends Throwable
+public abstract class AgoraError extends RuntimeException
 {
   /**
      This variable is the (possible) code tree where the error occured.
@@ -167,7 +167,7 @@ public abstract class AgoraError extends Throwable
   protected void setUpDialog(String message, AgoraObject receiver)
     {
       var window = new Frame();
-      window.setSize(AgoraIO.inspectorX,AgoraIO.inspectorY);
+      window.setSize(AwtIo.inspectorX, AwtIo.inspectorY);
       var dg = new ErrorDialog(window,"ERROR",message,code,receiver);
       window.pack();
       dg.pack();

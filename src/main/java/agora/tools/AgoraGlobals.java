@@ -102,8 +102,8 @@ public class AgoraGlobals implements Serializable
       // Create heavily used constants (cache them for efficiency reasons)
       this.uppedNull = Up.glob.up(null);
       var dummy = new JV_Nil(); // This must be here to force class loading!!!
-      this.ttrue = new Boolean(true);
-      this.ffalse = new Boolean(false);
+      this.ttrue = Boolean.TRUE;
+      this.ffalse = Boolean.FALSE;
       this.uppedTrue = Up.glob.up(ttrue);
       this.uppedFalse = Up.glob.up(ffalse);
       
