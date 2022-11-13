@@ -2,17 +2,24 @@ package agora.javaAdditions;
 
 import agora.attributes.Attribute;
 import agora.attributes.PrimFunctionAttribute;
+import agora.attributes.PrimMethAttribute;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
+import agora.grammar.UserPattern;
 import agora.objects.PrimGenerator;
 import agora.patterns.AbstractPattern;
 import agora.patterns.OperatorPattern;
 import agora.patterns.UnaryPattern;
+import agora.reflection.Frame;
+import agora.reflection.Operator;
+import agora.reflection.Unary;
+import agora.reflection.Up;
 
 import java.io.Serializable;
 import java.util.Hashtable;
 
 import static java.lang.Math.pow;
+import static java.lang.reflect.Modifier.isStatic;
 
 /**
  * An Agora integer will be programmed as an 'up'ed Java integer and all Agora
@@ -31,72 +38,6 @@ import static java.lang.Math.pow;
  */
 public class JV_Integer implements Serializable {
     /**
-     * This is the ad hoc generator creator for integers. This will be
-     * called when an integer is upped by 'Up'. It returns
-     * a method table that links Agora messages to procedures
-     * defined in this class.
-     *
-     * @return A generator containing Agora patterns that are linked to the operator
-     * procedures defined in this class.
-	 */
-    public static PrimGenerator generatorJV_Integer() {
-        var table = new Hashtable<AbstractPattern, Attribute>(25);
-        try {
-            var argtypes2 = new Class[]{
-					java.lang.Integer.class,
-					java.lang.Object.class
-            };
-            Class<?> thisOne = agora.javaAdditions.JV_Integer.class;
-            table.put(new OperatorPattern("+"),
-                    new PrimFunctionAttribute(thisOne.getMethod("plus", argtypes2)));
-            table.put(new OperatorPattern("-"),
-                    new PrimFunctionAttribute(thisOne.getMethod("min", argtypes2)));
-            table.put(new OperatorPattern("*"),
-                    new PrimFunctionAttribute(thisOne.getMethod("mult", argtypes2)));
-            table.put(new OperatorPattern("/"),
-                    new PrimFunctionAttribute(thisOne.getMethod("divide", argtypes2)));
-            table.put(new OperatorPattern("#"),
-                    new PrimFunctionAttribute(thisOne.getMethod("div", argtypes2)));
-            table.put(new OperatorPattern("%"),
-                    new PrimFunctionAttribute(thisOne.getMethod("mod", argtypes2)));
-            table.put(new OperatorPattern("^"),
-                    new PrimFunctionAttribute(thisOne.getMethod("power", argtypes2)));
-            table.put(new OperatorPattern("="),
-                    new PrimFunctionAttribute(thisOne.getMethod("equalsI", argtypes2)));
-            table.put(new OperatorPattern("<"),
-                    new PrimFunctionAttribute(thisOne.getMethod("smI", argtypes2)));
-            table.put(new OperatorPattern(">"),
-                    new PrimFunctionAttribute(thisOne.getMethod("gtI", argtypes2)));
-            table.put(new OperatorPattern("<="),
-                    new PrimFunctionAttribute(thisOne.getMethod("smeI", argtypes2)));
-            table.put(new OperatorPattern(">="),
-                    new PrimFunctionAttribute(thisOne.getMethod("gteI", argtypes2)));
-            table.put(new OperatorPattern("|"),
-                    new PrimFunctionAttribute(thisOne.getMethod("orI", argtypes2)));
-            table.put(new OperatorPattern("&"),
-                    new PrimFunctionAttribute(thisOne.getMethod("andI", argtypes2)));
-            var argtypes1 = new Class[]{
-					java.lang.Integer.class
-			};
-            table.put(new UnaryPattern("abs"),
-                    new PrimFunctionAttribute(thisOne.getMethod("abs", argtypes1)));
-            table.put(new UnaryPattern("inc"),
-                    new PrimFunctionAttribute(thisOne.getMethod("inc", argtypes1)));
-            table.put(new UnaryPattern("dec"),
-                    new PrimFunctionAttribute(thisOne.getMethod("dec", argtypes1)));
-            table.put(new UnaryPattern("sqrt"),
-                    new PrimFunctionAttribute(thisOne.getMethod("sqrt", argtypes1)));
-            table.put(new UnaryPattern("sqr"),
-                    new PrimFunctionAttribute(thisOne.getMethod("sqr", argtypes1)));
-            table.put(new UnaryPattern("not"),
-                    new PrimFunctionAttribute(thisOne.getMethod("not", argtypes1)));
-        } catch (NoSuchMethodException e) {
-            // This is impossible since all the adressed methods are simply here!
-        }
-		return new PrimGenerator("JV_Integer", table, null);
-    }
-
-    /**
      * Addition. Receiver is of type integer, the argument can be integer or float.
      *
      * @param receiver The integer indicating the receiver of the method
@@ -104,11 +45,12 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new float or int being the sum of the receiver and the argument.
      */
+    @Operator("+")
     public static Object plus(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return receiver + (Integer) arg;
-        } else if (arg instanceof Float) {
-            return receiver + (Float) arg;
+        if (arg instanceof Integer i) {
+            return receiver + i;
+        } else if (arg instanceof Float f) {
+            return receiver + f;
         } else {
             throw new ProgramError("Illegal Argument for +");
         }
@@ -123,11 +65,12 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new float or int being the substraction of the receiver and the argument.
      */
+    @Operator("-")
     public static Object min(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return receiver - (Integer) arg;
-        } else if (arg instanceof Float) {
-            return receiver - (Float) arg;
+        if (arg instanceof Integer i) {
+            return receiver - i;
+        } else if (arg instanceof Float f) {
+            return receiver - f;
         } else {
             throw new ProgramError("Illegal Argument for -");
         }
@@ -142,11 +85,12 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new float or int being the multiplication of the receiver and the argument.
      */
+    @Operator("*")
     public static Object mult(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return receiver * (Integer) arg;
-        } else if (arg instanceof Float) {
-            return receiver * (Float) arg;
+        if (arg instanceof Integer i) {
+            return receiver * i;
+        } else if (arg instanceof Float f) {
+            return receiver * f;
         } else {
             throw new ProgramError("Illegal Argument for *");
         }
@@ -161,11 +105,12 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new float being the floating division of the receiver and the argument.
      */
+    @Operator("/")
     public static Object divide(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return (float) (receiver / (Integer) arg);
-        } else if (arg instanceof Float) {
-            return receiver / (Float) arg;
+        if (arg instanceof Integer i) {
+            return (float) (receiver / i);
+        } else if (arg instanceof Float f) {
+            return receiver / f;
         } else {
             throw new ProgramError("Illegal Argument for /");
         }
@@ -180,9 +125,10 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new integer being the integer division of the receiver and the argument.
      */
+    @Operator("#")
     public static Object div(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return receiver / (Integer) arg;
+        if (arg instanceof Integer i) {
+            return receiver / i;
         } else {
             throw new ProgramError("Illegal Argument for #");
         }
@@ -197,9 +143,10 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new integer being the remainder of dividing the receiver and the argument.
      */
+    @Operator("%")
     public static Object mod(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return receiver % (Integer) arg;
+        if (arg instanceof Integer i) {
+            return receiver % i;
         } else {
             throw new ProgramError("Illegal Argument for %");
         }
@@ -214,11 +161,12 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new float or integer being the power of the receiver and the argument.
      */
+    @Operator("^")
     public static Object power(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return (int) pow(receiver, (Integer) arg);
-        } else if (arg instanceof Float) {
-            return (float) pow(receiver, (Float) arg);
+        if (arg instanceof Integer i) {
+            return (int) pow(receiver, i);
+        } else if (arg instanceof Float f) {
+            return (float) pow(receiver, f);
         } else {
             throw new ProgramError("Illegal Argument for ^");
         }
@@ -232,9 +180,10 @@ public class JV_Integer implements Serializable {
      * @param arg      The object indicating the argument.
      * @returns A new boolean being the comparision of the receiver and the argument.
      */
+    @Operator("=")
     public static Object equalsI(Integer receiver, Object arg) {
-        if (arg instanceof Integer) {
-            return receiver.intValue() == ((Integer) arg).intValue();
+        if (arg instanceof Integer i) {
+            return receiver.equals(i);
         } else
             return Boolean.FALSE;
     }
@@ -248,11 +197,12 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new boolean being the comparision of the receiver and the argument.
      */
+    @Operator("<")
     public static Object smI(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return receiver < (Integer) arg;
-        } else if (arg instanceof Float) {
-            return receiver < (Float) arg;
+        if (arg instanceof Integer i) {
+            return receiver < i;
+        } else if (arg instanceof Float f) {
+            return receiver < f;
         } else {
             throw new ProgramError("Illegal Argument for <");
         }
@@ -267,11 +217,12 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new boolean being the comparision of the receiver and the argument.
      */
+    @Operator(">")
     public static Object gtI(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return receiver > (Integer) arg;
-        } else if (arg instanceof Float) {
-            return receiver > (Float) arg;
+        if (arg instanceof Integer i) {
+            return receiver > i;
+        } else if (arg instanceof Float f) {
+            return receiver > f;
         } else {
             throw new ProgramError("Illegal Argument for >");
         }
@@ -286,11 +237,12 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new boolean being the comparision of the receiver and the argument.
      */
+    @Operator("<=")
     public static Object smeI(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return receiver <= (Integer) arg;
-        } else if (arg instanceof Float) {
-            return receiver <= (Float) arg;
+        if (arg instanceof Integer i) {
+            return receiver <= i;
+        } else if (arg instanceof Float f) {
+            return receiver <= f;
         } else {
             throw new ProgramError("Illegal Argument for <=");
         }
@@ -305,11 +257,12 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new boolean being the comparision of the receiver and the argument.
      */
+    @Operator(">=")
     public static Object gteI(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return receiver >= (Integer) arg;
-        } else if (arg instanceof Float) {
-            return receiver >= (Float) arg;
+        if (arg instanceof Integer i) {
+            return receiver >= i;
+        } else if (arg instanceof Float f) {
+            return receiver >= f;
         } else {
             throw new ProgramError("Illegal Argument for +");
         }
@@ -324,9 +277,10 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new boolean being the comparision of the receiver and the argument.
      */
+    @Operator("|")
     public static Object orI(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return receiver | (Integer) arg;
+        if (arg instanceof Integer i) {
+            return receiver | i;
         } else {
             throw new ProgramError("Illegal Argument for |");
         }
@@ -341,9 +295,10 @@ public class JV_Integer implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @returns A new boolean being the comparision of the receiver and the argument.
      */
+    @Operator("&")
     public static Object andI(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer) {
-            return receiver & (Integer) arg;
+        if (arg instanceof Integer i) {
+            return receiver & i;
         } else {
             throw new ProgramError("Illegal Argument for &");
         }
@@ -355,6 +310,7 @@ public class JV_Integer implements Serializable {
      * @param receiver The receiver of the message
      * @return The integer indicating the absolute value of the receiver.
 	 */
+    @Unary("abs")
     public static Object abs(Integer receiver) {
         return Math.abs(receiver);
     }
@@ -365,6 +321,7 @@ public class JV_Integer implements Serializable {
      * @param receiver The receiver of the message
      * @return The integer indicating the increment of the receiver.
 	 */
+    @Unary("inc")
     public static Object inc(Integer receiver) {
         return receiver + 1;
     }
@@ -375,6 +332,7 @@ public class JV_Integer implements Serializable {
      * @param receiver The receiver of the message
      * @return The integer indicating the decrement of the receiver.
 	 */
+    @Unary("dev")
     public static Object dec(Integer receiver) {
         return receiver - 1;
     }
@@ -385,6 +343,7 @@ public class JV_Integer implements Serializable {
      * @param receiver The receiver of the message
      * @return The float indicating the square root of the receiver.
 	 */
+    @Unary("sqrt")
     public static Object sqrt(Integer receiver) {
         return (float) Math.sqrt(receiver);
     }
@@ -395,6 +354,7 @@ public class JV_Integer implements Serializable {
      * @param receiver The receiver of the message
      * @return The integer indicating the square of the receiver.
 	 */
+    @Unary("sqr")
     public static Object sqr(Integer receiver) {
         return receiver * receiver;
     }
@@ -406,6 +366,7 @@ public class JV_Integer implements Serializable {
      * @return The integer indicating the bitwise not of the receiver.
      * @throws agora.errors.AgoraError Is never thrown in this case.
      */
+    @Unary("not")
     public static Object not(Integer receiver) throws AgoraError {
         return ~receiver;
     }

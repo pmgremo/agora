@@ -1,6 +1,7 @@
 package agora.patterns;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * This class represents agora.runtime unary agora.patterns. A unary pattern is essentially nothing but
@@ -36,33 +37,9 @@ public class UnaryPattern extends AbstractPattern implements Serializable {
      * read-pattern.
      */
     public KeywordPattern makeWritePattern() {
-        var writePat = new KeywordPattern(1);
+        var writePat = new KeywordPattern();
         writePat.atPut(0, pattern.concat(":"));
         return writePat;
-    }
-
-    /**
-     * Internal hashing method.
-     *
-     * @return The hash value of this unary pattern.
-     */
-    protected int doHash() {
-        var i = 0;
-        for (var j = 0; j < pattern.length(); j++)
-            i = i + this.pattern.charAt(j);
-        return i;
-    }
-
-    /**
-     * Equality test. If the argument is a unary pattern as well, both strings are compared.
-     *
-     * @param object An arbitrary Java object.
-     * @return If the argument is also a unary pattern, and if it has the same pattern and if
-     * super.equals returns true, the result of this method yields true. In all other cases,
-     * false is returned.
-     */
-    public boolean equals(Object object) {
-        return object instanceof UnaryPattern && super.equals(object) && pattern.equals(((UnaryPattern) object).getUnaryPattern());
     }
 
     /**
@@ -79,8 +56,23 @@ public class UnaryPattern extends AbstractPattern implements Serializable {
      *
      * @return The unary pattern converted to a string.
      */
+    @Override
     public String toString() {
         return this.pattern;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        UnaryPattern that = (UnaryPattern) o;
+        return Objects.equals(pattern, that.pattern);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), pattern);
     }
 }
 

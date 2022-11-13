@@ -2,23 +2,29 @@ package agora.reflection;
 
 import agora.attributes.*;
 import agora.errors.AgoraError;
-import agora.errors.PrimException;
-import agora.errors.ProgramError;
-import agora.javaAdditions.*;
-import agora.objects.AbstractGenerator;
+import agora.javaAdditions.JV_Boolean;
+import agora.javaAdditions.JV_Float;
+import agora.javaAdditions.JV_Integer;
+import agora.javaAdditions.JV_Nil;
 import agora.objects.AgoraObject;
 import agora.objects.PrimGenerator;
 import agora.objects.PrimIdentityGenerator;
 import agora.patterns.AbstractPattern;
 import agora.patterns.KeywordPattern;
+import agora.patterns.OperatorPattern;
 import agora.patterns.UnaryPattern;
 import agora.tools.AgoraGlobals;
 
 import java.io.Serializable;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Queue;
+
+import static java.lang.reflect.Modifier.isStatic;
 
 /**
  * This class consists of procedural code. Normally, the Agora design requires that
@@ -53,6 +59,50 @@ public class Up implements Serializable {
     public Up() {
         this.primitive = null;
         this.uptable = new Hashtable<>(30);
+    }
+
+    public static PrimGenerator buildGenerator(Class<?> type) {
+        var table = new Hashtable<AbstractPattern, Attribute>(5);
+        for (var x : type.getDeclaredMethods()) {
+            var reified = x.getAnnotation(Reified.class);
+            var attribute = isStatic(x.getModifiers()) ? new PrimFunctionAttribute(x) : new PrimMethAttribute(x);
+            {
+                var annotation = x.getAnnotation(Operator.class);
+                if (annotation != null) {
+                    for (var name : annotation.value()) {
+                        var pattern = new OperatorPattern(name);
+                        if (reified != null) pattern.setReifier();
+                        table.put(pattern, attribute);
+                    }
+                }
+            }
+            {
+                var annotation = x.getAnnotation(Unary.class);
+                if (annotation != null) {
+                    for (var name : annotation.value()) {
+                        var pattern = new UnaryPattern(name);
+                        if (reified != null) pattern.setReifier();
+                        table.put(pattern, attribute);
+                    }
+                }
+            }
+            {
+                var pattern = new KeywordPattern();
+                var parameters = x.getParameters();
+                for (int i = 0; i < parameters.length; i++) {
+                    var annotation = parameters[i].getAnnotation(Keyword.class);
+                    if (annotation != null) pattern.atPut(i, annotation.value());
+                }
+                if (pattern.size() > 0) {
+                    if (reified != null) pattern.setReifier();
+                    table.put(pattern, attribute);
+                }
+            }
+        }
+        if (table.isEmpty()) return null;
+        var frame = type.getAnnotation(Frame.class);
+        var name = frame != null ? frame.value() : type.getSimpleName();
+        return new PrimGenerator(name, table, null);
     }
 
     /**
@@ -120,46 +170,16 @@ public class Up implements Serializable {
      * to the root of the Agora system.
      */
     private PrimGenerator createGeneratorFor(Class<?> c, boolean isInstance) throws AgoraError {
-        AbstractGenerator superMethodTable;
-        if (c.equals(Object.class))
-            superMethodTable = AgoraGlobals.glob.rootIdentity;             // Link table to the root table of Agora
-        else
-            superMethodTable = generatorFor(c.getSuperclass(), isInstance); // Link table to table of the super
+        var methodTableOfc = buildGenerator(c);
 
-        PrimGenerator methodTableOfc;        // The method table of this class
-        Method generatorCreator;             // Does the Java class have an ad hoc 'generator creator' method ??
-
-        try  // See if there is an ad hoc 'generator creator' for this class c
-        {
-            generatorCreator = c.getMethod("generator" + unqualified(c.toString()));
-        } catch (NoSuchMethodException e) {
-            generatorCreator = null;
-        }
-
-        if (generatorCreator != null & isInstance) // 1) If there is an ad hoc generator creator, call it!
-        {
-            var modifiers = generatorCreator.getModifiers();
-            if (!(Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers)))
-                throw new ProgramError("'generator" + c.getName() + "' method must be public static");
-            try {
-                methodTableOfc = (PrimGenerator) generatorCreator.invoke(null, new Object[0]);
-                var asIsTable = constructGeneratorFor(c, isInstance);
-                asIsTable.setParent(superMethodTable);
-                superMethodTable = asIsTable;
-            } catch (IllegalAccessException e) {
-                throw new ProgramError("'wrong modifiers for 'generator" + c.getName() + "'");
-            } catch (InvocationTargetException e) {
-                if (e.getTargetException() instanceof AgoraError) // We cannot avoid this downcast
-                    throw (AgoraError) e.getTargetException();
-                else
-                    throw new PrimException(e.getTargetException(), "Up::createGeneratorFor");
-            }
-        } else // 2) If there is no ad hoc generator creator, we create the generator ourself!
-        {
+        if (methodTableOfc == null) {
             methodTableOfc = constructGeneratorFor(c, isInstance);
         }
 
-        methodTableOfc.setParent(superMethodTable);
+        if (Object.class.equals(c))
+            methodTableOfc.setParent(AgoraGlobals.glob.rootIdentity);             // Link table to the root table of Agora
+        else
+            methodTableOfc.setParent(generatorFor(c.getSuperclass(), isInstance)); // Link table to table of the super
 
         //Natives have special wrappers that contain operations not supported in java.lang
         if (c.equals(Object.class)) // Hack to make all upped objects primitive.
@@ -172,15 +192,15 @@ public class Up implements Serializable {
         }
 
         if (Integer.class.equals(c)) {
-            var operators = JV_Integer.generatorJV_Integer();
+            var operators = buildGenerator(JV_Integer.class);
             operators.setParent(methodTableOfc);
             return operators;
         } else if (Float.class.equals(c)) {
-            var operators = JV_Float.generatorJV_Float();
+            var operators = buildGenerator(JV_Float.class);
             operators.setParent(methodTableOfc);
             return operators;
         } else if (Boolean.class.equals(c)) {
-            var operators = JV_Boolean.generatorJV_Boolean();
+            var operators = buildGenerator(JV_Boolean.class);
             operators.setParent(methodTableOfc);
             return operators;
         } else {
@@ -195,15 +215,15 @@ public class Up implements Serializable {
      */
     private PrimGenerator constructGeneratorFor(Class<?> c, boolean isInstance) throws AgoraError {
         var q = new LinkedList<>();  // Make a new Queue
-        putFieldsInQueue(c, q, isInstance);        // Insert agora.patterns and fields
-        putMethodsInQueue(c, q, isInstance);       // Insert agora.patterns and methods
-        putConstructorsInQueue(c, q, isInstance);  // Insert agora.patterns and constructors
+        putFieldsInQueue(c, q, isInstance);        // Insert patterns and fields
+        putMethodsInQueue(c, q, isInstance);       // Insert patterns and methods
+        putConstructorsInQueue(c, q, isInstance);  // Insert patterns and constructors
         var sz = q.size() / 2;        // queue = (pat,att)(pat,att)....(pat,att)
-        var theTable = new Hashtable<>(sz + 1);//The size may not be zero, so add one
+        var theTable = new Hashtable<AbstractPattern, Attribute>(sz + 1);//The size may not be zero, so add one
         for (var j = 0; j < sz; j++) {
             var pattern = q.poll(); // These statements are really necessary because
             var attrib = q.poll(); // if we would simply write put(q.deQueue(),q.deQeueue)
-            theTable.put(pattern, attrib); // the wrong order could be used (if Java does it right to left)
+            theTable.put((AbstractPattern) pattern, (Attribute) attrib); // the wrong order could be used (if Java does it right to left)
         }
         return new PrimGenerator(c.getName(), theTable, null);    // Create a new generator with the members
     }
@@ -296,7 +316,7 @@ public class Up implements Serializable {
      * Creates a variable write pattern for a field f, i.e. the name of f with a colon.
      */
     private AbstractPattern createVariableWritePatFor(Field f) {
-        var writePat = new KeywordPattern(1);
+        var writePat = new KeywordPattern();
         writePat.atPut(0, decaps(f.getName()) + ":");
         return writePat;
     }
@@ -319,10 +339,10 @@ public class Up implements Serializable {
         if (types.length == 0)
             return new UnaryPattern(m.getName());
         else {
-            var pat = new KeywordPattern(types.length);
-            pat.atPut(0, decaps(m.getName()) + typeNameFor(types[0]) + ":");
+            var pat = new KeywordPattern();
+            pat.add(decaps(m.getName()) + typeNameFor(types[0]) + ":");
             for (var j = 1; j < types.length; j++)
-                pat.atPut(j, typeNameFor(types[j]) + ":");
+                pat.add(typeNameFor(types[j]) + ":");
             return pat;
         }
     }
@@ -345,11 +365,11 @@ public class Up implements Serializable {
         if (types.length == 0)
             return new UnaryPattern("new");
         else if (types.length == 1) {
-            var pat = new KeywordPattern(1);
+            var pat = new KeywordPattern();
             pat.atPut(0, "new" + typeNameFor(types[0]) + ":");
             return pat;
         } else {
-            var pat = new KeywordPattern(types.length);
+            var pat = new KeywordPattern();
             pat.atPut(0, "new" + typeNameFor(types[0]) + ":");
             for (var j = 1; j < types.length; j++)
                 pat.atPut(j, typeNameFor(types[j]) + ":");

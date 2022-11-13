@@ -3,6 +3,8 @@ package agora.tools;
 import agora.objects.*;
 import agora.javaAdditions.*;
 import agora.reflection.*;
+
+import java.awt.Frame;
 import java.util.*;
 import agora.errors.*;
 import agora.patterns.*;

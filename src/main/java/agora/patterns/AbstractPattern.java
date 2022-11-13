@@ -4,6 +4,7 @@ import agora.Copyable;
 
 import java.io.Serializable;
 import java.util.Hashtable;
+import java.util.Objects;
 
 /**
   This abstract class represents agora.runtime Agora agora.patterns. There are three subclasses of this
@@ -19,14 +20,7 @@ public abstract class AbstractPattern implements Serializable, Copyable<Abstract
     ordinary pattern
     */
   protected boolean reifierPattern;
-  
-  /**
-    Calculating the hashvalue of a pattern each time it is looked up in a dictionary
-    (during method lookup) is a waste of CPU time. Therefore we memoize it the first
-    time it is computed.
-    */
-  protected int hashValue; // Optimisation
-  
+
   /**
     The default constructor initializes the pattern. The boolean 'reifierPattern' is set 
     to false.
@@ -34,7 +28,6 @@ public abstract class AbstractPattern implements Serializable, Copyable<Abstract
   public AbstractPattern()
   {
     this.reifierPattern = false;
-    hashValue=0;
   }
 
   /**
@@ -53,42 +46,17 @@ public abstract class AbstractPattern implements Serializable, Copyable<Abstract
   {
     return this.reifierPattern;
   }
-  
-  /**
-    Tests whether the argument object is the same pattern. This is not a 'pointer equality',
-    but a deep compare of the several variables inside a pattern.
-    @param object An arbitrary object to be compared with the receiver.
-    @return If the argument is also a pattern, and the 'reifier value' (i.e. the boolean) is the
-    same as that of the receiver, true is returned. Otherwise false is returned.
-    */
-  public boolean equals(Object object)
-  {
-    if (object instanceof AbstractPattern)
-      return (this.reifierPattern==((AbstractPattern)object).isReifier());
-    else
-      return false;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    AbstractPattern that = (AbstractPattern) o;
+    return reifierPattern == that.reifierPattern;
   }
-  
-  /**
-    Internal hashing method. Depends on the type of pattern we are dealing with.
-    @return The hash value of the receiver.
-    */
-  protected abstract int doHash();
-  
-  /**
-    Overides the same method in 'Object'. Calls the internal protected hashing method.
-    The hash result is cached such that it get computed only once.
-    @return The hash value of the receiver.
-    */
-  public int hashCode()
-  {
-    if (hashValue == 0)
-      hashValue = this.doHash();
-    return hashValue;
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(reifierPattern);
   }
-  
-  /**
-    Overrides the same method in 'Object' to abstract. Hence, it MUST be overriden in each pattern.
-    */
-  public abstract String toString();
 }

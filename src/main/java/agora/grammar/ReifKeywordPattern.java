@@ -103,7 +103,7 @@ public class ReifKeywordPattern extends ReifPattern implements Serializable
     */
   public AbstractPattern makePattern(Context context)
     {
-        var pattern = new KeywordPattern(size);
+        var pattern = new KeywordPattern();
       for(var i = 0; i<size; i++)
 	pattern.atPut (i,keywords[i]);
       pattern.setReifier();
@@ -113,7 +113,7 @@ public class ReifKeywordPattern extends ReifPattern implements Serializable
   /**
     Create a list of formal arguments that are in this keyword pattern (if the keyword
     pattern is a pattern used for a declaration.
-    @param The context in which the formals are needed (usually the context of a
+    @param context context in which the formals are needed (usually the context of a
     VARIABLE: or a METHOD: reifier.
     @return An array of strings indicating the formal arguments of the keyword pattern.
     @exception agora.errors.AgoraError If something goes wrong (e.g. it is not a valid formal

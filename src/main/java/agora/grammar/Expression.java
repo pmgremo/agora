@@ -6,16 +6,17 @@ import agora.objects.AgoraObject;
 import agora.objects.FormalsAndPattern;
 import agora.objects.InternalGenerator;
 import agora.objects.PrimGenerator;
-import agora.patterns.AbstractPattern;
 import agora.patterns.KeywordPattern;
 import agora.patterns.UnaryPattern;
+import agora.reflection.Keyword;
+import agora.reflection.Reified;
+import agora.reflection.Unary;
 import agora.reflection.Up;
 import agora.runtime.Category;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
 import java.io.Serializable;
-import java.util.Hashtable;
 import java.util.Vector;
 
 /**
@@ -68,229 +69,6 @@ abstract public class Expression implements Serializable {
     }
 
     /**
-     * Besides the standard mapping of Java methods onto Agora patterns, expressions also have
-     * a special suite of Agora patterns that can be sent to them. This includes all the reifiers
-     * which have no associated Java syntax.
-     *
-     * @return A Primitive Generator containing the Agora patterns and primitive agora.attributes.
-     * @throws agora.errors.AgoraError Happens when a method does not exist.
-     */
-    public static PrimGenerator generatorExpression() throws AgoraError {
-        var table = new Hashtable<AbstractPattern, Attribute>(40);
-        try {
-            var argtypes1 = new Class[]{
-                    agora.runtime.Context.class
-            };
-            var argtypes2 = new Class[]{
-                    agora.runtime.Context.class,
-                    agora.grammar.Expression.class
-            };
-            var argtypes3 = new Class[]{
-                    agora.runtime.Context.class,
-                    agora.grammar.Expression.class,
-                    agora.grammar.Expression.class
-            };
-            var argtypes4 = new Class[]{
-                    agora.runtime.Context.class,
-                    agora.grammar.Expression.class,
-                    agora.grammar.Expression.class,
-                    agora.grammar.Expression.class
-            };
-            var argtypes5 = new Class[]{
-                    agora.runtime.Context.class,
-                    agora.grammar.Expression.class,
-                    agora.grammar.Expression.class,
-                    agora.grammar.Expression.class,
-                    agora.grammar.Expression.class
-            };
-            var thisOne = agora.grammar.Expression.class;
-            UnaryPattern unary;
-            KeywordPattern keyw;
-
-            unary = new UnaryPattern("VARIABLE");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("variable", argtypes1)));
-
-            unary = new UnaryPattern("VAR");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("variable", argtypes1)));
-
-            unary = new UnaryPattern("ARRAY");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("array", argtypes1)));
-
-            unary = new UnaryPattern("PUBLIC");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("publik", argtypes1)));
-
-            unary = new UnaryPattern("PUB");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("publik", argtypes1)));
-
-            unary = new UnaryPattern("LOCAL");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("local", argtypes1)));
-
-            unary = new UnaryPattern("LOC");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("local", argtypes1)));
-
-            unary = new UnaryPattern("JAVA");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("java", argtypes1)));
-
-            unary = new UnaryPattern("QUOTE");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("quote", argtypes1)));
-
-            unary = new UnaryPattern("UNQUOTE");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("unquote", argtypes1)));
-
-            unary = new UnaryPattern("UP");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("up", argtypes1)));
-
-            unary = new UnaryPattern("DOWN");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("down", argtypes1)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "VARIABLE:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("variableColon", argtypes2)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "VAR:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("variableColon", argtypes2)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "CONST:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("constColon", argtypes2)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "ARRAY:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("arrayColon", argtypes2)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "METHOD:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("methodColon", argtypes2)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "VIEW:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("viewColon", argtypes2)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "MIXIN:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("mixinColon", argtypes2)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "CLONING:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("cloningColon", argtypes2)));
-
-            keyw = new KeywordPattern(2);
-            keyw.atPut(0, "TRY:");
-            keyw.atPut(1, "CATCH:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("trycatch", argtypes3)));
-
-            keyw = new KeywordPattern(2);
-            keyw.atPut(0, "REIFIER:");
-            keyw.atPut(1, "IS:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("reifierIs", argtypes3)));
-
-            keyw = new KeywordPattern(3);
-            keyw.atPut(0, "FOR:");
-            keyw.atPut(1, "TO:");
-            keyw.atPut(2, "DO:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("fortodo", argtypes4)));
-
-            keyw = new KeywordPattern(3);
-            keyw.atPut(0, "FOR:");
-            keyw.atPut(1, "DOWNTO:");
-            keyw.atPut(2, "DO:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("fordowntodo", argtypes4)));
-
-            keyw = new KeywordPattern(4);
-            keyw.atPut(0, "FOR:");
-            keyw.atPut(1, "TO:");
-            keyw.atPut(2, "BY:");
-            keyw.atPut(3, "DO:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("fortobydo", argtypes5)));
-
-            keyw = new KeywordPattern(4);
-            keyw.atPut(0, "FOR:");
-            keyw.atPut(1, "DOWNTO:");
-            keyw.atPut(2, "BY:");
-            keyw.atPut(3, "DO:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("fordowntobydo", argtypes5)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "IFTRUE:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("ifTrue", argtypes2)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "IFFALSE:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("ifFalse", argtypes2)));
-
-            keyw = new KeywordPattern(2);
-            keyw.atPut(0, "IFTRUE:");
-            keyw.atPut(1, "IFFALSE:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("ifTrueifFalse", argtypes3)));
-
-            keyw = new KeywordPattern(2);
-            keyw.atPut(0, "IFFALSE:");
-            keyw.atPut(1, "IFTRUE:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("ifFalseifTrue", argtypes3)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "WHILETRUE:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("whileTrue", argtypes2)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "WHILEFALSE:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("whileFalse", argtypes2)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "UNTILTRUE:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("untilTrue", argtypes2)));
-
-            keyw = new KeywordPattern(1);
-            keyw.atPut(0, "UNTILFALSE:");
-            keyw.setReifier();
-            table.put(keyw, new PrimMethAttribute(thisOne.getMethod("untilFalse", argtypes2)));
-
-            unary = new UnaryPattern("COMMENT");
-            unary.setReifier();
-            table.put(unary, new PrimMethAttribute(thisOne.getMethod("comment", argtypes1)));
-
-        } catch (Throwable e) {
-            throw new PrimException(e, "Expression::generatorExpression");
-            // This is impossible!!
-        }
-        return new PrimGenerator("Expression", table, null);
-    }
-
-    /**
      * Code to evaluate the VARIABLE reifier message in a given context. A new pair of
      * read and write methods will be installed in the self of the context.
      *
@@ -298,6 +76,8 @@ abstract public class Expression implements Serializable {
      * @return The initial value of the variable:null.
      * @throws agora.errors.AgoraError Happens when illegal agora.patterns are given.
      */
+    @Unary({"VARIABLE", "VAR"})
+    @Reified
     public AgoraObject variable(Context context) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
         var thePattern = leftside.pattern;
@@ -338,13 +118,14 @@ abstract public class Expression implements Serializable {
      * @return The agora object associated to this reifier invocation.
      * @throws agora.errors.AgoraError When something goes wrong.
      */
-    public AgoraObject variableColon(Context context, Expression value) throws AgoraError {
+    @Reified
+    public AgoraObject variableColon(Context context, @Keyword("VARIABLE:") Expression value) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
         var thePattern = leftside.pattern;
         var theCat = leftside.cat;
         // Validate Pattern
         if (!(thePattern instanceof UnaryPattern))
-            throw (new ReifierMisused("VARIABLE can only be sent to unary agora.patterns"));
+            throw (new ReifierMisused("VARIABLE can only be sent to unary pattern"));
         if (!(Category.containsLessThan(theCat, Category.local | Category.publik)))
             throw (new ReifierMisused("Illegal Adjectives Used With VARIABLE"));
         // Fill In Default Values
@@ -379,7 +160,8 @@ abstract public class Expression implements Serializable {
      * @return The agoraobject being the value of this reifier expression.
      * @throws agora.errors.AgoraError When something goes wrong.
      */
-    public AgoraObject constColon(Context context, Expression value) throws AgoraError {
+    @Reified
+    public AgoraObject constColon(Context context, @Keyword("CONST:") Expression value) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
         var thePattern = leftside.pattern;
         var theCat = leftside.cat;
@@ -414,6 +196,8 @@ abstract public class Expression implements Serializable {
      * @return The agora object representing the array.
      * @throws agora.errors.AgoraError When something goes wrong.
      */
+    @Unary("ARRAY")
+    @Reified
     public AgoraObject array(Context context) throws AgoraError {
         var size = this.evalAsInteger(context);
         var theArray = new Vector<String>(size);
@@ -436,7 +220,8 @@ abstract public class Expression implements Serializable {
      * @return The agora object representing the newly created array.
      * @throws agora.errors.AgoraError When something goes wrong.
      */
-    public AgoraObject arrayColon(Context context, Expression value) throws AgoraError {
+    @Reified
+    public AgoraObject arrayColon(Context context, @Keyword("ARRAY:") Expression value) throws AgoraError {
         var size = this.evalAsInteger(context);
         var theArray = new Vector<>(size);
         try {
@@ -459,7 +244,8 @@ abstract public class Expression implements Serializable {
      * @return The return value of installing this method.
      * @throws agora.errors.AgoraError When something goes wrong during installing the method.
      */
-    public AgoraObject methodColon(Context context, Expression body) throws AgoraError {
+    @Reified
+    public AgoraObject methodColon(Context context, @Keyword("METHOD:") Expression body) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
         var thePattern = leftside.pattern;
         var theCat = leftside.cat;
@@ -490,7 +276,8 @@ abstract public class Expression implements Serializable {
      * @return The return value of installing this mixin.
      * @throws agora.errors.AgoraError When something goes wrong during installing the mixin.
      */
-    public AgoraObject mixinColon(Context context, Expression body) throws AgoraError {
+    @Reified
+    public AgoraObject mixinColon(Context context, @Keyword("MIXIN:") Expression body) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
         var thePattern = leftside.pattern;
         var theCat = leftside.cat;
@@ -523,7 +310,8 @@ abstract public class Expression implements Serializable {
      * @return The return value of installing the new view.
      * @throws agora.errors.AgoraError When something goes wrong when installing the new view.
      */
-    public AgoraObject viewColon(Context context, Expression body) throws AgoraError {
+    @Reified
+    public AgoraObject viewColon(Context context, @Keyword("VIEW:") Expression body) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
         var thePattern = leftside.pattern;
         var theCat = leftside.cat;
@@ -556,7 +344,8 @@ abstract public class Expression implements Serializable {
      * @return The return value of installing the new method.
      * @throws agora.errors.AgoraError When something goes wrong during installation of the new method.
      */
-    public AgoraObject cloningColon(Context context, Expression body) throws AgoraError {
+    @Reified
+    public AgoraObject cloningColon(Context context, @Keyword("CLONING:") Expression body) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
         var thePattern = leftside.pattern;
         var theCat = leftside.cat;
@@ -586,6 +375,8 @@ abstract public class Expression implements Serializable {
      * @return The FormalsAndPattern where the public bit is set to 1.
      * @throws agora.errors.AgoraError Perhaps a wrong pattern was there.
      */
+    @Unary({"PUBLIC", "PUB"})
+    @Reified
     public AgoraObject publik(Context context) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context).down();
         leftside.cat = leftside.cat | Category.publik;
@@ -599,6 +390,8 @@ abstract public class Expression implements Serializable {
      * @return The FormalsAndPattern(upped!) where the local bit is set to 1.
      * @throws agora.errors.AgoraError Perhaps a wrong pattern is the receiver.
      */
+    @Unary({"LOCAL", "LOC"})
+    @Reified
     public AgoraObject local(Context context) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context).down();
         leftside.cat = leftside.cat | Category.local;
@@ -617,10 +410,11 @@ abstract public class Expression implements Serializable {
      * @return The value of the FOR: expression.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
+    @Reified
     public AgoraObject fortodo(Context context,
-                               Expression from,
-                               Expression to,
-                               Expression doblock) throws AgoraError {
+                               @Keyword("FOR:") Expression from,
+                               @Keyword("TO:") Expression to,
+                               @Keyword("DO:") Expression doblock) throws AgoraError {
         var init = from.evalAsInteger(context);
         var term = to.evalAsInteger(context);
         // Determine unary receiverless pattern
@@ -651,10 +445,11 @@ abstract public class Expression implements Serializable {
      *
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
+    @Reified
     public AgoraObject fordowntodo(Context context,
-                                   Expression from,
-                                   Expression downto,
-                                   Expression doblock) throws AgoraError {
+                                   @Keyword("FOR:") Expression from,
+                                   @Keyword("DOWNTO:") Expression downto,
+                                   @Keyword("DO:") Expression doblock) throws AgoraError {
         var init = from.evalAsInteger(context);
         var term = downto.evalAsInteger(context);
         // Determine unary receiverless pattern
@@ -692,11 +487,12 @@ abstract public class Expression implements Serializable {
      * @return The value of the FOR: expression.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
+    @Reified
     public AgoraObject fortobydo(Context context,
-                                 Expression from,
-                                 Expression to,
-                                 Expression by,
-                                 Expression doblock) throws AgoraError {
+                                 @Keyword("FOR:") Expression from,
+                                 @Keyword("TO:") Expression to,
+                                 @Keyword("BY:") Expression by,
+                                 @Keyword("DO:") Expression doblock) throws AgoraError {
         var init = from.evalAsInteger(context);
         var term = to.evalAsInteger(context);
         var step = by.evalAsInteger(context);
@@ -728,11 +524,12 @@ abstract public class Expression implements Serializable {
      *
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
+    @Reified
     public AgoraObject fordowntobydo(Context context,
-                                     Expression from,
-                                     Expression downto,
-                                     Expression by,
-                                     Expression doblock) throws AgoraError {
+                                     @Keyword("FOR:") Expression from,
+                                     @Keyword("DOWNTO:") Expression downto,
+                                     @Keyword("BY:") Expression by,
+                                     @Keyword("DO:") Expression doblock) throws AgoraError {
         var init = from.evalAsInteger(context);
         var term = downto.evalAsInteger(context);
         var step = by.evalAsInteger(context);
@@ -769,7 +566,8 @@ abstract public class Expression implements Serializable {
      * @return The return value of this expression
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject ifTrue(Context context, Expression thenPart) throws AgoraError {
+    @Reified
+    public AgoraObject ifTrue(Context context, @Keyword("IFTRUE:") Expression thenPart) throws AgoraError {
         if (this.evalAsBoolean(context))
             return thenPart.eval(context);
         else
@@ -785,7 +583,8 @@ abstract public class Expression implements Serializable {
      * @return The value of this agora expression.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject ifFalse(Context context, Expression thenPart) throws AgoraError {
+    @Reified
+    public AgoraObject ifFalse(Context context, @Keyword("IFFALSE:") Expression thenPart) throws AgoraError {
         if (!this.evalAsBoolean(context))
             return thenPart.eval(context);
         else
@@ -797,7 +596,12 @@ abstract public class Expression implements Serializable {
      *
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject ifTrueifFalse(Context context, Expression thenPart, Expression elsePart) throws AgoraError {
+    @Reified
+    public AgoraObject ifTrueifFalse(
+            Context context,
+            @Keyword("IFTRUE:") Expression thenPart,
+            @Keyword("IFFALSE:") Expression elsePart
+    ) throws AgoraError {
         if (evalAsBoolean(context))
             return thenPart.eval(context);
         else
@@ -809,7 +613,12 @@ abstract public class Expression implements Serializable {
      *
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject ifFalseifTrue(Context context, Expression thenPart, Expression elsePart) throws AgoraError {
+    @Reified
+    public AgoraObject ifFalseifTrue(
+            Context context,
+            @Keyword("IFFALSE:") Expression thenPart,
+            @Keyword("IFTRUE:") Expression elsePart
+    ) throws AgoraError {
         if (!this.evalAsBoolean(context))
             return thenPart.eval(context);
         else
@@ -825,7 +634,8 @@ abstract public class Expression implements Serializable {
      * @param body    the expression to be evaluated.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject whileTrue(Context context, Expression body) throws AgoraError {
+    @Reified
+    public AgoraObject whileTrue(Context context, @Keyword("WHILETRUE:") Expression body) throws AgoraError {
         var result = AgoraGlobals.glob.uppedNull;
         while (this.evalAsBoolean(context))
             result = body.eval(context);
@@ -837,7 +647,8 @@ abstract public class Expression implements Serializable {
      *
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject whileFalse(Context context, Expression body) throws AgoraError {
+    @Reified
+    public AgoraObject whileFalse(Context context, @Keyword("WHILEFALSE:") Expression body) throws AgoraError {
         var result = AgoraGlobals.glob.uppedNull;
         while (!this.evalAsBoolean(context))
             result = body.eval(context);
@@ -849,11 +660,12 @@ abstract public class Expression implements Serializable {
      * yields the true object.
      *
      * @param context The context where this reifier was sent.
-     * @param textExp The expression that will evaluate to a boolean value.
+     * @param testExp The expression that will evaluate to a boolean value.
      * @return The Agora value of this expression.
      * @throws agora.errors.AgoraError When something went wrong during the evaluation cycle.
      */
-    public AgoraObject untilTrue(Context context, Expression testExp) throws AgoraError {
+    @Reified
+    public AgoraObject untilTrue(Context context, @Keyword("UNTILTRUE:") Expression testExp) throws AgoraError {
         var result = AgoraGlobals.glob.uppedNull;
         do {
             result = this.eval(context);
@@ -866,7 +678,8 @@ abstract public class Expression implements Serializable {
      *
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject untilFalse(Context context, Expression testExp) throws AgoraError {
+    @Reified
+    public AgoraObject untilFalse(Context context, @Keyword("UNTILFALSE") Expression testExp) throws AgoraError {
         do {
             this.eval(context);
         } while (testExp.evalAsBoolean(context));
@@ -879,6 +692,8 @@ abstract public class Expression implements Serializable {
      * @param context The context of evaluation.
      * @return Always returns null.
      */
+    @Unary("COMMENT")
+    @Reified
     public AgoraObject comment(Context context) {
         return AgoraGlobals.glob.uppedNull;
     }
@@ -894,7 +709,12 @@ abstract public class Expression implements Serializable {
      * @return The Agora value of this expression.
      * @throws agora.errors.AgoraError When something goes wrong, or when the exception does not match.
      */
-    public AgoraObject trycatch(Context context, Expression pattern, Expression catchcode) throws AgoraError {
+    @Reified
+    public AgoraObject trycatch(
+            Context context,
+            @Keyword("TRY:") Expression pattern,
+            @Keyword("CATCH:") Expression catchcode
+    ) throws AgoraError {
         try {
             return this.eval(context.setException(new AgoraException(catchcode)));
         } catch (AgoraException ex) {
@@ -912,7 +732,7 @@ abstract public class Expression implements Serializable {
                 throw (new ProgramError("TRY:xxx CATCH: pattern is not a valid pattern"));
         } catch (AgoraError ex) {
             if (pattern instanceof UserPattern pat) {
-                var agoError = new KeywordPattern(1);
+                var agoError = new KeywordPattern();
                 agoError.atPut(0, "agoraError:");
                 var formalPattern = pat.makePattern(context);
                 if (formalPattern.equals(agoError)) {
@@ -936,6 +756,8 @@ abstract public class Expression implements Serializable {
      * @return The class object corresponding to the receiving string.
      * @throws agora.errors.AgoraError When something goes wrong (e.g. when the class doesn't exist).
      */
+    @Unary("JAVA")
+    @Reified
     public AgoraObject java(Context context) throws AgoraError {
         var res = this.evalAsString(context);
         try {
@@ -952,6 +774,8 @@ abstract public class Expression implements Serializable {
      * @return The Upped receiving expression (as Agora value)
      * @throws agora.errors.AgoraError When something goes wrong.
      */
+    @Unary("QUOTE")
+    @Reified
     public AgoraObject quote(Context context) throws AgoraError {
         return Up.glob.up(this);
     }
@@ -964,6 +788,8 @@ abstract public class Expression implements Serializable {
      * @return The result of evaluating the receiver denoting an upped expression object.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
+    @Unary("UNQUOTE")
+    @Reified
     public AgoraObject unquote(Context context) throws AgoraError {
         var code = this.eval(context).down();
         if (code instanceof Expression)
@@ -980,6 +806,8 @@ abstract public class Expression implements Serializable {
      * @return The receiver evaluated, and then upped as a referable Agora object.
      * @throws agora.errors.AgoraError When something goes wrong when evaluating the receiving expression.
      */
+    @Unary("UP")
+    @Reified
     public AgoraObject up(Context context) throws AgoraError {
         return Up.glob.up(this.eval(context));
     }
@@ -994,6 +822,8 @@ abstract public class Expression implements Serializable {
      * @throws agora.errors.AgoraError When something goes wrong (e.g. evaluation error or illegal
      *                                 object to down).
      */
+    @Unary("down")
+    @Reified
     public AgoraObject down(Context context) throws AgoraError {
         var res = this.eval(context).down();
         if (res instanceof AgoraObject)
@@ -1008,14 +838,15 @@ abstract public class Expression implements Serializable {
      *
      * @param context          The context where this reifier was sent.
      * @param contextParameter The formal argument to which the agora.runtime context will be bound.
-     * @param bodyParameter    The body expression of the new reifier.
+     * @param bodyparameter    The body expression of the new reifier.
      * @return The return value of the REIFIER:IS: expression (null).
      * @throws agora.errors.AgoraError When the reifier cannot be installed or when wrong
      *                                 agora.patterns are specified.
      */
+    @Reified
     public AgoraObject reifierIs(Context context,
-                                 Expression contextParameter,
-                                 Expression bodyparameter) throws AgoraError {
+                                 @Keyword("REIFIER:") Expression contextParameter,
+                                 @Keyword("IS:") Expression bodyparameter) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
         var thePattern = leftside.pattern;
         var theCat = leftside.cat;
