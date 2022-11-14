@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:50 am
  */
-public class UnaryPattern extends AbstractPattern implements Serializable {
+public class UnaryPattern extends Pattern implements Serializable {
     /**
      * String denoting the pattern value of the unary pattern.
      */

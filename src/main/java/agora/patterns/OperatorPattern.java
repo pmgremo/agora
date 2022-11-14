@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:50 am
  */
-public class OperatorPattern extends AbstractPattern implements Serializable {
+public class OperatorPattern extends Pattern implements Serializable {
     /**
      * String representing the operator.
      */

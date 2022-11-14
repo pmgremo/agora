@@ -12,7 +12,7 @@ import java.util.Objects;
  * @author Wolfgang De Meuter (Programming technology Lab)
  * Last change:  E    16 Nov 97    1:50 am
  */
-public class KeywordPattern extends AbstractPattern {
+public class KeywordPattern extends Pattern {
     /**
      * An array of strings representing the different keywords of
      * the KeywordPattern.

@@ -2,11 +2,10 @@ package agora.attributes;
 
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
-import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
@@ -39,7 +38,7 @@ public class VarGetAttribute implements Attribute {
      * @param context The context of the object in which this attribute resides.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject doAttributeValue(AbstractPattern msg, Client client, Context context) throws AgoraError {
+    public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         return this.theContents.read();
     }
 

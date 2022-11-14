@@ -3,7 +3,7 @@ package agora.attributes;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
@@ -63,7 +63,7 @@ public class PrimVarSetAttribute extends PrimAttribute {
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
     public AgoraObject doAttributeValue(
-            AbstractPattern msg,
+            Pattern msg,
             Client client,
             Context context
     ) throws AgoraError {

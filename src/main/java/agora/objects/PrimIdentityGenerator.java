@@ -1,8 +1,8 @@
 package agora.objects;
 
+import agora.Inspector;
 import agora.tools.*;
 import agora.runtime.*;
-import java.util.*;
 import agora.errors.*;
 
 import java.io.*;

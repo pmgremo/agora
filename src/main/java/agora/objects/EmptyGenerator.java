@@ -1,8 +1,9 @@
 package agora.objects;
 
+import agora.Inspector;
 import agora.errors.AgoraError;
 import agora.errors.MessageNotUnderstood;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
@@ -34,7 +35,7 @@ public class EmptyGenerator extends AbstractGenerator implements Serializable {
      * Adds a view on the generator. This is normally used to temporarily extend
      * a user created object, for example for applying a view-attribute on the object.
      *
-     * @param nameOfFrame The name of the new generator to be used in inspectors.
+     * @param NameOfFrame The name of the new generator to be used in inspectors.
      * @return A newly created InternalGenerator with the receiver as parent generator.
      * @throws agora.errors.AgoraError For some generators, it is impossible to add a layer around
      *                                 them (i.e. we cannot inherit from primitive agora.objects). If this happens, the exception is
@@ -58,10 +59,10 @@ public class EmptyGenerator extends AbstractGenerator implements Serializable {
      * @throws agora.errors.AgoraError When the message is not understood or when an error occurs
      *                                 during evaluation of the method associated to the pattern.
      */
-    public AgoraObject delegate(AbstractPattern msg,
+    public AgoraObject delegate(Pattern msg,
                                 Client client,
                                 Context context) throws AgoraError {
-        throw (new MessageNotUnderstood(msg, context.getSelf().wrap()));
+        throw new MessageNotUnderstood(msg, context.getSelf().wrap());
     }
 
     /**
@@ -94,13 +95,10 @@ public class EmptyGenerator extends AbstractGenerator implements Serializable {
      */
     public EmptyGenerator copy(Hashtable<Object, Object> cloneMap) {
         var myclone = (EmptyGenerator) cloneMap.get(this);
-        if (myclone != null)
-            return myclone;
-        else {
-            var newclone = new EmptyGenerator(this.getFrameName());
-            cloneMap.put(this, newclone);
-            return newclone;
-        }
+        if (myclone != null) return myclone;
+        var newclone = new EmptyGenerator(this.getFrameName());
+        cloneMap.put(this, newclone);
+        return newclone;
     }
 
 }

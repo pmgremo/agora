@@ -4,7 +4,7 @@ import agora.errors.AgoraError;
 import agora.grammar.Expression;
 import agora.objects.AgoraObject;
 import agora.objects.InternalGenerator;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.patterns.UnaryPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
@@ -45,7 +45,7 @@ public class MethAttribute implements Attribute {
      * @param context The context of the object in which this attribute resides.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject doAttributeValue(AbstractPattern msg, Client client, Context context) throws AgoraError {
+    public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         var localPriv = this.bind(client.getActuals(), context.getPrivate());
         var localPub = context.getPub().funcAddLayer("Calling Frame of:" + msg.toString());
         localPub.setPrivate(localPriv);

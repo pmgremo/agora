@@ -1,6 +1,5 @@
 package agora.attributes;
 
-import java.util.*;
 import java.io.*;
 
 import agora.Copyable;
@@ -28,7 +27,7 @@ public interface Attribute extends Serializable, Copyable<Attribute>
      @param context The context of the object in which this attribute resides.
      @exception agora.errors.AgoraError When something goes wrong during evaluation.
   */
-  AgoraObject doAttributeValue(AbstractPattern msg, Client client, Context context) throws AgoraError;
+  AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError;
 
   /**
      Inspects the attribute in a given context.

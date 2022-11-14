@@ -3,7 +3,7 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.patterns.OperatorPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
@@ -45,7 +45,7 @@ public class ReifOperatorPattern extends ReifPattern {
         return context.newReifierClient(actuals);
     }
 
-    public AbstractPattern makePattern(Context context) {
+    public Pattern makePattern(Context context) {
         var pattern = new OperatorPattern(this.operator);
         pattern.setReifier();
         return pattern;

@@ -3,7 +3,7 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.patterns.KeywordPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
@@ -102,7 +102,7 @@ public class UserKeywordPattern extends UserPattern {
      *                syntactic pattern is needed.
      * @return A agora.runtime representation of this syntactic pattern.
      */
-    public AbstractPattern makePattern(Context context) {
+    public Pattern makePattern(Context context) {
         var pattern = new KeywordPattern();
         for (var keyword : keywords) pattern.add(keyword);
         return pattern;

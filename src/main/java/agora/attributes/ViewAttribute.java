@@ -3,7 +3,7 @@ package agora.attributes;
 import agora.errors.AgoraError;
 import agora.grammar.Expression;
 import agora.objects.AgoraObject;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
@@ -37,7 +37,7 @@ public class ViewAttribute extends MethAttribute {
      * @param context The context of the object in which this attribute resides.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject doAttributeValue(AbstractPattern msg,
+    public AgoraObject doAttributeValue(Pattern msg,
                                         Client client,
                                         Context context) throws AgoraError {
         var viewPriv = this.bind(client.getActuals(), context.getPrivate());

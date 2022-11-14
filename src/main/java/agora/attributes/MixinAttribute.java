@@ -2,10 +2,9 @@ package agora.attributes;
 
 import agora.errors.*;
 import agora.objects.*;
+import agora.patterns.Pattern;
 import agora.runtime.*;
 import agora.grammar.*;
-import agora.patterns.*;
-import java.io.*;
 
 
 /**
@@ -35,7 +34,7 @@ public class MixinAttribute extends MethAttribute
      @param context The context of the object in which this attribute resides.
      @exception agora.errors.AgoraError When something goes wrong during evaluation.
   */
-  public AgoraObject doAttributeValue(AbstractPattern msg,Client client,Context context) throws AgoraError
+  public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError
     {
       var mixinPriv = this.bind(client.getActuals(),context.getPrivate());
       mixinPriv = mixinPriv.funcAddLayer("Local part of mixin " + msg.toString());

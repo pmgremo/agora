@@ -2,7 +2,7 @@ package agora.objects;
 
 import agora.attributes.Attribute;
 import agora.errors.AgoraError;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 
 import java.util.Hashtable;
 
@@ -19,7 +19,7 @@ public abstract class MethodsGenerator extends AbstractGenerator {
     /**
      * Each methodsGenerator has a hashtable that links patterns to agora.attributes.
      */
-    protected Hashtable<AbstractPattern, Attribute> theMethodTable;
+    protected Hashtable<Pattern, Attribute> theMethodTable;
     /**
      * Each methodsGenerator is linked to another generator, which is the next generator
      * in the inheritance chain.
@@ -35,7 +35,7 @@ public abstract class MethodsGenerator extends AbstractGenerator {
      */
     public MethodsGenerator(
             String nameOfFrame,
-            Hashtable<AbstractPattern, Attribute> table,
+            Hashtable<Pattern, Attribute> table,
             AbstractGenerator parent
     ) {
         super(nameOfFrame);
@@ -66,7 +66,7 @@ public abstract class MethodsGenerator extends AbstractGenerator {
      *
      * @return A hashtable being the internal table of (pattern,attribute) bindings.
      */
-    public Hashtable<AbstractPattern, Attribute> getHashTable() {
+    public Hashtable<Pattern, Attribute> getHashTable() {
         return this.theMethodTable;
     }
 
@@ -75,7 +75,7 @@ public abstract class MethodsGenerator extends AbstractGenerator {
      *
      * @param newTable The new hashtable after doing the re-assigning.
      */
-    public void setHashTable(Hashtable<AbstractPattern, Attribute> newTable) {
+    public void setHashTable(Hashtable<Pattern, Attribute> newTable) {
         this.theMethodTable = newTable;
     }
 
@@ -85,7 +85,7 @@ public abstract class MethodsGenerator extends AbstractGenerator {
      * @param pattern   The new agora.runtime pattern serving as a key in the hashtable.
      * @param attribute The attribute that will be the value associated to the pattern.
      */
-    public void installPattern(AbstractPattern pattern, Attribute attribute) {
+    public void installPattern(Pattern pattern, Attribute attribute) {
         this.theMethodTable.put(pattern, attribute);
     }
 

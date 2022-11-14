@@ -3,7 +3,7 @@ package agora.attributes;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.reflection.Up;
 import agora.runtime.Client;
 import agora.runtime.Context;
@@ -60,7 +60,7 @@ public class PrimVarGetAttribute extends PrimAttribute {
      * @param context The context of the object in which this attribute resides.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject doAttributeValue(AbstractPattern msg, Client client, Context context) throws AgoraError {
+    public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         try {
             return Up.glob.up(f.get(context.getSelf().down()));
         } catch (IllegalAccessException e) {

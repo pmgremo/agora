@@ -1,7 +1,7 @@
 package agora.errors;
 
 import agora.grammar.Expression;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.runtime.Client;
 
 /**
@@ -23,7 +23,7 @@ public class AgoraException extends AgoraError {
     /**
      * The pattern that will be used to invoke the catch-code.
      */
-    protected AbstractPattern pattern;
+    protected Pattern pattern;
     /**
      * The saved client object.
      */
@@ -56,7 +56,7 @@ public class AgoraException extends AgoraError {
      *
      * @return Gives the agora.runtime (i.e. actual) pattern that occurs in RAISE.
      */
-    public AbstractPattern getPattern() {
+    public Pattern getPattern() {
         return pattern;
     }
 
@@ -74,7 +74,7 @@ public class AgoraException extends AgoraError {
      *
      * @param p The pattern to be filled in by raise.
      */
-    public void setPattern(AbstractPattern p) {
+    public void setPattern(Pattern p) {
         pattern = p;
     }
 

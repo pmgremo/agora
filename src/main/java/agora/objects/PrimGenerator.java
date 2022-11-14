@@ -1,14 +1,14 @@
 package agora.objects;
 
+import agora.Inspector;
 import agora.attributes.Attribute;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
-import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
@@ -23,15 +23,15 @@ public class PrimGenerator extends MethodsGenerator {
     /**
      * Creates a new PrimGenerator. The String argument is the name of the frame.
      * This will be used to display the PrimGenerator in the inspector.
-     * The hashtable binds agora.patterns to agora.attributes and the additional generator is
+     * The hashtable binds patterns to attributes and the additional generator is
      * a reference to the parent frame.
      *
      * @param nameOfFrame The name of the generator to be used in the inspector.
      * @param table       The initial value of the methods hashtable. This table links
-     *                    agora.patterns to their corresponding agora.attributes.
+     *                    patterns to their corresponding agora.attributes.
      * @param parent      This initial value of the parent link of this generator.
      */
-    public PrimGenerator(String nameOfFrame, Hashtable<AbstractPattern, Attribute> table, AbstractGenerator parent) {
+    public PrimGenerator(String nameOfFrame, Hashtable<Pattern, Attribute> table, AbstractGenerator parent) {
         super(nameOfFrame, table, parent);
     }
 
@@ -47,12 +47,11 @@ public class PrimGenerator extends MethodsGenerator {
      * @throws agora.errors.AgoraError When the message is not understood or when an error occurs
      *                                 during evaluation of the method associated to the pattern.
      */
-    public AgoraObject delegate(AbstractPattern msg, Client client, Context context) throws AgoraError {
+    public AgoraObject delegate(Pattern msg, Client client, Context context) throws AgoraError {
         var lookupResult = this.theMethodTable.get(msg);
-        if (lookupResult != null)
-            return lookupResult.doAttributeValue(msg, client, context.setParent(this.parent));
-        else
-            return parent.delegate(msg, client, context);
+        return lookupResult == null ?
+                parent.delegate(msg, client, context) :
+                lookupResult.doAttributeValue(msg, client, context.setParent(this.parent));
     }
 
     /**
@@ -99,6 +98,6 @@ public class PrimGenerator extends MethodsGenerator {
      *                                 thrown.
      */
     public InternalGenerator funcAddLayer(String nameOfFrame) throws AgoraError {
-        return new InternalGenerator(nameOfFrame, new Hashtable(5), null, this);
+        return new InternalGenerator(nameOfFrame, new Hashtable<>(5), null, this);
     }
 }

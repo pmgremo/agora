@@ -3,7 +3,6 @@ package agora.patterns;
 import agora.Copyable;
 
 import java.io.Serializable;
-import java.util.Hashtable;
 import java.util.Objects;
 
 /**
@@ -13,7 +12,7 @@ import java.util.Objects;
   @author Wolfgang De Meuter
 	Last change:  E    16 Nov 97    1:50 am
   */
-public abstract class AbstractPattern implements Serializable, Copyable<AbstractPattern>
+public abstract class Pattern implements Serializable, Copyable<Pattern>
 {
   /** 
     This variable indicates whether it concerns a reifier pattern or an
@@ -25,7 +24,7 @@ public abstract class AbstractPattern implements Serializable, Copyable<Abstract
     The default constructor initializes the pattern. The boolean 'reifierPattern' is set 
     to false.
     */
-  public AbstractPattern()
+  public Pattern()
   {
     this.reifierPattern = false;
   }
@@ -51,7 +50,7 @@ public abstract class AbstractPattern implements Serializable, Copyable<Abstract
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    AbstractPattern that = (AbstractPattern) o;
+    Pattern that = (Pattern) o;
     return reifierPattern == that.reifierPattern;
   }
 

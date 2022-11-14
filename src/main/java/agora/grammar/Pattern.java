@@ -2,7 +2,6 @@ package agora.grammar;
 
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
-import agora.patterns.AbstractPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
@@ -31,7 +30,7 @@ abstract public class Pattern extends Expression {
      * @param context The evaluation context when the pattern is needed (right before sending.)
      * @return A new agora.runtime pattern that can be used for send or delegate.
      */
-    public abstract AbstractPattern makePattern(Context context);
+    public abstract agora.patterns.Pattern makePattern(Context context);
 
     /**
      * This method constructs the formal arguments for this pattern expression.
@@ -48,7 +47,7 @@ abstract public class Pattern extends Expression {
      * determines whether the pattern will really be evaluated (as a receiverless message),
      * or whether a new 'FormalsAndPattern' will be returned.
      *
-     * @param The evaluation context containing the evaluation category.
+     * @param context The evaluation context containing the evaluation category.
      * @return The Agora object resulting from looking up the pattern in the private (when
      * the category is not 'flags', or an upped FormalsAndPattern when the pattern is evaluated
      * in the 'flags' category, indicating that the patter must not be looked up, but simply

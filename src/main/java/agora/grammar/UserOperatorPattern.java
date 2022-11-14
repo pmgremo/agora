@@ -3,7 +3,7 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.patterns.OperatorPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
@@ -79,7 +79,7 @@ public class UserOperatorPattern extends UserPattern {
      *                of a message expression).
      * @return The agora.runtime variant of this syntactic pattern.
      */
-    public AbstractPattern makePattern(Context context) {
+    public Pattern makePattern(Context context) {
         return (new OperatorPattern(this.operator));
     }
 

@@ -2,7 +2,7 @@ package agora.grammar;
 
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.patterns.OperatorPattern;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
@@ -102,7 +102,7 @@ public class Aggregate extends Expression {
      * @param context The evaluation context when sending the [] or {} message.
      * @return The operator pattern corresponding to this [] or {} expression.
      */
-    public AbstractPattern makePattern(Context context) {
+    public Pattern makePattern(Context context) {
         var pat = new OperatorPattern(leftDel == '[' ? "[]" : "{}");
         pat.setReifier();
         return pat;

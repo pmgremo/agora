@@ -1,8 +1,9 @@
 package agora.objects;
 
+import agora.Inspector;
 import agora.attributes.Attribute;
 import agora.errors.AgoraError;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.runtime.Category;
 import agora.runtime.Client;
 import agora.runtime.Context;
@@ -10,7 +11,6 @@ import agora.tools.AgoraGlobals;
 
 import java.io.Serializable;
 import java.util.Hashtable;
-import java.util.NoSuchElementException;
 
 /**
  * An internal generator is a frame of methods for ex-nihilo created agora.objects
@@ -57,7 +57,7 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
      *                    with a parent-of link.
      */
     public InternalGenerator(String nameOfFrame,
-                             Hashtable<AbstractPattern, Attribute> myPart,
+                             Hashtable<Pattern, Attribute> myPart,
                              InternalGenerator privPart,
                              AbstractGenerator parentPart) {
         super(nameOfFrame, myPart, parentPart);
@@ -115,53 +115,38 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
      * @throws agora.errors.AgoraError When the message is not understood or when an error occurs
      *                                 during evaluation of the method associated to the pattern.
      */
-    public AgoraObject delegate(AbstractPattern msg,
+    public AgoraObject delegate(Pattern msg,
                                 Client client,
                                 Context context) throws AgoraError {
-        Object lookupResult = this.theMethodTable.get(msg);
-        if (lookupResult != null)
-            return (((Attribute) lookupResult).doAttributeValue(msg,
-                    client,
-                    context.setMultiple(this.privPart,
-                            Category.emptyCategory,
-                            this.parent)));
-
-        else
-            return parent.delegate(msg, client, context);
+        var lookupResult = this.theMethodTable.get(msg);
+        if (lookupResult == null) return parent.delegate(msg, client, context);
+        return lookupResult.doAttributeValue(
+                msg,
+                client,
+                context.setMultiple(
+                        this.privPart,
+                        Category.emptyCategory,
+                        this.parent
+                )
+        );
     }
 
     /**
      * Makes a deep clone of the internal generator by copying all the constituents of the
      * generator. The parameter is a clone map such that a thing is not copied twice.
      *
-     * @param cloneMap A table of already-copied-things such that nothing gets copied twice.
+     * @param cache A table of already-copied-things such that nothing gets copied twice.
      * @return A deep copy of the receiver.
      */
-
-    public InternalGenerator copy(Hashtable<Object, Object> cloneMap) {
-        var myclone = (InternalGenerator) cloneMap.get(this);
-        if (myclone != null)
-            return myclone;
-        else {
-            var newclone = new InternalGenerator(this.getFrameName(), null, null, null);
-            cloneMap.put(this, newclone);
-            newclone.parent = this.parent.copy(cloneMap);
-            newclone.theMethodTable = new Hashtable<>(this.theMethodTable.size());
-            var keys = theMethodTable.keys();
-            var vals = theMethodTable.elements();
-            try {
-                while (keys.hasMoreElements()) {
-                    newclone.theMethodTable.put(
-                            keys.nextElement().copy(cloneMap),
-                            vals.nextElement().copy(cloneMap)
-                    );
-                }
-            } catch (NoSuchElementException e) {
-                //cannnever happen because we have tested it in the while condition
-            }
-            newclone.privPart = this.privPart.copy(cloneMap);
-            return newclone;
-        }
+    public InternalGenerator copy(Hashtable<Object, Object> cache) {
+        var existing = (InternalGenerator) cache.get(this);
+        if (existing != null) return existing;
+        var result = new InternalGenerator(getFrameName(), null, null, null);
+        cache.put(this, result);
+        result.parent = parent.copy(cache);
+        result.theMethodTable = new Hashtable<>(theMethodTable.size());
+        theMethodTable.forEach((key, value) -> result.theMethodTable.put(key.copy(cache), value.copy(cache)));
+        result.privPart = privPart.copy(cache);
+        return result;
     }
-
 }

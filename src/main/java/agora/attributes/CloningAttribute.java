@@ -3,13 +3,12 @@ package agora.attributes;
 import agora.errors.AgoraError;
 import agora.grammar.Expression;
 import agora.objects.*;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.runtime.Category;
 import agora.runtime.Client;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
-import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
@@ -40,7 +39,7 @@ public class CloningAttribute extends MethAttribute {
      * @param context The context of the object in which this attribute resides.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject doAttributeValue(AbstractPattern msg, Client client, Context context) throws AgoraError {
+    public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         if (Category.contains(context.getCategory(), Category.dontClone))
             return this.methodCode.eval(context);
         var cloningMap = new Hashtable<>(3);

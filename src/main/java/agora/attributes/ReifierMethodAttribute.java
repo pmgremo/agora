@@ -4,7 +4,7 @@ import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.grammar.Expression;
 import agora.objects.AgoraObject;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.patterns.UnaryPattern;
 import agora.reflection.Up;
 import agora.runtime.Client;
@@ -44,7 +44,7 @@ public class ReifierMethodAttribute extends MethAttribute {
      * @param context The context of the object in which this attribute resides.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject doAttributeValue(AbstractPattern msg, Client client, Context context) throws AgoraError {
+    public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         var localPriv = this.bind(client.getActuals(), context.getPrivate());
         var localPub = context.getPub().funcAddLayer("Formals-Actuals Frame");
         localPub.setPrivate(localPriv);

@@ -41,9 +41,11 @@ public class UserIdentityGenerator extends IdentityGenerator implements Serializ
      *                                 thrown.
      */
     public IdentityGenerator funcAddLayer(String nameOfFrame) throws AgoraError {
-        var newMe = this.myMethods.funcAddLayer(nameOfFrame);
-        var newID = new UserIdentityGenerator("Object", newMe, null);
-        return newID;
+        return new UserIdentityGenerator(
+                Object.class.getSimpleName(),
+                myMethods.funcAddLayer(nameOfFrame),
+                null
+        );
     }
 
     /**
@@ -62,18 +64,15 @@ public class UserIdentityGenerator extends IdentityGenerator implements Serializ
      * Makes a deep clone of the identity by copying all the constituents of the
      * identity. The parameter is a clone map such that a thing is not copied twice.
      *
-     * @param cloneMap A table of already-copied-things such that nothing gets copied twice.
+     * @param cache A table of already-copied-things such that nothing gets copied twice.
      * @return A deep copy of the receiver.
      */
-    public UserIdentityGenerator copy(Hashtable<Object, Object> cloneMap) {
-        var cachedclone = (UserIdentityGenerator) cloneMap.get(this);
-        if (cachedclone != null)
-            return cachedclone;
-        else {
-            var newClone = new UserIdentityGenerator(this.getFrameName(), null, null);
-            cloneMap.put(this, newClone);
-            newClone.myMethods = (MethodsGenerator) (this.myMethods.copy(cloneMap));
-            return newClone;
-        }
+    public UserIdentityGenerator copy(Hashtable<Object, Object> cache) {
+        var existing = (UserIdentityGenerator) cache.get(this);
+        if (existing != null) return existing;
+        var result = new UserIdentityGenerator(getFrameName(), null, null);
+        cache.put(this, result);
+        result.myMethods = (MethodsGenerator) (myMethods.copy(cache));
+        return result;
     }
 }

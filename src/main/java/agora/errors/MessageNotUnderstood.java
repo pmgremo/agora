@@ -1,7 +1,7 @@
 package agora.errors;
 
 import agora.objects.AgoraObject;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 
 /**
  * This is the most occuring Agora error to indicate that a 'send'
@@ -14,7 +14,7 @@ public class MessageNotUnderstood extends AgoraError {
     /**
      * The message that was sent.
      */
-    protected AbstractPattern msg;
+    protected Pattern msg;
     /**
      * The object to which the message was sent.
      */
@@ -30,7 +30,7 @@ public class MessageNotUnderstood extends AgoraError {
      *                 receiver to be inspected. If it is null, no 'Inspect Receiver' button will be
      *                 visible in the dialog box.
      */
-    public MessageNotUnderstood(AbstractPattern msg, AgoraObject receiver) {
+    public MessageNotUnderstood(Pattern msg, AgoraObject receiver) {
         super();
         this.msg = msg;
         this.receiver = receiver;
@@ -41,7 +41,7 @@ public class MessageNotUnderstood extends AgoraError {
      *
      * @return The pattern determining the message that was not understood.
      */
-    public AbstractPattern getPattern() {
+    public Pattern getPattern() {
         return this.msg;
     }
 

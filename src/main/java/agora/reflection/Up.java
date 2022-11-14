@@ -9,7 +9,7 @@ import agora.javaAdditions.JV_Nil;
 import agora.objects.AgoraObject;
 import agora.objects.PrimGenerator;
 import agora.objects.PrimIdentityGenerator;
-import agora.patterns.AbstractPattern;
+import agora.patterns.Pattern;
 import agora.patterns.KeywordPattern;
 import agora.patterns.OperatorPattern;
 import agora.patterns.UnaryPattern;
@@ -52,7 +52,7 @@ public class Up implements Serializable {
     private final VariableContainer primitive = new VariableContainer(null); // temporary variable
 
     public static PrimGenerator buildGenerator(Class<?> type) {
-        var table = new Hashtable<AbstractPattern, Attribute>(5);
+        var table = new Hashtable<Pattern, Attribute>(5);
         for (var x : type.getDeclaredMethods()) {
             var reified = x.getAnnotation(Reified.class);
             var attribute = isStatic(x.getModifiers()) ? new PrimFunctionAttribute(x) : new PrimMethAttribute(x);
@@ -189,7 +189,7 @@ public class Up implements Serializable {
      * for every class in the hierarchy.
      */
     private PrimGenerator constructGeneratorFor(Class<?> c, boolean isInstance) throws AgoraError {
-        var theTable = new Hashtable<AbstractPattern, Attribute>();
+        var theTable = new Hashtable<Pattern, Attribute>();
         putFieldsInQueue(c, theTable, isInstance);                       // Insert patterns and fields
         putMethodsInQueue(c, theTable, isInstance);                      // Insert patterns and methods
         putConstructorsInQueue(c, theTable, isInstance);                 // Insert patterns and constructors
@@ -201,7 +201,7 @@ public class Up implements Serializable {
      * It creates appropriate read and write Agora attributes and puts them
      * all in a queue.
      */
-    private void putFieldsInQueue(Class<?> c, Hashtable<AbstractPattern, Attribute> q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
+    private void putFieldsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
         var fields = c.getDeclaredFields();
         for (var field : fields) {
             if (!Modifier.isPublic(field.getModifiers()) ||
@@ -223,7 +223,7 @@ public class Up implements Serializable {
      * Agora attribute and puts a pattern for the methods together with the attribute in
      * a queue.
      */
-    private void putMethodsInQueue(Class<?> c, Hashtable<AbstractPattern, Attribute> q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
+    private void putMethodsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
         var methods = c.getDeclaredMethods();
         for (var method : methods) {
             if (!Modifier.isPublic(method.getModifiers()) ||
@@ -242,7 +242,7 @@ public class Up implements Serializable {
      * a pattern 'new' is created and the appropriate Agora attribute is constructed.
      * All the patterns and the attributes are gathered together in a queue.
      */
-    private void putConstructorsInQueue(Class<?> c, Hashtable<AbstractPattern, Attribute> q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
+    private void putConstructorsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
         var constructors = c.getDeclaredConstructors();
         for (var constructor : constructors) {
             if (!Modifier.isPublic(constructor.getModifiers()) ||
@@ -259,7 +259,7 @@ public class Up implements Serializable {
     /**
      * Creates a Variable Read pattern for a field f.
      */
-    private AbstractPattern createVariableReadPatFor(Field f) {
+    private Pattern createVariableReadPatFor(Field f) {
         return new UnaryPattern(decaps(f.getName()));
     }
 
@@ -273,7 +273,7 @@ public class Up implements Serializable {
     /**
      * Creates a variable write pattern for a field f, i.e. the name of f with a colon.
      */
-    private AbstractPattern createVariableWritePatFor(Field f) {
+    private Pattern createVariableWritePatFor(Field f) {
         var writePat = new KeywordPattern();
         writePat.add(decaps(f.getName()) + ":");
         return writePat;
@@ -292,7 +292,7 @@ public class Up implements Serializable {
      * signature of the Java method, a unary, an operator or a
      * keyword pattern is created.
      */
-    private AbstractPattern createMethodPatFor(Method m) {
+    private Pattern createMethodPatFor(Method m) {
         var types = m.getParameterTypes();
         if (types.length == 0) return new UnaryPattern(m.getName());
         var pat = new KeywordPattern();
@@ -315,7 +315,7 @@ public class Up implements Serializable {
      * Depending on the signature of the constructor, a unary pattern or a keyword
      * pattern is created.
      */
-    private AbstractPattern createConstructorPatFor(Constructor<?> c) {
+    private Pattern createConstructorPatFor(Constructor<?> c) {
         var types = c.getParameterTypes();
         if (types.length == 0)
             return new UnaryPattern("new");
