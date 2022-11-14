@@ -48,9 +48,87 @@ public class Up implements Serializable {
      * Java class names onto generators that contain the method tables for the
      * associated class.
      */
-    private final Hashtable<String, PrimGenerator> uptable = new Hashtable<>(30);
+    private final Hashtable<String, PrimGenerator> cache = new Hashtable<>(30);
 
-    public static PrimGenerator buildGenerator(Class<?> type) {
+    /**
+     * This is a  public procedure.
+     * It wraps any Java implementation level object into a corresponding Agora object.
+     * It reads the fields, methods and constructors of the class of the object, and turns
+     * them into an Agora method table.
+     *
+     * @param o The object of which the upped Agora version is needed.
+     * @return The upped version of the input. This upped version understands
+     * send and down.
+     * @throws agora.errors.AgoraError When something goes wrong during the upping. For example,
+     *                                 a generatorcreator might be invoked that accesses a Java method that does not exists.
+     */
+    public AgoraObject up(Object o) throws AgoraError {
+        if (o == null) o = new JV_Nil();
+        if (o instanceof Class<?> c)
+            return new PrimIdentityGenerator(c.getSimpleName(), generatorFor(c, false), o).wrap();
+        else
+            return new PrimIdentityGenerator(Object.class.getSimpleName(), generatorFor(o.getClass(), true), o).wrap();
+    }
+
+    /**
+     * This private procedure generators a generator (i.e. a lookup table that understands 'delegate')
+     * for a Java implementation level class. It is called by 'Up' with the class of the object.
+     * It checks whether the method table is already in the cache. If so, it is simply returned.
+     * Otherwise, the method table is constructed and put in the cache for the next usage. The second
+     * argument indicates whether object attributes (apart from class attributes like constructors
+     * and statics) should also be considered
+     */
+    private PrimGenerator generatorFor(Class<?> c, boolean isInstance) throws AgoraError {
+        var type = c;
+        var superType = c.getSuperclass();
+        if (Integer.class.equals(c)) {
+            type = JV_Integer.class;
+            superType = c;
+        } else if (Float.class.equals(c)) {
+            type = JV_Float.class;
+            superType = c;
+        } else if (Boolean.class.equals(c)) {
+            type = JV_Boolean.class;
+            superType = c;
+        }
+        return createGeneratorFor(type, superType, isInstance);
+    }
+
+    /**
+     * This procedure really creates the generator for the class by recursively
+     * traversing the class hierarchy and creating (or looking up in the cache)
+     * the generator for the subclasses. The generator for 'java.lang.Object' is linked
+     * to the root of the Agora system.
+     */
+    private PrimGenerator createGeneratorFor(Class<?> type, Class<?> superType, boolean isInstance) throws AgoraError {
+        var name = type.getName();
+        if (!isInstance) name += "CLASS";
+
+        var generator = cache.get(name);
+        if (generator != null) return generator;
+
+        generator = buildGenerator(type);
+
+        if (generator == null)
+            generator = constructGeneratorFor(type, isInstance);
+
+        cache.put(name, generator);
+
+        if (Object.class.equals(type)) {
+            generator.setParent(AgoraGlobals.glob.rootIdentity);
+            generator.installPattern(
+                    new UnaryPattern("primitive"),
+                    new VarGetAttribute(new VariableContainer(up(true)))
+            );
+            return generator;
+        }
+
+        generator.setParent(createGeneratorFor(superType, superType.getSuperclass(), isInstance));
+
+        return generator;
+    }
+
+    private static PrimGenerator buildGenerator(Class<?> type) {
         var table = new Hashtable<Pattern, Attribute>(5);
         for (var x : type.getDeclaredMethods()) {
             var reified = x.getAnnotation(Reified.class);
@@ -92,84 +170,6 @@ public class Up implements Serializable {
         var frame = type.getAnnotation(Frame.class);
         var name = frame != null ? frame.value() : type.getSimpleName();
         return new PrimGenerator(name, table, null);
-    }
-
-    /**
-     * This is a  public procedure.
-     * It wraps any Java implementation level object into a corresponding Agora object.
-     * It reads the fields, methods and constructors of the class of the object, and turns
-     * them into an Agora method table.
-     *
-     * @param o The object of which the upped Agora version is needed.
-     * @return The upped version of the input. This upped version understands
-     * send and down.
-     * @throws agora.errors.AgoraError When something goes wrong during the upping. For example,
-     *                                 a generatorcreator might be invoked that accesses a Java method that does not exists.
-     */
-    public AgoraObject up(Object o) throws AgoraError {
-        if (o == null) o = new JV_Nil();
-        if (o instanceof Class<?> c)
-            return new PrimIdentityGenerator(c.getSimpleName(), generatorFor(c, false), o).wrap();
-        else
-            return new PrimIdentityGenerator(Object.class.getSimpleName(), generatorFor(o.getClass(), true), o).wrap();
-    }
-
-    /**
-     * This private procedure generators a generator (i.e. a lookup table that understands 'delegate')
-     * for a Java implementation level class. It is called by 'Up' with the class of the object.
-     * It checks whether the method table is already in the cache. If so, it is simply returned.
-     * Otherwise, the method table is constructed and put in the cache for the next usage. The second
-     * argument indicates whether object agora.attributes (apart from class agora.attributes like constructors
-     * and statics) should also be considered
-     */
-    private PrimGenerator generatorFor(Class<?> c, boolean isInstance) throws AgoraError {
-        var type = c;
-        var superType = c.getSuperclass();
-        if (Integer.class.equals(c)) {
-            type = JV_Integer.class;
-            superType = c;
-        } else if (Float.class.equals(c)) {
-            type = JV_Float.class;
-            superType = c;
-        } else if (Boolean.class.equals(c)) {
-            type = JV_Boolean.class;
-            superType = c;
-        }
-        return createGeneratorFor(type, superType, isInstance);
-    }
-
-    /**
-     * This procedure really creates the generator for the class by recursively
-     * traversing the class hierarchy and creating (or looking up in the cache)
-     * the generator for the subclasses. The generator for 'java.lang.Object' is linked
-     * to the root of the Agora system.
-     */
-    private PrimGenerator createGeneratorFor(Class<?> type, Class<?> superType, boolean isInstance) throws AgoraError {
-        var name = type.getName();
-        if (!isInstance) name = name + "CLASS";
-
-        var methodTableOfc = uptable.get(name);
-        if (methodTableOfc != null) return methodTableOfc;
-
-        methodTableOfc = buildGenerator(type);
-
-        if (methodTableOfc == null)
-            methodTableOfc = constructGeneratorFor(type, isInstance);
-
-        uptable.put(name, methodTableOfc);
-
-        if (Object.class.equals(type)) {
-            methodTableOfc.setParent(AgoraGlobals.glob.rootIdentity);
-            methodTableOfc.installPattern(
-                    new UnaryPattern("primitive"),
-                    new VarGetAttribute(new VariableContainer(up(true)))
-            );
-            return methodTableOfc;
-        }
-
-        methodTableOfc.setParent(createGeneratorFor(superType, superType.getSuperclass(), isInstance));
-
-        return methodTableOfc;
     }
 
     /**
@@ -308,15 +308,14 @@ public class Up implements Serializable {
         var types = c.getParameterTypes();
         if (types.length == 0)
             return new UnaryPattern("new");
+        var pat = new KeywordPattern();
         if (types.length == 1) {
-            var pat = new KeywordPattern();
-            pat.atPut(0, "new" + typeNameFor(types[0]) + ":");
+            pat.add("new" + typeNameFor(types[0]) + ":");
             return pat;
         }
-        var pat = new KeywordPattern();
-        pat.atPut(0, "new" + typeNameFor(types[0]) + ":");
+        pat.add("new" + typeNameFor(types[0]) + ":");
         for (var j = 1; j < types.length; j++)
-            pat.atPut(j, typeNameFor(types[j]) + ":");
+            pat.add(typeNameFor(types[j]) + ":");
         return pat;
     }
 

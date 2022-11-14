@@ -66,6 +66,6 @@ public class PrimIdentityGenerator extends IdentityGenerator implements Serializ
 				  this.downedVersion,
 				  context);
       d.pack();
-      d.show();
+      d.setVisible(true);
     }
 }

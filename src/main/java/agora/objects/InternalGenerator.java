@@ -75,7 +75,7 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
      *                                 thrown.
      */
     public InternalGenerator funcAddLayer(String nameOfFrame) throws AgoraError {
-        return (new InternalGenerator(nameOfFrame, new Hashtable(3), null, this));
+        return new InternalGenerator(nameOfFrame, new Hashtable<>(3), null, this);
     }
 
     /**

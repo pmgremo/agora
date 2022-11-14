@@ -3,7 +3,6 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
 import agora.objects.FormalsAndPattern;
-import agora.objects.PrimGenerator;
 import agora.reflection.Reified;
 import agora.reflection.Unary;
 import agora.reflection.Up;
@@ -11,18 +10,6 @@ import agora.runtime.Category;
 import agora.runtime.Context;
 
 abstract public class ReifPattern extends Pattern {
-    /**
-     * Method to create an ad-hoc 'up' generator for the agora.objects of this class.
-     *
-     * @return The generator containing the agora.patterns that can be sent to reifier agora.patterns.
-     * @throws agora.errors.AgoraError When something goes wrong while creating the generator
-     *                                 (e.g. if a method has been deleted from this class).
-     *                                 Last change:  E    16 Nov 97    2:25 pm
-     */
-    public static PrimGenerator generatorReifPattern() throws AgoraError {
-        return Up.buildGenerator(ReifPattern.class);
-    }
-
     /**
      * Method to evaluate a reifier pattern.
      *
@@ -34,9 +21,12 @@ abstract public class ReifPattern extends Pattern {
         try {
             // Patterns in Flags Category Must Be Declared: Just Return a new pattern
             if (Category.contains(context.getCategory(), Category.flags))
-                return Up.glob.up(new FormalsAndPattern(this.makeFormals(context),
-                        this.makePattern(context),
-                        Category.emptyCategory));
+                return Up.glob.up(
+                        new FormalsAndPattern(this.makeFormals(context),
+                                this.makePattern(context),
+                                Category.emptyCategory
+                        )
+                );
                 // Patterns in Other Categories Denote Accesses in the Local Part of An Object
             else {
                 var client = this.makeClient(context, Up.glob.up(context));

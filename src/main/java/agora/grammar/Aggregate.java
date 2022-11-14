@@ -1,12 +1,12 @@
 package agora.grammar;
 
+import agora.awt.AwtIo;
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
-import agora.patterns.Pattern;
 import agora.patterns.OperatorPattern;
+import agora.patterns.Pattern;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
-import agora.awt.AwtIo;
 
 /**
  * This class represents the parsetree node for aggregates of Agora expressions.
@@ -40,9 +40,9 @@ public class Aggregate extends Expression {
      * @param right The right delimiter of the aggregate.
      */
     public Aggregate(int sz, char left, char right) {
-        this.expressions = new Expression[sz];
-        this.leftDel = left;
-        this.rightDel = right;
+        expressions = new Expression[sz];
+        leftDel = left;
+        rightDel = right;
     }
 
     /**
@@ -52,7 +52,7 @@ public class Aggregate extends Expression {
      * @return The expression residing at the specified position in the aggregate.
      */
     public Expression at(int index) {
-        return this.expressions[index];
+        return expressions[index];
     }
 
     /**
@@ -62,7 +62,7 @@ public class Aggregate extends Expression {
      * @param expression The new expression to be installed at the given position.
      */
     public void atPut(int index, Expression expression) {
-        this.expressions[index] = expression;
+        expressions[index] = expression;
     }
 
     /**
@@ -73,16 +73,18 @@ public class Aggregate extends Expression {
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
     public AgoraObject eval(Context context) throws AgoraError {
-        if (this.leftDel == '[') {
+        if (leftDel == '[') {
             var exnihiloSelf = AgoraGlobals.glob.rootIdentity.funcAddLayer("public of ex nihilo");
             var exnihiloPriv = context.getPrivate().funcAddLayer("private of ex nihilo");
             exnihiloSelf.getMe().setPrivate(exnihiloPriv);
             exnihiloPriv.setPrivate(exnihiloPriv);
-            var exnihiloCont = context.setMultiple(exnihiloSelf,
+            var exnihiloCont = context.setMultiple(
+                    exnihiloSelf,
                     exnihiloPriv,
                     exnihiloSelf.getMe(),
                     context.getCategory(),
-                    AgoraGlobals.glob.rootIdentity);
+                    AgoraGlobals.glob.rootIdentity
+            );
             for (var expression : expressions) expression.eval(exnihiloCont);
             return exnihiloSelf.wrap();
         } else // leftDel=='{'
@@ -117,16 +119,16 @@ public class Aggregate extends Expression {
      */
     public String unparse(int hor) {
         var msg = new StringBuilder(AwtIo.makeSpaces(hor));
-        msg.append(Character.valueOf(this.leftDel).toString());
-        if (this.expressions.length != 0) {
-            for (var i = 0; i < this.expressions.length; i++) {
-                if (i == 0) msg.append(this.expressions[i].unparse(hor));
-                else msg.append(this.expressions[i].unparse(hor + 2));
-                if (i < this.expressions.length - 1) msg.append(";\n");
+        msg.append(Character.valueOf(leftDel).toString());
+        if (expressions.length != 0) {
+            for (var i = 0; i < expressions.length; i++) {
+                if (i == 0) msg.append(expressions[i].unparse(hor));
+                else msg.append(expressions[i].unparse(hor + 2));
+                if (i < expressions.length - 1) msg.append(";\n");
             }
             msg.append(AwtIo.makeSpaces(hor));
         }
-        msg.append(this.rightDel);
+        msg.append(rightDel);
         return msg.toString();
     }
 }

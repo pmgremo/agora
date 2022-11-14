@@ -21,7 +21,7 @@ public class JV_Boolean {
      * @param receiver The boolean indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the 'and' of the receiver and the argument.
+     * @return A new boolean being the 'and' of the receiver and the argument.
      */
     @Operator("&&")
     public static Boolean andB(Boolean receiver, Object arg) throws AgoraError {
@@ -38,7 +38,7 @@ public class JV_Boolean {
      * @param receiver The boolean indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the 'or' of the receiver and the argument.
+     * @return A new boolean being the 'or' of the receiver and the argument.
      */
     @Operator("||")
     public static Boolean orB(Boolean receiver, Object arg) throws AgoraError {
@@ -55,7 +55,7 @@ public class JV_Boolean {
      *
      * @param receiver The boolean indicating the receiver of the method
      * @param arg      The object indicating the argument.
-     * @returns A new boolean being the comparision of the receiver and the argument.
+     * @return A new boolean being the comparision of the receiver and the argument.
      */
     @Operator("=")
     public static Boolean equalsB(Boolean receiver, Object arg) {

@@ -14,6 +14,8 @@ public class Agora {
         AgoraGlobals.glob = new AgoraGlobals(null, null);
         var input = new ByteArrayInputStream(args[0].getBytes(UTF_8));
         var parser = new Parser(new Scanner(() -> input));
-        parser.parseExpression().defaultEval();
+        var x = parser.parseExpression().defaultEval();
+        System.out.println();
+        System.out.println(x);
     }
 }

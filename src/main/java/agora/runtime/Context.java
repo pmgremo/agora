@@ -94,12 +94,14 @@ public class Context implements Serializable {
      * @return A copy of the specified argument
      */
     public Context newContext(Context c) {
-        return new Context(c.currentSelf,
+        return new Context(
+                c.currentSelf,
                 c.currentPriv,
                 c.currentPub,
                 c.currentCategory,
                 c.currentParent,
-                c.currentException);
+                c.currentException
+        );
     }
 
     /**
@@ -254,9 +256,11 @@ public class Context implements Serializable {
      * @return A new Context in which everything is the same as in the original context,
      * but the specified parameters.
      */
-    public Context setMultiple(IdentityGenerator self,
-                               InternalGenerator priv,
-                               AbstractGenerator parent) {
+    public Context setMultiple(
+            IdentityGenerator self,
+            InternalGenerator priv,
+            AbstractGenerator parent
+    ) {
         var newC = this.newContext(this);
         newC.currentParent = parent;
         newC.currentPriv = priv;
@@ -272,8 +276,7 @@ public class Context implements Serializable {
      * @return A new Context in which everything is the same as in the original context,
      * but the specified parameters.
      */
-    public Context setMultiple(IdentityGenerator self,
-                               int cat) {
+    public Context setMultiple(IdentityGenerator self, int cat) {
         var newC = this.newContext(this);
         newC.currentSelf = self;
         newC.currentCategory = cat;
@@ -289,9 +292,11 @@ public class Context implements Serializable {
      * @return A new Context in which everything is the same as in the original context,
      * but the specified parameters.
      */
-    public Context setMultiple(InternalGenerator priv,
-                               int cat,
-                               AbstractGenerator parent) {
+    public Context setMultiple(
+            InternalGenerator priv,
+            int cat,
+            AbstractGenerator parent
+    ) {
         var newC = this.newContext(this);
         newC.currentPriv = priv;
         newC.currentParent = parent;

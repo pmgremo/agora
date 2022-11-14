@@ -4,13 +4,12 @@ import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
 import agora.objects.FormalsAndPattern;
-import agora.objects.PrimGenerator;
 import agora.patterns.KeywordPattern;
-import agora.reflection.*;
+import agora.reflection.Reified;
+import agora.reflection.Unary;
+import agora.reflection.Up;
 import agora.runtime.Category;
 import agora.runtime.Context;
-
-import java.io.Serializable;
 
 /**
  * This abstract class represents agora.patterns for ordinary messages. It has subclasses
@@ -36,12 +35,11 @@ abstract public class UserPattern extends Pattern {
                 return Up.glob.up(new FormalsAndPattern(this.makeFormals(context),
                         this.makePattern(context),
                         Category.emptyCategory));
-                // Patterns in Other Categories Denote Accesses in the Local Part of An Object
-            else {
-                var client = this.makeClient(context, context.getSelf().wrap());
-                client.actualsEval(context);
-                return context.getPrivate().delegate(this.makePattern(context), client, context);
-            }
+
+            // Patterns in Other Categories Denote Accesses in the Local Part of An Object
+            var client = this.makeClient(context, context.getSelf().wrap());
+            client.actualsEval(context);
+            return context.getPrivate().delegate(this.makePattern(context), client, context);
         } catch (AgoraError ex) {
             ex.setCode(this);
             throw ex;
@@ -60,22 +58,21 @@ abstract public class UserPattern extends Pattern {
     @Reified
     public AgoraObject raise(Context context) throws AgoraError {
         var agoError = new KeywordPattern();
-        agoError.atPut(0, "agoraError:");
+        agoError.add("agoraError:");
         var runtimePat = this.makePattern(context);
         var theClient = this.makeClient(context, null);
         theClient.actualsEval(context);
         if (agoError.equals(runtimePat)) {
             var actuals = theClient.getActuals();
-            if (((AgoraObject) actuals[0]).down() instanceof AgoraError) {
-                throw (AgoraError) ((AgoraObject) actuals[0]).down();
-            } else
+            if (((AgoraObject) actuals[0]).down() instanceof AgoraError e)
+                throw e;
+            else
                 throw new ProgramError("agoraError: is a reserved exception pattern. Its argument must be an exception.");
-        } else {
-            var theException = context.getException();
-            theException.setPattern(runtimePat);
-            theException.setClient(theClient);
-            throw theException;
         }
+        var theException = context.getException();
+        theException.setPattern(runtimePat);
+        theException.setClient(theClient);
+        throw theException;
     }
 
     /**
