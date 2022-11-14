@@ -1,7 +1,6 @@
 package agora;
 
 import agora.errors.AgoraError;
-import agora.errors.PrimException;
 import agora.errors.ProgramError;
 import agora.grammar.Parser;
 import agora.grammar.Scanner;
@@ -88,7 +87,7 @@ public class Agorique implements Serializable {
                 else
                     throw new ProgramError("Parse Error");
             } catch (AgoraError error) {
-                error.signal();
+                ErrorDialog.setUpErrorDialog(error.getMessage(), error.getCode(), null);
             }
         });
         b2.addActionListener(e -> {
@@ -108,8 +107,8 @@ public class Agorique implements Serializable {
 					os.close();
 					window.setCursor(oldCursor);
 				} catch (IOException error) {
-					new PrimException(error, "Save Image ActionListener").signal();
-				}
+                    ErrorDialog.setUpErrorDialog("Save Image ActionListener", null, null);
+                }
 			}
 		});
         b3.addActionListener(e -> {
@@ -131,19 +130,19 @@ public class Agorique implements Serializable {
 					window.setCursor(oldCursor);
 					AgoraGlobals.glob.agoraWindow = window;
 				} catch (IOException error) {
-					new PrimException(error, "Load Image ActionListener").signal();
-				} catch (ClassNotFoundException error2) {
-					new ProgramError("Image of Wrong Version").signal();
-				}
+                    ErrorDialog.setUpErrorDialog("Load Image ActionListener", null, null);
+                } catch (ClassNotFoundException error2) {
+                    ErrorDialog.setUpErrorDialog("Image of Wrong Version", null, null);
+                }
 			}
 		});
         try {
             AgoraGlobals.glob = new AgoraGlobals(null, window);
             window.setVisible(true);
         } catch (AgoraError ex) {
-            ex.signal();
+            ErrorDialog.setUpErrorDialog(ex.getMessage(), ex.getCode(), null);
         } catch (IllegalArgumentException e) {
-            System.out.print(e.getMessage());
+            System.err.print(e.getMessage());
         }
     }
 

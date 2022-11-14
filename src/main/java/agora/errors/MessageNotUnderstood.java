@@ -12,11 +12,11 @@ import agora.patterns.AbstractPattern;
  */
 public class MessageNotUnderstood extends AgoraError {
     /**
-     * The message that was send.
+     * The message that was sent.
      */
     protected AbstractPattern msg;
     /**
-     * The object to which the message was send.
+     * The object to which the message was sent.
      */
     protected AgoraObject receiver;
 
@@ -59,15 +59,8 @@ public class MessageNotUnderstood extends AgoraError {
     public String getMessage() {
         var x = "";
         if (this.msg.isReifier())
-            x = x + "Reifier ";
-        x = x + "Message Not Understood";
-        x = x + ": \n\n";
-        x = x + msg.toString();
+            x = "Reifier ";
+        x = x + "Message Not Understood: \n\n" + msg.toString();
         return x;
-    }
-
-    @Override
-    public void signal() {
-        this.setUpDialog(getMessage(), receiver);
     }
 }

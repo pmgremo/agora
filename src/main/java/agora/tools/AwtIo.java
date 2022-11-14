@@ -84,13 +84,10 @@ public class AwtIo implements Io {
      */
     @Override
     public char getChar() {
-        if (count >= theInput.length())
-            return (char) 0;
-        else {
-            var ret = theInput.charAt(count);
-            count++;
-            return ret;
-        }
+        if (count >= theInput.length()) return (char) 0;
+        var ret = theInput.charAt(count);
+        count++;
+        return ret;
     }
 }
 

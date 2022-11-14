@@ -1,7 +1,7 @@
 package agora;
 
 import agora.errors.AgoraError;
-import agora.errors.PrimException;
+import agora.errors.MessageNotUnderstood;
 import agora.errors.ProgramError;
 import agora.grammar.Parser;
 import agora.grammar.Scanner;
@@ -11,8 +11,6 @@ import agora.tools.AwtIo;
 import agora.tools.SingleRoot;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -61,99 +59,95 @@ public class Agorette extends java.applet.Applet {
         textArea.append("\nhttp://progwww.vub.ac.be/");
         textArea.append("\n\nIf you find bugs, PLEASE, mail them to wdmeuter@vub.ac.be");
         textArea.append("\n\n\nType in an expression, select it and press the eval button!");
-        b1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // FROM HERE TO ....
-                String input;
-                try   // THIS NORMALLY WORKS!!!!!!!!!!!!!!!!!!!!!!!!!
-                {
-                    input = textArea.getSelectedText();
-                } catch (StringIndexOutOfBoundsException exc) {
-                    // THIS WORKS IN THE APPLETVIEWER!!!!!!!!!!!!!!!
-                    var str = textArea.getText();
-                    var strbuff = new StringBuffer(str);
-                    var j = 0;
-                    for (var i = 0; i < str.length(); i++) {
-                        if ((str.charAt(i) == '\n') | (str.charAt(i) == '\r')) {
-                            j++;
-                            strbuff.insert((i + j), '\r');
-                        }
+        b1.addActionListener(e -> {
+            // FROM HERE TO ....
+            String input;
+            try   // THIS NORMALLY WORKS!!!!!!!!!!!!!!!!!!!!!!!!!
+            {
+                input = textArea.getSelectedText();
+            } catch (StringIndexOutOfBoundsException exc) {
+                // THIS WORKS IN THE APPLETVIEWER!!!!!!!!!!!!!!!
+                var str = textArea.getText();
+                var strbuff = new StringBuilder(str);
+                var j = 0;
+                for (var i = 0; i < str.length(); i++) {
+                    if ((str.charAt(i) == '\n') | (str.charAt(i) == '\r')) {
+                        j++;
+                        strbuff.insert((i + j), '\r');
                     }
-                    input = strbuff.toString();
-                    input = input.substring(textArea.getSelectionStart(), textArea.getSelectionEnd());
                 }
-                // ... TO HERE
-                // Due to a bug in the JDK Java interpreter and appletviewer.
-                var selectedExpression = (new Parser(new Scanner(new AwtIo(input, textArea)))).parseExpression();
+                input = strbuff.toString();
+                input = input.substring(textArea.getSelectionStart(), textArea.getSelectionEnd());
+            }
+            // ... TO HERE
+            // Due to a bug in the JDK Java interpreter and appletviewer.
+            var selectedExpression = new Parser(new Scanner(new AwtIo(input, textArea))).parseExpression();
+            try {
+                if (selectedExpression != null)
+                    selectedExpression.defaultEval();
+                else
+                    throw new ProgramError("Parse Error");
+            } catch (MessageNotUnderstood error) {
+                ErrorDialog.setUpErrorDialog(error.getMessage(), error.getCode(), error.getReceiver());
+            } catch (AgoraError error) {
+                ErrorDialog.setUpErrorDialog(error.getMessage(), error.getCode(), null);
+            }
+        });
+        b2.addActionListener(e -> {
+            var fd = new FileDialog(new Frame(), "DUMP IMAGE", FileDialog.SAVE);
+            fd.setVisible(true);
+            var fileName = fd.getFile();
+            if (fileName != null) //User didnot click 'Cancel'
+            {
                 try {
-                    if (selectedExpression != null)
-                        selectedExpression.defaultEval();
-                    else
-                        throw (new ProgramError("Parse Error"));
-                } catch (AgoraError error) {
-                    error.signal();
+                    var oldCursor = window.getCursor();
+                    window.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                    var fos = new FileOutputStream(fileName);
+                    var gos = new GZIPOutputStream(fos);
+                    var os = new ObjectOutputStream(gos);
+                    os.writeObject(new SingleRoot(AgoraGlobals.glob, Up.glob));
+                    os.flush();
+                    os.close();
+                    window.setCursor(oldCursor);
+                } catch (IOException error) {
+                    ErrorDialog.setUpErrorDialog("Save Image ActionListener", null, null);
                 }
             }
         });
-        b2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                var fd = new FileDialog(new Frame(), "DUMP IMAGE", FileDialog.SAVE);
-                fd.show();
-                var fileName = fd.getFile();
-                if (fileName != null) //User didnot click 'Cancel'
-                {
-                    try {
-                        var oldCursor = window.getCursor();
-                        window.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        var fos = new FileOutputStream(fileName);
-                        var gos = new GZIPOutputStream(fos);
-                        var os = new ObjectOutputStream(gos);
-                        os.writeObject(new SingleRoot(AgoraGlobals.glob, Up.glob));
-                        os.flush();
-                        os.close();
-                        window.setCursor(oldCursor);
-                    } catch (IOException error) {
-                        (new PrimException(error, "Save Image ActionListener")).signal();
-                    }
-                }
-            }
-        });
-        b3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                var fd = new FileDialog(new Frame(), "READ IMAGE", FileDialog.LOAD);
-                fd.show();
-                var fileName = fd.getFile();
-                if (fileName != null) //User didnot click 'Cancel'
-                {
-                    try {
-                        var oldCursor = window.getCursor();
-                        window.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-                        var fis = new FileInputStream(fileName);
-                        var gis = new GZIPInputStream(fis);
-                        var s = new ObjectInputStream(gis);
-                        var newRoot = (SingleRoot) s.readObject();
-                        AgoraGlobals.glob = newRoot.globalStructures;
-                        Up.glob = newRoot.reflectionWrappers;
-                        s.close();
-                        AgoraGlobals.glob.updateApplet(Agorette.this);
-                        AgoraGlobals.glob.agoraWindow = window;
-                        window.setCursor(oldCursor);
-                    } catch (IOException error) {
-                        (new PrimException(error, "Load Image ActionListener")).signal();
-                    } catch (ClassNotFoundException error2) {
-                        (new ProgramError("Image of Wrong Version")).signal();
-                    }
+        b3.addActionListener(e -> {
+            var fd = new FileDialog(new Frame(), "READ IMAGE", FileDialog.LOAD);
+            fd.setVisible(true);
+            var fileName = fd.getFile();
+            if (fileName != null) //User didnot click 'Cancel'
+            {
+                try {
+                    var oldCursor = window.getCursor();
+                    window.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                    var fis = new FileInputStream(fileName);
+                    var gis = new GZIPInputStream(fis);
+                    var s = new ObjectInputStream(gis);
+                    var newRoot = (SingleRoot) s.readObject();
+                    AgoraGlobals.glob = newRoot.globalStructures;
+                    Up.glob = newRoot.reflectionWrappers;
+                    s.close();
+                    AgoraGlobals.glob.updateApplet(Agorette.this);
+                    AgoraGlobals.glob.agoraWindow = window;
+                    window.setCursor(oldCursor);
+                } catch (IOException error) {
+                    ErrorDialog.setUpErrorDialog("Load Image ActionListener", null, null);
+                } catch (ClassNotFoundException error) {
+                    ErrorDialog.setUpErrorDialog("Image of Wrong Version", null, null);
                 }
             }
         });
         try {
             AgoraGlobals.glob = new AgoraGlobals(this, window);
-        } catch (AgoraError ex) // All normal agora.errors are trapped and displayed to
-        {                  // Agora programmer.
-            ex.signal();
-        } catch (IllegalArgumentException e)     //This happens when the evaluator calls a native
-        {                                   //method with the wrong arguments. Caanot be
-            System.out.print(e.getMessage()); // resolved, because if it happens, this is a bug.
+        } catch (MessageNotUnderstood ex) {
+            ErrorDialog.setUpErrorDialog(ex.getMessage(), ex.getCode(), ex.getReceiver());
+        } catch (AgoraError ex) {
+            ErrorDialog.setUpErrorDialog(ex.getMessage(), ex.getCode(), null);
+        } catch (IllegalArgumentException e) {
+            System.err.print(e.getMessage());
         }
     }
 
