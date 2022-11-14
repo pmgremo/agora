@@ -3,13 +3,10 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.errors.AgoraHalt;
 import agora.objects.AgoraObject;
-import agora.objects.PrimGenerator;
 import agora.reflection.Reified;
 import agora.reflection.Unary;
 import agora.reflection.Up;
 import agora.runtime.Context;
-
-import java.io.Serializable;
 
 /**
  * Parse tree node type for string literals.
@@ -17,7 +14,7 @@ import java.io.Serializable;
  * @author Wolfgang De Meuter
  * Last change:  E    16 Nov 97    2:16 pm
  */
-public class StringLiteral extends Literal implements Serializable {
+public class StringLiteral extends Literal {
     /**
      * The String value as determined by the parser.
      */
@@ -41,6 +38,7 @@ public class StringLiteral extends Literal implements Serializable {
     public String unparse(int hor) {
         return theString;
     }
+
     /**
      * Implements the HALT reifier. The receiver must evaluate to a string object.
      *

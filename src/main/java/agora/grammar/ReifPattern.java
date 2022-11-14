@@ -10,9 +10,7 @@ import agora.reflection.Up;
 import agora.runtime.Category;
 import agora.runtime.Context;
 
-import java.io.Serializable;
-
-abstract public class ReifPattern extends Pattern implements Serializable {
+abstract public class ReifPattern extends Pattern {
     /**
      * Method to create an ad-hoc 'up' generator for the agora.objects of this class.
      *

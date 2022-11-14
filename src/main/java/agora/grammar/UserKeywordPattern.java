@@ -9,15 +9,13 @@ import agora.runtime.Client;
 import agora.runtime.Context;
 import agora.tools.AwtIo;
 
-import java.io.Serializable;
-
 /**
  * This class represents user keyword agora.patterns like at:3 put:5 or at:i put:thing.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:43 am
  */
-public class UserKeywordPattern extends UserPattern implements Serializable {
+public class UserKeywordPattern extends UserPattern {
     protected String[] keywords;
     protected Expression[] arguments;
     protected int size;
@@ -72,14 +70,15 @@ public class UserKeywordPattern extends UserPattern implements Serializable {
      * @return The stringrepresentation of the node.
      */
     public String unparse(int hor) {
-        var msg = AwtIo.makeSpaces(hor);
+        var msg = new StringBuilder(AwtIo.makeSpaces(hor));
         for (var i = 0; i < this.size; i++) {
-            msg = msg + keywords[i];
-            msg = msg + arguments[i].unparse(0);
+            msg
+                    .append(keywords[i])
+                    .append(arguments[i].unparse(0));
             if (i < this.size - 1)
-                msg = msg + " ";
+                msg.append(" ");
         }
-        return msg;
+        return msg.toString();
     }
 
     /**
@@ -92,8 +91,7 @@ public class UserKeywordPattern extends UserPattern implements Serializable {
      */
     public Client makeClient(Context context, AgoraObject receiver) {
         var actuals = new Object[size];
-        for (var i = 0; i < size; i++)
-            actuals[i] = this.arguments[i];
+        System.arraycopy(this.arguments, 0, actuals, 0, size);
         return (context.newClient(actuals));
     }
 
@@ -106,8 +104,7 @@ public class UserKeywordPattern extends UserPattern implements Serializable {
      */
     public AbstractPattern makePattern(Context context) {
         var pattern = new KeywordPattern();
-        for (var i = 0; i < size; i++)
-            pattern.add(keywords[i]);
+        for (var keyword : keywords) pattern.add(keyword);
         return pattern;
     }
 
@@ -122,10 +119,10 @@ public class UserKeywordPattern extends UserPattern implements Serializable {
      *                                 formals (e.g. when it is not a formal pattern).
      */
     public String[] makeFormals(Context context) throws AgoraError {
-        var formals = new String[size];
-        for (var i = 0; i < size; i++) {
-            if (arguments[i] instanceof UserUnaryPattern)
-                formals[i] = ((UserUnaryPattern) arguments[i]).getUnary();
+        var formals = new String[arguments.length];
+        for (var i = 0; i < arguments.length; i++) {
+            if (arguments[i] instanceof UserUnaryPattern u)
+                formals[i] = u.getUnary();
             else {
                 var ex = new ProgramError("Formal parameters must be identifiers");
                 ex.setCode(this);

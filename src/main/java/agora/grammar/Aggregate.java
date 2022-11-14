@@ -8,8 +8,6 @@ import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 import agora.tools.AwtIo;
 
-import java.io.Serializable;
-
 /**
  * This class represents the parsetree node for aggregates of Agora expressions.
  * These can be [] and {} expressions.
@@ -17,7 +15,7 @@ import java.io.Serializable;
  * @author Wolfgang De Meuter
  * Last change:  E    16 Nov 97    2:25 pm
  */
-public class Aggregate extends Expression implements Serializable {
+public class Aggregate extends Expression {
     /**
      * Represents the left delimitting character of the aggregate (usually [ or {)
      */
@@ -85,8 +83,7 @@ public class Aggregate extends Expression implements Serializable {
                     exnihiloSelf.getMe(),
                     context.getCategory(),
                     AgoraGlobals.glob.rootIdentity);
-            AgoraObject dummy = null;
-            for (var expression : expressions) dummy = expression.eval(exnihiloCont);
+            for (var expression : expressions) expression.eval(exnihiloCont);
             return exnihiloSelf.wrap();
         } else // leftDel=='{'
         {
@@ -106,11 +103,7 @@ public class Aggregate extends Expression implements Serializable {
      * @return The operator pattern corresponding to this [] or {} expression.
      */
     public AbstractPattern makePattern(Context context) {
-        OperatorPattern pat = null;
-        if (this.leftDel == '[')
-            pat = new OperatorPattern("[]");
-        else
-            pat = new OperatorPattern("{}");
+        var pat = new OperatorPattern(leftDel == '[' ? "[]" : "{}");
         pat.setReifier();
         return pat;
     }
@@ -123,19 +116,17 @@ public class Aggregate extends Expression implements Serializable {
      * @return The string representation of the aggregate.
      */
     public String unparse(int hor) {
-        var msg = AwtIo.makeSpaces(hor);
-        msg = msg + Character.valueOf(this.leftDel).toString();
-        if (this.expressions.length == 0)
-            msg = msg + Character.valueOf(this.rightDel).toString();
-        else {
+        var msg = new StringBuilder(AwtIo.makeSpaces(hor));
+        msg.append(Character.valueOf(this.leftDel).toString());
+        if (this.expressions.length != 0) {
             for (var i = 0; i < this.expressions.length; i++) {
-                if (i == 0) msg = msg + this.expressions[i].unparse(hor);
-                else msg = msg + this.expressions[i].unparse(hor + 2);
-                if (i < this.expressions.length - 1) msg = msg + ";\n";
+                if (i == 0) msg.append(this.expressions[i].unparse(hor));
+                else msg.append(this.expressions[i].unparse(hor + 2));
+                if (i < this.expressions.length - 1) msg.append(";\n");
             }
-            msg = msg + AwtIo.makeSpaces(hor);
-            msg = msg + Character.valueOf(this.rightDel).toString();
+            msg.append(AwtIo.makeSpaces(hor));
         }
-        return msg;
+        msg.append(this.rightDel);
+        return msg.toString();
     }
 }

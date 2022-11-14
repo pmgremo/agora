@@ -21,8 +21,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import static java.lang.reflect.Modifier.isStatic;
 
@@ -120,14 +118,8 @@ public class Up implements Serializable {
      *                                 a generatorcreator might be invoked that accesses a Java method that does not exists.
      */
     public AgoraObject up(Object o) throws AgoraError {
-        if (o == null) // If null object is to be upped, take JV_Nil (reason: in Agora, null is an object!)
-        {
-            return new PrimIdentityGenerator(
-                    Object.class.getSimpleName(),
-                    generatorFor(JV_Nil.class, true),
-                    new JV_Nil()
-            ).wrap();
-        } else if (o instanceof Class<?> c) // Dirty type cast because Java has no classes of classes of ...
+        if (o == null) o = new JV_Nil();
+        if (o instanceof Class<?> c)
             return new PrimIdentityGenerator(c.getSimpleName(), generatorFor(c, false), o).wrap();
         else
             return new PrimIdentityGenerator(Object.class.getSimpleName(), generatorFor(o.getClass(), true), o).wrap();
@@ -197,42 +189,31 @@ public class Up implements Serializable {
      * for every class in the hierarchy.
      */
     private PrimGenerator constructGeneratorFor(Class<?> c, boolean isInstance) throws AgoraError {
-        var q = new LinkedList<>();  // Make a new Queue
-        putFieldsInQueue(c, q, isInstance);        // Insert patterns and fields
-        putMethodsInQueue(c, q, isInstance);       // Insert patterns and methods
-        putConstructorsInQueue(c, q, isInstance);  // Insert patterns and constructors
-        var sz = q.size() / 2;        // queue = (pat,att)(pat,att)....(pat,att)
-        var theTable = new Hashtable<AbstractPattern, Attribute>(sz + 1);//The size may not be zero, so add one
-        for (var j = 0; j < sz; j++) {
-            var pattern = q.poll(); // These statements are really necessary because
-            var attrib = q.poll(); // if we would simply write put(q.deQueue(),q.deQeueue)
-            theTable.put((AbstractPattern) pattern, (Attribute) attrib); // the wrong order could be used (if Java does it right to left)
-        }
+        var theTable = new Hashtable<AbstractPattern, Attribute>();
+        putFieldsInQueue(c, theTable, isInstance);                       // Insert patterns and fields
+        putMethodsInQueue(c, theTable, isInstance);                      // Insert patterns and methods
+        putConstructorsInQueue(c, theTable, isInstance);                 // Insert patterns and constructors
         return new PrimGenerator(c.getName(), theTable, null);    // Create a new generator with the members
     }
 
     /**
      * This procedure reads all the fields (i.e. data members) of a class.
-     * It creates appropriate read and write Agora agora.attributes and puts them
+     * It creates appropriate read and write Agora attributes and puts them
      * all in a queue.
      */
-    private void putFieldsInQueue(Class<?> c, Queue<Object> q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
-        var fields = c.getFields();
+    private void putFieldsInQueue(Class<?> c, Hashtable<AbstractPattern, Attribute> q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
+        var fields = c.getDeclaredFields();
         for (var field : fields) {
-            if (Modifier.isPublic(field.getModifiers()) &&
-                    (!Modifier.isAbstract(field.getModifiers())) &&
-                    (!Modifier.isPrivate(field.getModifiers())) &&
-                    (!Modifier.isProtected(field.getModifiers())) &&
-                    (!Modifier.isInterface(field.getModifiers())) &&
-                    (field.getDeclaringClass().equals(c)) &&
-                    (isInstance | (Modifier.isStatic(field.getModifiers())))) // not isInstance -> isStatic
+            if (!Modifier.isPublic(field.getModifiers()) ||
+                    (Modifier.isAbstract(field.getModifiers())) ||
+                    (Modifier.isInterface(field.getModifiers())) ||
+                    (!(isInstance | (Modifier.isStatic(field.getModifiers()))))) // not isInstance -> isStatic
             {
-                q.offer(createVariableReadPatFor(field));
-                q.offer(createVariableReadAttFor(field));
-                if (!(Modifier.isFinal(field.getModifiers()))) { // Only a write pattern if the field is non-final (i.e. not constant)
-                    q.offer(createVariableWritePatFor(field));
-                    q.offer(createVariableWriteAttFor(field));
-                }
+                continue;
+            }
+            q.put(createVariableReadPatFor(field), createVariableReadAttFor(field));
+            if (!(Modifier.isFinal(field.getModifiers()))) { // Only a write pattern if the field is non-final (i.e. not constant)
+                q.put(createVariableWritePatFor(field), createVariableWriteAttFor(field));
             }
         }
     }
@@ -242,20 +223,17 @@ public class Up implements Serializable {
      * Agora attribute and puts a pattern for the methods together with the attribute in
      * a queue.
      */
-    private void putMethodsInQueue(Class<?> c, Queue<Object> q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
-        var methods = c.getMethods();
+    private void putMethodsInQueue(Class<?> c, Hashtable<AbstractPattern, Attribute> q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
+        var methods = c.getDeclaredMethods();
         for (var method : methods) {
-            if (Modifier.isPublic(method.getModifiers()) &&
-                    !Modifier.isAbstract(method.getModifiers()) &&
-                    !Modifier.isPrivate(method.getModifiers()) &&
-                    !Modifier.isProtected(method.getModifiers()) &&
-                    !Modifier.isInterface(method.getModifiers()) &&
-                    method.getDeclaringClass().equals(c) &&
-                    isInstance | Modifier.isStatic(method.getModifiers())) // not isInstance -> isStatic
+            if (!Modifier.isPublic(method.getModifiers()) ||
+                    Modifier.isAbstract(method.getModifiers()) ||
+                    Modifier.isInterface(method.getModifiers()) ||
+                    !(isInstance | Modifier.isStatic(method.getModifiers()))) // not isInstance -> isStatic
             {
-                q.offer(createMethodPatFor(method));
-                q.offer(createMethodAttFor(method));
+                continue;
             }
+            q.put(createMethodPatFor(method), createMethodAttFor(method));
         }
     }
 
@@ -264,20 +242,17 @@ public class Up implements Serializable {
      * a pattern 'new' is created and the appropriate Agora attribute is constructed.
      * All the patterns and the attributes are gathered together in a queue.
      */
-    private void putConstructorsInQueue(Class<?> c, Queue<Object> q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
-        var constructors = c.getConstructors();
+    private void putConstructorsInQueue(Class<?> c, Hashtable<AbstractPattern, Attribute> q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
+        var constructors = c.getDeclaredConstructors();
         for (var constructor : constructors) {
-            if (Modifier.isPublic(constructor.getModifiers()) &&
-                    !Modifier.isNative(constructor.getModifiers()) &&
-                    !Modifier.isAbstract(constructor.getModifiers()) &&
-                    !Modifier.isPrivate(constructor.getModifiers()) &&
-                    !Modifier.isProtected(constructor.getModifiers()) &&
-                    !Modifier.isInterface(constructor.getModifiers()) &&
-                    constructor.getDeclaringClass().equals(c) &&
-                    !isInstance) {
-                q.offer(createConstructorPatFor(constructor));
-                q.offer(createConstructorAttFor(constructor));
+            if (!Modifier.isPublic(constructor.getModifiers()) ||
+                    Modifier.isNative(constructor.getModifiers()) ||
+                    Modifier.isAbstract(constructor.getModifiers()) ||
+                    Modifier.isInterface(constructor.getModifiers()) ||
+                    isInstance) {
+                continue;
             }
+            q.put(createConstructorPatFor(constructor), createConstructorAttFor(constructor));
         }
     }
 
@@ -319,15 +294,12 @@ public class Up implements Serializable {
      */
     private AbstractPattern createMethodPatFor(Method m) {
         var types = m.getParameterTypes();
-        if (types.length == 0)
-            return new UnaryPattern(m.getName());
-        else {
-            var pat = new KeywordPattern();
-            pat.add(decaps(m.getName()) + typeNameFor(types[0]) + ":");
-            for (var j = 1; j < types.length; j++)
-                pat.add(typeNameFor(types[j]) + ":");
-            return pat;
-        }
+        if (types.length == 0) return new UnaryPattern(m.getName());
+        var pat = new KeywordPattern();
+        pat.add(decaps(m.getName()) + typeNameFor(types[0]) + ":");
+        for (var j = 1; j < types.length; j++)
+            pat.add(typeNameFor(types[j]) + ":");
+        return pat;
     }
 
     /**
@@ -347,17 +319,16 @@ public class Up implements Serializable {
         var types = c.getParameterTypes();
         if (types.length == 0)
             return new UnaryPattern("new");
-        else if (types.length == 1) {
+        if (types.length == 1) {
             var pat = new KeywordPattern();
             pat.atPut(0, "new" + typeNameFor(types[0]) + ":");
-            return pat;
-        } else {
-            var pat = new KeywordPattern();
-            pat.atPut(0, "new" + typeNameFor(types[0]) + ":");
-            for (var j = 1; j < types.length; j++)
-                pat.atPut(j, typeNameFor(types[j]) + ":");
             return pat;
         }
+        var pat = new KeywordPattern();
+        pat.atPut(0, "new" + typeNameFor(types[0]) + ":");
+        for (var j = 1; j < types.length; j++)
+            pat.atPut(j, typeNameFor(types[j]) + ":");
+        return pat;
     }
 
     /**

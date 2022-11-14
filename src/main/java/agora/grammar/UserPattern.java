@@ -19,7 +19,35 @@ import java.io.Serializable;
  * @author Wolfgang De Meuter (Programming Technology Lab)
  * Last change:  E    16 Nov 97    2:04 pm
  */
-abstract public class UserPattern extends Pattern implements Serializable {
+abstract public class UserPattern extends Pattern {
+    /**
+     * Method to evaluate a user pattern.
+     *
+     * @param context The environment in which the user patter is evaluated. If this
+     *                contains the 'flags' category, a new formal pattern is returned. Otherwise,
+     *                the pattern is delegated to the private part of the context.
+     * @return The Agora Object associated with this pattern expression.
+     * @throws agora.errors.AgoraError When something goes wrong during evaluation.
+     */
+    public AgoraObject eval(Context context) throws AgoraError {
+        try {
+            // Patterns in Flags Category Must Be Declared: Just Return a new pattern
+            if (Category.contains(context.getCategory(), Category.flags))
+                return Up.glob.up(new FormalsAndPattern(this.makeFormals(context),
+                        this.makePattern(context),
+                        Category.emptyCategory));
+                // Patterns in Other Categories Denote Accesses in the Local Part of An Object
+            else {
+                var client = this.makeClient(context, context.getSelf().wrap());
+                client.actualsEval(context);
+                return context.getPrivate().delegate(this.makePattern(context), client, context);
+            }
+        } catch (AgoraError ex) {
+            ex.setCode(this);
+            throw ex;
+        }
+    }
+
     /**
      * Implements the RAISE reifier. Raises an AgoraException with the receiving pattern as content.
      *
@@ -47,34 +75,6 @@ abstract public class UserPattern extends Pattern implements Serializable {
             theException.setPattern(runtimePat);
             theException.setClient(theClient);
             throw theException;
-        }
-    }
-
-    /**
-     * Method to evaluate a user pattern.
-     *
-     * @param context The environment in which the user patter is evaluated. If this
-     *                contains the 'flags' category, a new formal pattern is returned. Otherwise,
-     *                the pattern is delegated to the private part of the context.
-     * @return The Agora Object associated with this pattern expression.
-     * @throws agora.errors.AgoraError When something goes wrong during evaluation.
-     */
-    public AgoraObject eval(Context context) throws AgoraError {
-        try {
-            // Patterns in Flags Category Must Be Declared: Just Return a new pattern
-            if (Category.contains(context.getCategory(), Category.flags))
-                return Up.glob.up(new FormalsAndPattern(this.makeFormals(context),
-                        this.makePattern(context),
-                        Category.emptyCategory));
-                // Patterns in Other Categories Denote Accesses in the Local Part of An Object
-            else {
-                var client = this.makeClient(context, context.getSelf().wrap());
-                client.actualsEval(context);
-                return context.getPrivate().delegate(this.makePattern(context), client, context);
-            }
-        } catch (AgoraError ex) {
-            ex.setCode(this);
-            throw ex;
         }
     }
 

@@ -5,17 +5,15 @@ import agora.objects.AgoraObject;
 import agora.runtime.Context;
 import agora.tools.AwtIo;
 
-import java.io.Serializable;
-
 /**
- * @author: Wolfgang De Meuter(Programming technology Lab).
  * This class represents user messages in Agora. Each UserMessage contains an
  * expression as the receiver of that message, and a UserPattern as the name
  * of the message and possible arguments.
  * Last change:  E    16 Nov 97    2:26 pm
+ * @author: Wolfgang De Meuter(Programming technology Lab).
  */
 
-public class UserMessage extends Message implements Serializable {
+public class UserMessage extends Message {
 
     /**
      * Creates a new message expression.
