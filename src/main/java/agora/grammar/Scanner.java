@@ -1,8 +1,8 @@
 package agora.grammar;
 
-import agora.tools.AwtIo;
 import agora.tools.Io;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -55,9 +55,9 @@ public class Scanner implements Serializable {
     /**
      * Creates a new scanner.
      */
-    public Scanner(Io io) {
+    public Scanner(Io io) throws IOException {
         this.io = io;
-        lastChar = io.getChar();
+        lastChar = (char) io.in().read();
         lastRKeyword = null;
         lastUKeyword = null;
         lastROperator = null;
@@ -75,21 +75,21 @@ public class Scanner implements Serializable {
      * to access the 'getChar' method from AgoraIO, but this method can be overriden e.g. to get
      * characters from a file.
      */
-    protected void nextChar() {
-        lastChar = io.getChar();
+    protected void nextChar() throws IOException {
+        lastChar = (char) io.in().read();
     }
 
     private boolean caps() {
-        return ((lastChar >= 'A') && (lastChar <= 'Z'));
+        return lastChar >= 'A' && lastChar <= 'Z';
     }
 
-    private void eatSpaces() {
+    private void eatSpaces() throws IOException {
         while (lastChar == ' ' || lastChar == '\n' || lastChar == '\r' || lastChar == '\t' || lastChar == '\f')
             nextChar();
     }
 
     private boolean lower() {
-        return ((lastChar >= 'a') && (lastChar <= 'z'));
+        return lastChar >= 'a' && lastChar <= 'z';
     }
 
     private boolean letter() {
@@ -97,36 +97,35 @@ public class Scanner implements Serializable {
     }
 
     private boolean digit() {
-        return ((lastChar >= '0') && (lastChar <= '9'));
+        return lastChar >= '0' && lastChar <= '9';
     }
 
     private boolean operatorchar() {
-        return ((lastChar == '!') ||
-                (lastChar == '@') ||
-                (lastChar == '#') ||
-                (lastChar == '$') ||
-                (lastChar == '%') ||
-                (lastChar == '^') ||
-                (lastChar == '&') ||
-                (lastChar == '*') ||
-                (lastChar == '-') ||
-                (lastChar == '=') ||
-                (lastChar == '+') ||
-                (lastChar == '<') ||
-                (lastChar == '>') ||
-                (lastChar == '/') ||
-                (lastChar == '.') ||
-                (lastChar == ',') ||
-                (lastChar == '|') ||
-                (lastChar == '?'));
+        return lastChar == '!' ||
+                lastChar == '@' ||
+                lastChar == '#' ||
+                lastChar == '$' ||
+                lastChar == '%' ||
+                lastChar == '^' ||
+                lastChar == '&' ||
+                lastChar == '*' ||
+                lastChar == '-' ||
+                lastChar == '=' ||
+                lastChar == '+' ||
+                lastChar == '<' ||
+                lastChar == '>' ||
+                lastChar == '/' ||
+                lastChar == '.' ||
+                lastChar == ',' ||
+                lastChar == '|' ||
+                lastChar == '?';
     }
 
-    private int scan_string() // return value is a token as defined above
+    private int scan_string() throws IOException // return value is a token as defined above
     {
         var result = new StringBuilder();
         nextChar();
-        if (lastChar == 0)
-            return _ERROR_;
+        if (lastChar == 0) return _ERROR_;
         while (lastChar != '"') {
             if (lastChar == '\\') {
                 nextChar();
@@ -155,7 +154,7 @@ public class Scanner implements Serializable {
         return _STRING_;
     }
 
-    private int scan_operator() //return value is a token as defined above
+    private int scan_operator() throws IOException //return value is a token as defined above
     {
         var result = new StringBuilder();
         result.append(lastChar);
@@ -168,7 +167,7 @@ public class Scanner implements Serializable {
         return _OPERATOR_;
     }
 
-    private int scan_number() // return value is a token as defined above
+    private int scan_number() throws IOException // return value is a token as defined above
     {
         var i = 0;
         float f = 0;
@@ -220,7 +219,7 @@ public class Scanner implements Serializable {
         return _REAL_;
     }
 
-    private int scan_character() // return value is a token as defined above
+    private int scan_character() throws IOException // return value is a token as defined above
     {
         char theChar;
         nextChar();
@@ -254,7 +253,7 @@ public class Scanner implements Serializable {
         return _CHAR_;
     }
 
-    private int scan_identifier() // return value is a token as defined above
+    private int scan_identifier() throws IOException // return value is a token as defined above
     {
         var result = new StringBuilder();
         var allCaps = caps();
@@ -297,7 +296,7 @@ public class Scanner implements Serializable {
      *
      * @return An integer denoting one of the tokens defined in this class.
      */
-    public int scan() {
+    public int scan() throws IOException {
         eatSpaces();
         if (lastChar == 0)
             return _EOFTOKEN_;

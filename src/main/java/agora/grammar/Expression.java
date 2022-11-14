@@ -84,11 +84,11 @@ abstract public class Expression implements Serializable {
         // Validate Pattern
         if (!(thePattern instanceof UnaryPattern))
             throw (new ReifierMisused("VARIABLE can only be sent to unary agora.patterns"));
-        if (!(Category.containsLessThan(theCat, Category.local | Category.publik)))
+        if (!Category.containsLessThan(theCat, Category.local | Category.publik))
             throw (new ReifierMisused("Illegal Adjectives Used With VARIABLE"));
         // Fill In Default Values
-        if ((!Category.contains(theCat, Category.local)) &&
-                (!Category.contains(theCat, Category.publik)))
+        if (!Category.contains(theCat, Category.local) &&
+                !Category.contains(theCat, Category.publik))
             theCat = theCat | Category.publik;
         // Install variable and initial value in the appropriate object part(s)
         var theVarCont = new VariableContainer(Up.glob.up(0));

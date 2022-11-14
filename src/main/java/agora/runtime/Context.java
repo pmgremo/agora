@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @see agora.runtime.ReifierClient
  * Last change:  E    16 Nov 97    1:51 am
  */
-public class Context extends Object implements Serializable {
+public class Context implements Serializable {
     /**
      * The 'current' self, i.e. the object identity of the object in which an expression
      * is evaluated.
@@ -64,20 +64,21 @@ public class Context extends Object implements Serializable {
      * send creates a new context in which all information of the receiver is present.
      *
      * @param self   The self of the object in which	the message arrived.
-     * @param prive  The private part of that object.
+     * @param priv   The private part of that object.
      * @param pub    The public part of that object.
      * @param cat    The evaluation category in which the method corresponding to the
      *               arrived message must be evaluated.
      * @param parent The parent object.
      * @param except The exception that resides in the client that created this context.
      */
-    public Context(IdentityGenerator self,
-                   InternalGenerator priv,
-                   MethodsGenerator pub,
-                   int cat,
-                   AbstractGenerator parent,
-                   AgoraException except) {
-        super();
+    public Context(
+            IdentityGenerator self,
+            InternalGenerator priv,
+            MethodsGenerator pub,
+            int cat,
+            AbstractGenerator parent,
+            AgoraException except
+    ) {
         this.currentException = except;
         this.currentParent = parent;
         this.currentPriv = priv;

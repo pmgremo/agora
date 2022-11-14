@@ -1,5 +1,6 @@
 package agora.grammar;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -21,7 +22,7 @@ public class Parser implements Serializable {
      *
      * @param scanner A new scanner that will deliver the tokens.
      */
-    public Parser(Scanner scanner) {
+    public Parser(Scanner scanner) throws IOException {
         this.s = scanner;
         this.lastToken = this.s.scan();
     }
@@ -32,14 +33,14 @@ public class Parser implements Serializable {
      *
      * @return The parsed expression. Parse errors are indicated by null as return value.
      */
-    public Expression parseExpression() {
-        if ((this.lastToken == Scanner._ERROR_) ||
-                (this.lastToken == Scanner._EOFTOKEN_))
+    public Expression parseExpression() throws IOException {
+        if (this.lastToken == Scanner._ERROR_ ||
+                this.lastToken == Scanner._EOFTOKEN_)
             return null;
         return this.parse_Rkeywordmessage();
     }
 
-    private void scan() {
+    private void scan() throws IOException {
         this.lastToken = this.s.scan();
     }
 
@@ -70,7 +71,7 @@ public class Parser implements Serializable {
         return result;
     }
 
-    private Expression parse_Rkeywordmessage() {
+    private Expression parse_Rkeywordmessage() throws IOException {
         if (lastToken == Scanner._MKEYWORD_)
             return this.parse_Rkeywordpattern();
         var opmsg = this.parse_Roperatormessage();
@@ -83,7 +84,7 @@ public class Parser implements Serializable {
             return opmsg;
     }
 
-    private Expression parse_Roperatormessage() {
+    private Expression parse_Roperatormessage() throws IOException {
         if (lastToken == Scanner._MOPERATOR_)
             return this.parse_Roperatorpattern();
         var unarymsg = this.parse_Runarymessage();
@@ -98,7 +99,7 @@ public class Parser implements Serializable {
         return unarymsg;
     }
 
-    private Expression parse_Runarymessage() {
+    private Expression parse_Runarymessage() throws IOException {
         var keywordmsg = this.parse_Keywordmessage();
         if (keywordmsg == null)
             return null;
@@ -111,7 +112,7 @@ public class Parser implements Serializable {
         return keywordmsg;
     }
 
-    private Expression parse_Keywordmessage() {
+    private Expression parse_Keywordmessage() throws IOException {
         if (this.lastToken == Scanner._KEYWORD_)
             return this.parse_Keywordpattern();
         var opmsg = this.parse_Operatormessage();
@@ -124,7 +125,7 @@ public class Parser implements Serializable {
             return opmsg;
     }
 
-    private Expression parse_Operatormessage() {
+    private Expression parse_Operatormessage() throws IOException {
         if (this.lastToken == Scanner._OPERATOR_)
             return this.parse_Operatorpattern();
         var unarymsg = this.parse_Unarymessage();
@@ -139,7 +140,7 @@ public class Parser implements Serializable {
         return unarymsg;
     }
 
-    private Expression parse_Unarymessage() {
+    private Expression parse_Unarymessage() throws IOException {
         var factor = this.parse_Factor();
         if (factor == null)
             return null;
@@ -152,7 +153,7 @@ public class Parser implements Serializable {
         return factor;
     }
 
-    private Expression parse_Factor() {
+    private Expression parse_Factor() throws IOException {
         if ((this.lastToken == Scanner._ERROR_) ||
                 (this.lastToken == Scanner._EOFTOKEN_))
             return null;
@@ -177,7 +178,7 @@ public class Parser implements Serializable {
         return this.parse_Literal();
     }
 
-    private Expression parse_Literal() {
+    private Expression parse_Literal() throws IOException {
         Expression lit;
         if (this.lastToken == Scanner._STRING_) {
             lit = this.s.lastString;
@@ -202,7 +203,7 @@ public class Parser implements Serializable {
         return null;
     }
 
-    private Expression parse_Aggregate() {
+    private Expression parse_Aggregate() throws IOException {
         var begin = this.lastToken;
         this.scan();
         if ((this.lastToken == Scanner._ERROR_) ||
@@ -224,7 +225,7 @@ public class Parser implements Serializable {
             return this.makeAggregate('{', '}', exps);
     }
 
-    private Queue<Object> parse_Expressionsequence() {
+    private Queue<Object> parse_Expressionsequence() throws IOException {
         var q = new LinkedList<>();
         while (!((this.lastToken == Scanner._RBRACE_) ||
                 (this.lastToken == Scanner._RBRACK_))) {
@@ -249,7 +250,7 @@ public class Parser implements Serializable {
         return q;
     }
 
-    private ReifKeywordPattern parse_Rkeywordpattern() {
+    private ReifKeywordPattern parse_Rkeywordpattern() throws IOException {
         var q = new LinkedList<>();
         var key = this.s.lastRKeyword;
         this.scan();
@@ -278,7 +279,7 @@ public class Parser implements Serializable {
             return null;
     }
 
-    private ReifUnaryPattern parse_Runarypattern() {
+    private ReifUnaryPattern parse_Runarypattern() throws IOException {
         if (this.lastToken != Scanner._MUNARY_)
             return null;
         var result = new ReifUnaryPattern(this.s.lastRUnary);
@@ -286,7 +287,7 @@ public class Parser implements Serializable {
         return result;
     }
 
-    private ReifOperatorPattern parse_Roperatorpattern() {
+    private ReifOperatorPattern parse_Roperatorpattern() throws IOException {
         if (this.lastToken != Scanner._MOPERATOR_)
             return null;
         var result = this.s.lastROperator;
@@ -297,7 +298,7 @@ public class Parser implements Serializable {
         return (new ReifOperatorPattern(result, Runarymsg));
     }
 
-    private UserKeywordPattern parse_Keywordpattern() {
+    private UserKeywordPattern parse_Keywordpattern() throws IOException {
         var q = new LinkedList<>();
         var key = this.s.lastUKeyword;
         this.scan();
@@ -326,7 +327,7 @@ public class Parser implements Serializable {
             return null;
     }
 
-    private UserUnaryPattern parse_Unarypattern() {
+    private UserUnaryPattern parse_Unarypattern() throws IOException {
         if (this.lastToken != Scanner._UNARY_)
             return null;
         var result = new UserUnaryPattern(this.s.lastUUnary);
@@ -334,7 +335,7 @@ public class Parser implements Serializable {
         return result;
     }
 
-    private UserOperatorPattern parse_Operatorpattern() {
+    private UserOperatorPattern parse_Operatorpattern() throws IOException {
         if (this.lastToken != Scanner._OPERATOR_)
             return null;
         var result = this.s.lastUOperator;

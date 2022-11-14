@@ -2,6 +2,7 @@ package agora;
 
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
+import agora.grammar.Expression;
 import agora.grammar.Parser;
 import agora.grammar.Scanner;
 import agora.reflection.Up;
@@ -80,7 +81,12 @@ public class Agorique implements Serializable {
             }
 			// ... TO HERE
 			// Due to a bug in the JDK Java interpreter and appletviewer.
-            var selectedExpression = new Parser(new Scanner(new AwtIo(input, textArea))).parseExpression();
+            Expression selectedExpression = null;
+            try {
+                selectedExpression = new Parser(new Scanner(new AwtIo(input, textArea))).parseExpression();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             try {
                 if (selectedExpression != null)
                     selectedExpression.defaultEval();

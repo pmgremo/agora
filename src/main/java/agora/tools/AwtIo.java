@@ -1,6 +1,9 @@
 package agora.tools;
 
 import java.awt.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This class is an abstract layer for all Agora IO that occurs during the execution
@@ -31,6 +34,7 @@ public class AwtIo implements Io {
      */
     public static int inspectorX = 10;
     public static int inspectorY = 10;
+    private final ByteArrayInputStream inputStream;
 
     /**
      * Initialises AgoraIO with a given string and a textarea.
@@ -44,6 +48,7 @@ public class AwtIo implements Io {
         theInput = i;
         theOutput = o;
         count = 0;
+        inputStream = new ByteArrayInputStream(theInput.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -76,18 +81,9 @@ public class AwtIo implements Io {
         theOutput.append(s);
     }
 
-    /**
-     * Reads the next character from the input and moves the 'current' one
-     * step further.
-     *
-     * @return The next character from the input.
-     */
     @Override
-    public char getChar() {
-        if (count >= theInput.length()) return (char) 0;
-        var ret = theInput.charAt(count);
-        count++;
-        return ret;
+    public InputStream in() {
+        return inputStream;
     }
 }
 
