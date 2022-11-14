@@ -1,25 +1,11 @@
 package agora.javaAdditions;
 
-import agora.attributes.Attribute;
-import agora.attributes.PrimFunctionAttribute;
-import agora.attributes.PrimMethAttribute;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
-import agora.grammar.UserPattern;
-import agora.objects.PrimGenerator;
-import agora.patterns.AbstractPattern;
-import agora.patterns.OperatorPattern;
-import agora.patterns.UnaryPattern;
-import agora.reflection.Frame;
 import agora.reflection.Operator;
 import agora.reflection.Unary;
-import agora.reflection.Up;
-
-import java.io.Serializable;
-import java.util.Hashtable;
 
 import static java.lang.Math.pow;
-import static java.lang.reflect.Modifier.isStatic;
 
 /**
  * An Agora integer will be programmed as an 'up'ed Java integer and all Agora
@@ -36,7 +22,7 @@ import static java.lang.reflect.Modifier.isStatic;
  * @author Wolfgang De Meuter (Programming Technology Lab)
  * Last change:  E    16 Nov 97    1:47 am
  */
-public class JV_Integer implements Serializable {
+public class JV_Integer {
     /**
      * Addition. Receiver is of type integer, the argument can be integer or float.
      *
@@ -309,7 +295,7 @@ public class JV_Integer implements Serializable {
      *
      * @param receiver The receiver of the message
      * @return The integer indicating the absolute value of the receiver.
-	 */
+     */
     @Unary("abs")
     public static Object abs(Integer receiver) {
         return Math.abs(receiver);
@@ -320,7 +306,7 @@ public class JV_Integer implements Serializable {
      *
      * @param receiver The receiver of the message
      * @return The integer indicating the increment of the receiver.
-	 */
+     */
     @Unary("inc")
     public static Object inc(Integer receiver) {
         return receiver + 1;
@@ -331,7 +317,7 @@ public class JV_Integer implements Serializable {
      *
      * @param receiver The receiver of the message
      * @return The integer indicating the decrement of the receiver.
-	 */
+     */
     @Unary("dev")
     public static Object dec(Integer receiver) {
         return receiver - 1;
@@ -342,7 +328,7 @@ public class JV_Integer implements Serializable {
      *
      * @param receiver The receiver of the message
      * @return The float indicating the square root of the receiver.
-	 */
+     */
     @Unary("sqrt")
     public static Object sqrt(Integer receiver) {
         return (float) Math.sqrt(receiver);
@@ -353,7 +339,7 @@ public class JV_Integer implements Serializable {
      *
      * @param receiver The receiver of the message
      * @return The integer indicating the square of the receiver.
-	 */
+     */
     @Unary("sqr")
     public static Object sqr(Integer receiver) {
         return receiver * receiver;

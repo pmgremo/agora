@@ -9,11 +9,11 @@ import java.io.*;
 
 
 /**
-   These are the Agora mixin agora.attributes, formerly known as imperative mixin methods.
+   These are the Agora mixin attributes, formerly known as imperative mixin methods.
    @author Wolfgang De Meuter (Programming Technology Lab).
 	Last change:  E    16 Nov 97    2:00 am
 */
-public class MixinAttribute extends MethAttribute implements Serializable
+public class MixinAttribute extends MethAttribute
 {
   /**
      Creates a new mixin attribute with the array of strings as formal arguments

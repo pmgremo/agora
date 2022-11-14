@@ -12,7 +12,7 @@ import agora.runtime.Context;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.Serial;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -20,51 +20,39 @@ import java.lang.reflect.Method;
  * This class represents a primitive public (non static) method in Java.
  * Last change:  E    17 Nov 97    1:30 am
  */
-public class PrimMethAttribute extends PrimAttribute implements Serializable {
+public class PrimMethAttribute extends PrimAttribute {
     protected Method m;
 
+    @Serial
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.writeObject(m.getDeclaringClass().getName());
         stream.writeObject(m.getName());
-        Class[] types = m.getParameterTypes();
+        var types = m.getParameterTypes();
         stream.writeInt(types.length);
-        for (var i = 0; i < types.length; i++)
-            stream.writeObject(types[i].getName());
+        for (var type : types) stream.writeObject(type.getName());
     }
 
+    @Serial
     private void readObject(ObjectInputStream stream) throws IOException {
-        var metName = "";
-        var argName = "";
-        Class[] sig = null;
-        Class decl = null;
-        var ln = 0;
         try {
-            decl = Class.forName((String) stream.readObject());
-            metName = (String) stream.readObject();
-            ln = stream.readInt();
-            sig = new Class[ln];
+            var decl = Class.forName((String) stream.readObject());
+            var metName = (String) stream.readObject();
+            var ln = stream.readInt();
+            var sig = new Class[ln];
             for (var i = 0; i < ln; i++) {
-                argName = (String) stream.readObject();
-                if (argName.equals("int"))
-                    sig[i] = java.lang.Integer.TYPE;
-                else if (argName.equals("boolean"))
-                    sig[i] = java.lang.Boolean.TYPE;
-                else if (argName.equals("char"))
-                    sig[i] = java.lang.Character.TYPE;
-                else if (argName.equals("short"))
-                    sig[i] = java.lang.Short.TYPE;
-                else if (argName.equals("byte"))
-                    sig[i] = java.lang.Byte.TYPE;
-                else if (argName.equals("float"))
-                    sig[i] = java.lang.Float.TYPE;
-                else if (argName.equals("long"))
-                    sig[i] = java.lang.Long.TYPE;
-                else if (argName.equals("double"))
-                    sig[i] = java.lang.Double.TYPE;
-                else if (argName.equals("void"))
-                    sig[i] = java.lang.Void.TYPE;
-                else
-                    sig[i] = Class.forName(argName);
+                var argName = (String) stream.readObject();
+                sig[i] = switch (argName) {
+                    case "int" -> Integer.TYPE;
+                    case "boolean" -> Boolean.TYPE;
+                    case "char" -> Character.TYPE;
+                    case "short" -> Short.TYPE;
+                    case "byte" -> Byte.TYPE;
+                    case "float" -> Float.TYPE;
+                    case "long" -> Long.TYPE;
+                    case "double" -> Double.TYPE;
+                    case "void" -> Void.TYPE;
+                    default -> Class.forName(argName);
+                };
             }
             m = decl.getMethod(metName, sig);
         } catch (NoSuchMethodException error) {
@@ -98,12 +86,12 @@ public class PrimMethAttribute extends PrimAttribute implements Serializable {
         try {
             return Up.glob.up(this.m.invoke(context.getSelf().down(), client.makeNativeArguments()));
         } catch (IllegalAccessException e) {
-            throw (new ProgramError("Illegal Access Exception while accessing a primitive method"));
+            throw new ProgramError("Illegal Access Exception while accessing a primitive method");
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof AgoraError)
-                throw ((AgoraError) e.getTargetException());
+                throw (AgoraError) e.getTargetException();
             else
-                throw (new PrimException(e.getTargetException(), "PrimMethAttribute::doAttributeValue"));
+                throw new PrimException(e.getTargetException(), "PrimMethAttribute::doAttributeValue");
         }
 
     }

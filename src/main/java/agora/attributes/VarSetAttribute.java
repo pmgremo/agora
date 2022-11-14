@@ -57,15 +57,12 @@ public class VarSetAttribute implements Attribute {
      */
     public VarSetAttribute copy(Hashtable<Object, Object> cloneMap) {
         var myclone = (VarSetAttribute) cloneMap.get(this);
-        if (myclone != null)
-            return myclone;
-        else {
-            var clonedAttribute = new VarSetAttribute(null);
-            cloneMap.put(this, clonedAttribute);
-            clonedAttribute.theContents = (VariableContainer) (this.theContents.copy(cloneMap));
-            // We cannot avoid this type cast because of the genericity of clone maps.
-            return clonedAttribute;
-        }
+        if (myclone != null) return myclone;
+        var clonedAttribute = new VarSetAttribute(null);
+        cloneMap.put(this, clonedAttribute);
+        clonedAttribute.theContents = (VariableContainer) (this.theContents.copy(cloneMap));
+        // We cannot avoid this type cast because of the genericity of clone maps.
+        return clonedAttribute;
     }
 
     /**

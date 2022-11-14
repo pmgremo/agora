@@ -57,7 +57,7 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
      *                    with a parent-of link.
      */
     public InternalGenerator(String nameOfFrame,
-                             Hashtable myPart,
+                             Hashtable<AbstractPattern, Attribute> myPart,
                              InternalGenerator privPart,
                              AbstractGenerator parentPart) {
         super(nameOfFrame, myPart, parentPart);

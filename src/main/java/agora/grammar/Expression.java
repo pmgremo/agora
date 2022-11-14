@@ -5,7 +5,6 @@ import agora.errors.*;
 import agora.objects.AgoraObject;
 import agora.objects.FormalsAndPattern;
 import agora.objects.InternalGenerator;
-import agora.objects.PrimGenerator;
 import agora.patterns.KeywordPattern;
 import agora.patterns.UnaryPattern;
 import agora.reflection.Keyword;

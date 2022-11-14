@@ -1,25 +1,11 @@
 package agora.javaAdditions;
 
-import agora.attributes.Attribute;
-import agora.attributes.PrimFunctionAttribute;
-import agora.attributes.PrimMethAttribute;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
-import agora.grammar.UserPattern;
-import agora.objects.PrimGenerator;
-import agora.patterns.AbstractPattern;
-import agora.patterns.OperatorPattern;
-import agora.patterns.UnaryPattern;
-import agora.reflection.Frame;
 import agora.reflection.Operator;
 import agora.reflection.Unary;
-import agora.reflection.Up;
 
-import java.io.Serializable;
-import java.util.Hashtable;
-
-import static java.lang.Boolean.*;
-import static java.lang.reflect.Modifier.isStatic;
+import static java.lang.Boolean.FALSE;
 
 /**
  * An Agora float will be programmed as an 'up'ed Java float and all Agora
@@ -34,7 +20,7 @@ import static java.lang.reflect.Modifier.isStatic;
  * it work.
  * Last change:  E    16 Nov 97    1:47 am
  */
-public class JV_Float implements Serializable {
+public class JV_Float {
     /**
      * Addition. Receiver is of type float, the argument can be integer or float.
      *

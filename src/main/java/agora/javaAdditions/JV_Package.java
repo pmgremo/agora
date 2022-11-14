@@ -1,20 +1,6 @@
 package agora.javaAdditions;
 
-import agora.attributes.Attribute;
-import agora.attributes.PrimFunctionAttribute;
-import agora.attributes.PrimMethAttribute;
-import agora.grammar.UserPattern;
-import agora.objects.PrimGenerator;
-import agora.patterns.AbstractPattern;
-import agora.patterns.OperatorPattern;
-import agora.reflection.Frame;
 import agora.reflection.Operator;
-import agora.reflection.Up;
-
-import java.io.Serializable;
-import java.util.Hashtable;
-
-import static java.lang.reflect.Modifier.isStatic;
 
 /**
  * This is the implementation level class representing 'package' agora.objects in Agora.
@@ -29,7 +15,7 @@ import static java.lang.reflect.Modifier.isStatic;
  * @author Wolfgang De Meuter (Programming technology Lab).
  * Last change:  E    15 Nov 97   11:52 pm
  */
-public class JV_Package implements Serializable {
+public class JV_Package {
     protected String packageName;
 
     /**

@@ -1,132 +1,116 @@
 package agora.attributes;
 
-import java.lang.reflect.*;
-import java.io.*;
-import agora.errors.*;
-import agora.runtime.*;
-import agora.reflection.*;
-import agora.patterns.*;
-import agora.objects.*;
+import agora.errors.AgoraError;
+import agora.errors.PrimException;
+import agora.errors.ProgramError;
+import agora.objects.AgoraObject;
+import agora.patterns.AbstractPattern;
+import agora.reflection.Up;
+import agora.runtime.Client;
+import agora.runtime.Context;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serial;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
-   A primitive cloning attribute is actually a Java constructor.
-   @author Wolfgang De Meuter (Programming Technology Lab)
-	Last change:  E    17 Nov 97    0:01 am
-*/
-public class PrimCloningAttribute extends PrimAttribute implements Serializable
-{	
-  
-  protected Constructor c;
+ * A primitive cloning attribute is actually a Java constructor.
+ *
+ * @author Wolfgang De Meuter (Programming Technology Lab)
+ * Last change:  E    17 Nov 97    0:01 am
+ */
+public class PrimCloningAttribute extends PrimAttribute {
 
-  private void writeObject(ObjectOutputStream stream) throws IOException
-    {
-       stream.writeObject(c.getDeclaringClass().getName());
-		var types = c.getParameterTypes();
-       stream.writeInt(types.length);
-       for (var i = 0; i<types.length ; i++ )
-	  stream.writeObject(types[i].getName());
-    }
-  private void readObject(ObjectInputStream stream) throws IOException
-    {
-		var argName = "";
-	Class[] sig = null;
-	Class decl = null;
-		var ln = 0;
-	try
-	  {
-	    decl    = Class.forName((String)stream.readObject());
-	    ln      = stream.readInt();
-	    sig     = new Class[ln];
-	    for (var i = 0; i<ln ; i++ )
-	    {
-		argName = (String)stream.readObject();
-	        if (argName.equals("int"))
-	 	  sig[i] = java.lang.Integer.TYPE;
-	        else if (argName.equals("boolean"))
-		  sig[i] = java.lang.Boolean.TYPE;
-	        else if (argName.equals("char"))
-		  sig[i] = java.lang.Character.TYPE;
-	        else if (argName.equals("short"))
-		  sig[i] = java.lang.Short.TYPE;
-	        else if (argName.equals("byte"))
-		  sig[i] = java.lang.Byte.TYPE;
-	        else if (argName.equals("float"))
-		  sig[i] = java.lang.Float.TYPE;
-	        else if (argName.equals("long"))
-		  sig[i] = java.lang.Long.TYPE;
-	        else
-                  sig[i] = Class.forName(argName);
-	    }
-	    c = decl.getConstructor(sig);
-	  }
-	catch(NoSuchMethodException error)
-          {
-	    java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchconstructor)");
- 	  }
-	catch(ClassNotFoundException error)
-	  {
-	    java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchclass");
-	  }
-     }
+    protected Constructor<?> c;
 
-  /**
-     Creates a primitive cloning attribute corresponding to the given constructor.
-     @param c The native Java constructor corresponding to this attribute.
-  */
-  public PrimCloningAttribute (Constructor c)
-    {
-      super();
-      this.c = c;
+    @Serial
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        stream.writeObject(c.getDeclaringClass().getName());
+        var types = c.getParameterTypes();
+        stream.writeInt(types.length);
+        for (var type : types) stream.writeObject(type.getName());
     }
-  
-  /**
-     Executing the cloning method consists of invoking the constructor with the downed arguments.
-     The newly created object is upped into Agora.
-     @param msg The message whose delegation gave rise to the invocation.
-     @param client The client object containing the actual arguments.
-     @param context The context of the object in which this attribute resides.
-     @exception agora.errors.AgoraError When something goes wrong during evaluation.
-  */
-  public AgoraObject doAttributeValue(AbstractPattern msg,Client client,Context context) throws AgoraError
-    {
-      try
-	{
-	  client.actualsDown();
-	  return Up.glob.up(c.newInstance(client.getActuals()));
-	}
-      catch(IllegalAccessException e)
-	{
-	  throw (new ProgramError("Illegal Access Exception when invoking constructor"));
-	}
-      catch(InvocationTargetException e)
-	{
-	  if (e.getTargetException() instanceof AgoraError)
-	    throw ((AgoraError)e.getTargetException());
-	  else
-	    throw (new PrimException(e.getTargetException(),"PrimCloningMethAttribute::doAttributeValue"));
-	}
-      catch(InstantiationException e)
-	{
-	  throw (new ProgramError("Primitive CLoning Method (constructor) could not instantiate"));
-	}
+
+    @Serial
+    private void readObject(ObjectInputStream stream) throws IOException {
+        try {
+            var decl = Class.forName((String) stream.readObject());
+            var ln = stream.readInt();
+            var sig = new Class[ln];
+            for (var i = 0; i < ln; i++) {
+                var argName = (String) stream.readObject();
+                sig[i] = switch (argName) {
+                    case "int" -> Integer.TYPE;
+                    case "boolean" -> Boolean.TYPE;
+                    case "char" -> Character.TYPE;
+                    case "short" -> Short.TYPE;
+                    case "byte" -> Byte.TYPE;
+                    case "float" -> Float.TYPE;
+                    case "long" -> Long.TYPE;
+                    default -> Class.forName(argName);
+                };
+            }
+            c = decl.getConstructor(sig);
+        } catch (NoSuchMethodException error) {
+            java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchconstructor)");
+        } catch (ClassNotFoundException error) {
+            java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchclass");
+        }
     }
-  
-  /**
-     Converts the attribute into a string.
-  */
-  public String toString()
-    {
-      return "PRIMITIVE CLONING:";
+
+    /**
+     * Creates a primitive cloning attribute corresponding to the given constructor.
+     *
+     * @param c The native Java constructor corresponding to this attribute.
+     */
+    public PrimCloningAttribute(Constructor<?> c) {
+        super();
+        this.c = c;
     }
-  
-  /**
-     Inspects the attribute in a given context.
-     @param context The context of the object in which this attribute resides.
-     @exception agora.errors.AgoraError When something goes wrong while inspecting.
-     @return The attribute as a string, ready to be displayed in the inspector.
-  */
-  public String inspect(Context context) throws AgoraError
-    {
-      return "Primitive Java Constructor";
+
+    /**
+     * Executing the cloning method consists of invoking the constructor with the downed arguments.
+     * The newly created object is upped into Agora.
+     *
+     * @param msg     The message whose delegation gave rise to the invocation.
+     * @param client  The client object containing the actual arguments.
+     * @param context The context of the object in which this attribute resides.
+     * @throws agora.errors.AgoraError When something goes wrong during evaluation.
+     */
+    public AgoraObject doAttributeValue(AbstractPattern msg, Client client, Context context) throws AgoraError {
+        try {
+            client.actualsDown();
+            return Up.glob.up(c.newInstance(client.getActuals()));
+        } catch (IllegalAccessException e) {
+            throw new ProgramError("Illegal Access Exception when invoking constructor");
+        } catch (InvocationTargetException e) {
+            if (e.getTargetException() instanceof AgoraError)
+                throw (AgoraError) e.getTargetException();
+            else
+                throw new PrimException(e.getTargetException(), "PrimCloningMethAttribute::doAttributeValue");
+        } catch (InstantiationException e) {
+            throw new ProgramError("Primitive CLoning Method (constructor) could not instantiate");
+        }
+    }
+
+    /**
+     * Converts the attribute into a string.
+     */
+    public String toString() {
+        return "PRIMITIVE CLONING:";
+    }
+
+    /**
+     * Inspects the attribute in a given context.
+     *
+     * @param context The context of the object in which this attribute resides.
+     * @return The attribute as a string, ready to be displayed in the inspector.
+     * @throws agora.errors.AgoraError When something goes wrong while inspecting.
+     */
+    public String inspect(Context context) throws AgoraError {
+        return "Primitive Java Constructor";
     }
 }

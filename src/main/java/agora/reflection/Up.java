@@ -50,16 +50,8 @@ public class Up implements Serializable {
      * Java class names onto generators that contain the method tables for the
      * associated class.
      */
-    private final Hashtable<String, PrimGenerator> uptable;
-    private VariableContainer primitive; // temporary variable
-
-    /**
-     * This must be called at system-startup time to initialise the cache.
-     */
-    public Up() {
-        this.primitive = null;
-        this.uptable = new Hashtable<>(30);
-    }
+    private final Hashtable<String, PrimGenerator> uptable = new Hashtable<>(30);
+    private final VariableContainer primitive = new VariableContainer(null); // temporary variable
 
     public static PrimGenerator buildGenerator(Class<?> type) {
         var table = new Hashtable<AbstractPattern, Attribute>(5);
@@ -107,7 +99,7 @@ public class Up implements Serializable {
 
     /**
      * This method must be called right after system startup, when the boolean
-     * agora.objects have been upped. Somewhere, the up version of the booleans define
+     * objects have been upped. Somewhere, the up version of the booleans define
      * a method 'primitive' that returns an upped boolean. Hence, when calling
      * Up with a boolean, this upped boolean is not yet known.
      */
@@ -131,17 +123,14 @@ public class Up implements Serializable {
         if (o == null) // If null object is to be upped, take JV_Nil (reason: in Agora, null is an object!)
         {
             return new PrimIdentityGenerator(
-                    "Object",
+                    Object.class.getSimpleName(),
                     generatorFor(JV_Nil.class, true),
                     new JV_Nil()
             ).wrap();
-        } else {
-            if (o instanceof Class<?> c) // Dirty type cast because Java has no classes of classes of ...
-                return new PrimIdentityGenerator("Class", generatorFor(c, false), o).wrap();
-            else
-                return new PrimIdentityGenerator("Object", generatorFor(o.getClass(), true), o).wrap();
-
-        }
+        } else if (o instanceof Class<?> c) // Dirty type cast because Java has no classes of classes of ...
+            return new PrimIdentityGenerator(c.getSimpleName(), generatorFor(c, false), o).wrap();
+        else
+            return new PrimIdentityGenerator(Object.class.getSimpleName(), generatorFor(o.getClass(), true), o).wrap();
     }
 
     /**
@@ -153,14 +142,19 @@ public class Up implements Serializable {
      * and statics) should also be considered
      */
     private PrimGenerator generatorFor(Class<?> c, boolean isInstance) throws AgoraError {
-        var name = c.getName();
-        if (!isInstance) name = name + "CLASS";
-        var methodTableOfc = uptable.get(name);
-        if (methodTableOfc == null) {
-            methodTableOfc = createGeneratorFor(c, isInstance);
-            uptable.put(name, methodTableOfc);
+        var type = c;
+        var superType = c.getSuperclass();
+        if (Integer.class.equals(c)) {
+            type = JV_Integer.class;
+            superType = c;
+        } else if (Float.class.equals(c)) {
+            type = JV_Float.class;
+            superType = c;
+        } else if (Boolean.class.equals(c)) {
+            type = JV_Boolean.class;
+            superType = c;
         }
-        return methodTableOfc;
+        return createGeneratorFor(type, superType, isInstance);
     }
 
     /**
@@ -169,43 +163,32 @@ public class Up implements Serializable {
      * the generator for the subclasses. The generator for 'java.lang.Object' is linked
      * to the root of the Agora system.
      */
-    private PrimGenerator createGeneratorFor(Class<?> c, boolean isInstance) throws AgoraError {
-        var methodTableOfc = buildGenerator(c);
+    private PrimGenerator createGeneratorFor(Class<?> type, Class<?> superType, boolean isInstance) throws AgoraError {
+        var name = type.getName();
+        if (!isInstance) name = name + "CLASS";
 
-        if (methodTableOfc == null) {
-            methodTableOfc = constructGeneratorFor(c, isInstance);
-        }
+        var methodTableOfc = uptable.get(name);
+        if (methodTableOfc != null) return methodTableOfc;
 
-        if (Object.class.equals(c))
-            methodTableOfc.setParent(AgoraGlobals.glob.rootIdentity);             // Link table to the root table of Agora
-        else
-            methodTableOfc.setParent(generatorFor(c.getSuperclass(), isInstance)); // Link table to table of the super
+        methodTableOfc = buildGenerator(type);
 
-        //Natives have special wrappers that contain operations not supported in java.lang
-        if (c.equals(Object.class)) // Hack to make all upped objects primitive.
-        {
-            var unary = new UnaryPattern("primitive");
-            if (primitive == null)
-                primitive = new VariableContainer(null); // make a reference, because the container has to be adjusted later.
-            var getter = new VarGetAttribute(primitive);
-            methodTableOfc.installPattern(unary, getter);
-        }
+        if (methodTableOfc == null)
+            methodTableOfc = constructGeneratorFor(type, isInstance);
 
-        if (Integer.class.equals(c)) {
-            var operators = buildGenerator(JV_Integer.class);
-            operators.setParent(methodTableOfc);
-            return operators;
-        } else if (Float.class.equals(c)) {
-            var operators = buildGenerator(JV_Float.class);
-            operators.setParent(methodTableOfc);
-            return operators;
-        } else if (Boolean.class.equals(c)) {
-            var operators = buildGenerator(JV_Boolean.class);
-            operators.setParent(methodTableOfc);
-            return operators;
-        } else {
+        if (Object.class.equals(type)) {
+            methodTableOfc.setParent(AgoraGlobals.glob.rootIdentity);
+            methodTableOfc.installPattern(
+                    new UnaryPattern("primitive"),
+                    new VarGetAttribute(primitive)
+            );
             return methodTableOfc;
         }
+
+        methodTableOfc.setParent(createGeneratorFor(superType, superType.getSuperclass(), isInstance));
+
+        uptable.put(name, methodTableOfc);
+
+        return methodTableOfc;
     }
 
     /**
@@ -235,7 +218,7 @@ public class Up implements Serializable {
      */
     private void putFieldsInQueue(Class<?> c, Queue<Object> q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
         var fields = c.getFields();
-        for (Field field : fields) {
+        for (var field : fields) {
             if (Modifier.isPublic(field.getModifiers()) &&
                     (!Modifier.isAbstract(field.getModifiers())) &&
                     (!Modifier.isPrivate(field.getModifiers())) &&
@@ -261,7 +244,7 @@ public class Up implements Serializable {
      */
     private void putMethodsInQueue(Class<?> c, Queue<Object> q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
         var methods = c.getMethods();
-        for (Method method : methods) {
+        for (var method : methods) {
             if (Modifier.isPublic(method.getModifiers()) &&
                     !Modifier.isAbstract(method.getModifiers()) &&
                     !Modifier.isPrivate(method.getModifiers()) &&
@@ -279,11 +262,11 @@ public class Up implements Serializable {
     /**
      * This procedure reads all the constructors in a class. For each constructor,
      * a pattern 'new' is created and the appropriate Agora attribute is constructed.
-     * All the agora.patterns and the agora.attributes are gathered together in a queue.
+     * All the patterns and the attributes are gathered together in a queue.
      */
     private void putConstructorsInQueue(Class<?> c, Queue<Object> q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
         var constructors = c.getConstructors();
-        for (Constructor<?> constructor : constructors) {
+        for (var constructor : constructors) {
             if (Modifier.isPublic(constructor.getModifiers()) &&
                     !Modifier.isNative(constructor.getModifiers()) &&
                     !Modifier.isAbstract(constructor.getModifiers()) &&
@@ -317,7 +300,7 @@ public class Up implements Serializable {
      */
     private AbstractPattern createVariableWritePatFor(Field f) {
         var writePat = new KeywordPattern();
-        writePat.atPut(0, decaps(f.getName()) + ":");
+        writePat.add(decaps(f.getName()) + ":");
         return writePat;
     }
 
@@ -389,22 +372,7 @@ public class Up implements Serializable {
      * is also removed. Hence, the 'real' type name results.
      */
     private String typeNameFor(Class<?> s) {
-        return decaps(unqualified(unArrayed(s))); // Remove [], remove package structure, remove capitals
-    }
-
-    /**
-     * Removes the package qualifiers from a class name.
-     */
-    private String unqualified(String s) {
-        if (s.length() == 0)
-            return s;
-        var pos = s.length() - 1;
-        while (s.charAt(pos) != '.') {
-            pos--;
-            if (pos == -1)
-                return s;
-        }
-        return s.substring(pos + 1);
+        return decaps(unArrayed(s)); // Remove [], remove package structure, remove capitals
     }
 
     /**
@@ -412,7 +380,7 @@ public class Up implements Serializable {
      * the type Vector[][] is transformed into VectorAA.
      */
     private String unArrayed(Class<?> c) {
-        return c.isArray() ? unArrayed(c.getComponentType()) + "A" : c.getName();
+        return c.isArray() ? unArrayed(c.getComponentType()) + "A" : c.getSimpleName();
     }
 
     /**

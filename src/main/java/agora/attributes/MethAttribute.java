@@ -14,7 +14,7 @@ import agora.runtime.Context;
  * exist such as view, mixin, cloning and so on. These subclasses must only
  * override the way the are executed in 'doAttributeValue'.
  *
- * @autor Wolfgang De Meuter (Programming Technology Lab).
+ * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:34 am
  */
 public class MethAttribute implements Attribute {

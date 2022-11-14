@@ -1,25 +1,11 @@
 package agora.javaAdditions;
 
-import agora.attributes.Attribute;
-import agora.attributes.PrimFunctionAttribute;
-import agora.attributes.PrimMethAttribute;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
-import agora.grammar.UserPattern;
-import agora.objects.PrimGenerator;
-import agora.patterns.AbstractPattern;
-import agora.patterns.OperatorPattern;
-import agora.patterns.UnaryPattern;
-import agora.reflection.Frame;
 import agora.reflection.Operator;
 import agora.reflection.Unary;
-import agora.reflection.Up;
 
-import java.io.Serializable;
-import java.util.Hashtable;
 import java.util.Objects;
-
-import static java.lang.reflect.Modifier.isStatic;
 
 /**
  * This class contains a number of methods that should have been included in
@@ -28,7 +14,7 @@ import static java.lang.reflect.Modifier.isStatic;
  * explicitely pass the receiver and the arguments.
  * Last change:  E    16 Nov 97    1:47 am
  */
-public class JV_Boolean implements Serializable {
+public class JV_Boolean {
     /**
      * And. Receiver is of type boolean, the argument must be boolean.
      *
