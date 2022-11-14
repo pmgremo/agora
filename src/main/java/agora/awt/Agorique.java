@@ -1,5 +1,6 @@
-package agora;
+package agora.awt;
 
+import agora.ErrorDialog;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.grammar.Expression;
@@ -7,7 +8,6 @@ import agora.grammar.Parser;
 import agora.grammar.Scanner;
 import agora.reflection.Up;
 import agora.tools.AgoraGlobals;
-import agora.tools.AwtIo;
 import agora.tools.SingleRoot;
 
 import java.awt.*;
@@ -30,7 +30,7 @@ public class Agorique implements Serializable {
     private static final int yval = 75; // Text area in which we type Agora code
 
     public static void main(String... argv) {
-        window = new Frame("agora.Agorique");
+        window = new Frame("Agorique");
         var b1 = new Button("Eval");
         var b2 = new Button("Dump Image");
         var b3 = new Button("Read Image");

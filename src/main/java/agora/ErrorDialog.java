@@ -6,7 +6,7 @@ import agora.grammar.Expression;
 import agora.objects.AgoraObject;
 import agora.patterns.UnaryPattern;
 import agora.runtime.Client;
-import agora.tools.AwtIo;
+import agora.awt.AwtIo;
 
 import java.awt.*;
 

@@ -6,7 +6,7 @@ import agora.patterns.Pattern;
 import agora.patterns.OperatorPattern;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
-import agora.tools.AwtIo;
+import agora.awt.AwtIo;
 
 /**
  * This class represents the parsetree node for aggregates of Agora expressions.

@@ -4,7 +4,7 @@ import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
 import agora.reflection.Up;
 import agora.runtime.Context;
-import agora.tools.AwtIo;
+import agora.awt.AwtIo;
 
 /**
  * Parse tree nodes for floating point literals.

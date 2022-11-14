@@ -7,7 +7,7 @@ import agora.patterns.Pattern;
 import agora.patterns.OperatorPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
-import agora.tools.AwtIo;
+import agora.awt.AwtIo;
 
 /**
  * This class represents user operator agora.patterns like + 4 or +arg.

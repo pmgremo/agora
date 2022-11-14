@@ -1,6 +1,6 @@
 package agora.grammar;
 
-import agora.tools.AwtIo;
+import agora.awt.AwtIo;
 
 /**
  * Abstract class representing Agora message expressions. This class normally has

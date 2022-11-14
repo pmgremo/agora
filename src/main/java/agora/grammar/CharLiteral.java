@@ -4,7 +4,7 @@ import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
 import agora.reflection.Up;
 import agora.runtime.Context;
-import agora.tools.AwtIo;
+import agora.awt.AwtIo;
 
 /**
  * The parse tree node class representing character literals.

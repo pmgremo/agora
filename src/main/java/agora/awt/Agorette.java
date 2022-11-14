@@ -1,5 +1,6 @@
-package agora;
+package agora.awt;
 
+import agora.ErrorDialog;
 import agora.errors.AgoraError;
 import agora.errors.MessageNotUnderstood;
 import agora.errors.ProgramError;
@@ -8,7 +9,6 @@ import agora.grammar.Parser;
 import agora.grammar.Scanner;
 import agora.reflection.Up;
 import agora.tools.AgoraGlobals;
-import agora.tools.AwtIo;
 import agora.tools.SingleRoot;
 
 import java.awt.*;

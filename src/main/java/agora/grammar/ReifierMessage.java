@@ -4,9 +4,7 @@ import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
 import agora.reflection.Up;
 import agora.runtime.Context;
-import agora.tools.AwtIo;
-
-import java.io.Serializable;
+import agora.awt.AwtIo;
 
 /**
  * Representation of reifier message expressions.

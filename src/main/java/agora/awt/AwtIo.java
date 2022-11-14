@@ -1,4 +1,6 @@
-package agora.tools;
+package agora.awt;
+
+import agora.tools.Io;
 
 import java.awt.*;
 import java.io.ByteArrayInputStream;
@@ -69,16 +71,6 @@ public class AwtIo implements Io {
      */
     public static String makeSpaces(int i) {
       return " " + (i == 0 ? "" : makeSpaces(i - 1));
-    }
-
-    /**
-     * Dumps the given string onto the textarea associated with AgoraIO.
-     *
-     * @param s The string to be printed.
-     */
-    @Override
-    public void print(String s) {
-        theOutput.append(s);
     }
 
     @Override

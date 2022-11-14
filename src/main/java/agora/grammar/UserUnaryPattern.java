@@ -6,7 +6,7 @@ import agora.patterns.Pattern;
 import agora.patterns.UnaryPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
-import agora.tools.AwtIo;
+import agora.awt.AwtIo;
 
 /**
  * A UserUnaryPattern is an Agora expression denoting ordinary unary agora.patterns.

@@ -7,7 +7,7 @@ import agora.patterns.Pattern;
 import agora.patterns.KeywordPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
-import agora.tools.AwtIo;
+import agora.awt.AwtIo;
 
 /**
  * This class represents reifier keyword agora.patterns like METHOD:{}
