@@ -65,15 +65,7 @@ public class AgoraGlobals implements Serializable {
      * global variable.
      */
     public AgoraObject uppedNull;
-    /**
-     * There is only one Boolean object 'true'. In order to save execution time,
-     * both objects (the Java version and the Agora version) are stored here,
-     * such that they will never be garbage collected and will never be constructed
-     * again. The same holds for 'false'.
-     */
-    Object ttrue;
     AgoraObject uppedTrue;
-    Object ffalse;
     AgoraObject uppedFalse;
 
     /**
@@ -106,12 +98,9 @@ public class AgoraGlobals implements Serializable {
 
         // Create heavily used constants (cache them for efficiency reasons)
         this.uppedNull = Up.glob.up(null);
-        this.ttrue = Boolean.TRUE;
-        this.ffalse = Boolean.FALSE;
-        this.uppedTrue = Up.glob.up(ttrue);
-        this.uppedFalse = Up.glob.up(ffalse);
+        this.uppedTrue = Up.glob.up(true);
+        this.uppedFalse = Up.glob.up(false);
 
-        Up.glob.fixBooleanCircularity();
         // Fill the ROOT object with the standard methods
         this.standardMethods(agora);
     }
@@ -173,7 +162,7 @@ public class AgoraGlobals implements Serializable {
             var selfMeth = new PrimReifierMethAttribute(Context.class.getMethod("Self", Context.class));
             this.rootPrivate.installPattern(selfP, selfMeth);
         } catch (Throwable e) {
-            throw (new PrimException(e, "AgoraGlobals::standardMethods"));
+            throw new PrimException(e, "AgoraGlobals::standardMethods");
         }
 
         // inspect
@@ -182,20 +171,8 @@ public class AgoraGlobals implements Serializable {
             var inspectMeth = new PrimReifierMethAttribute(Context.class.getMethod("inspectPrimitive"));
             this.rootPublic.installPattern(inspect, inspectMeth);
         } catch (Throwable e) {
-            throw (new PrimException(e, "AgoraGlobals::standardMethods"));
+            throw new PrimException(e, "AgoraGlobals::standardMethods");
         }
-    }
-
-    /**
-     * Given a native boolean, this method returns the corresponding wrapped Java version, which
-     * is cached in the globals class. Otherwise, the if-test executed in this code would be
-     * in the evaluator for about 100 times.
-     *
-     * @param b The boolean of which the cached version is required.
-     * @return The corresponding cached boolean.
-     */
-    public Object cachedBoolean(boolean b) {
-        return b ? ttrue : ffalse;
     }
 
     /**

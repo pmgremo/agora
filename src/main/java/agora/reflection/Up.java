@@ -49,7 +49,6 @@ public class Up implements Serializable {
      * associated class.
      */
     private final Hashtable<String, PrimGenerator> uptable = new Hashtable<>(30);
-    private final VariableContainer primitive = new VariableContainer(null); // temporary variable
 
     public static PrimGenerator buildGenerator(Class<?> type) {
         var table = new Hashtable<Pattern, Attribute>(5);
@@ -93,16 +92,6 @@ public class Up implements Serializable {
         var frame = type.getAnnotation(Frame.class);
         var name = frame != null ? frame.value() : type.getSimpleName();
         return new PrimGenerator(name, table, null);
-    }
-
-    /**
-     * This method must be called right after system startup, when the boolean
-     * objects have been upped. Somewhere, the up version of the booleans define
-     * a method 'primitive' that returns an upped boolean. Hence, when calling
-     * Up with a boolean, this upped boolean is not yet known.
-     */
-    public void fixBooleanCircularity() {
-        primitive.write(AgoraGlobals.glob.cachedUppedBoolean(true));
     }
 
     /**
@@ -167,18 +156,18 @@ public class Up implements Serializable {
         if (methodTableOfc == null)
             methodTableOfc = constructGeneratorFor(type, isInstance);
 
+        uptable.put(name, methodTableOfc);
+
         if (Object.class.equals(type)) {
             methodTableOfc.setParent(AgoraGlobals.glob.rootIdentity);
             methodTableOfc.installPattern(
                     new UnaryPattern("primitive"),
-                    new VarGetAttribute(primitive)
+                    new VarGetAttribute(new VariableContainer(up(true)))
             );
             return methodTableOfc;
         }
 
         methodTableOfc.setParent(createGeneratorFor(superType, superType.getSuperclass(), isInstance));
-
-        uptable.put(name, methodTableOfc);
 
         return methodTableOfc;
     }

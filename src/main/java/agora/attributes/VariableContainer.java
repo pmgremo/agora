@@ -1,5 +1,6 @@
 package agora.attributes;
 
+import agora.Copyable;
 import agora.objects.AgoraObject;
 
 import java.io.Serializable;
@@ -10,7 +11,7 @@ import java.util.Hashtable;
  * the same structure such that they stay consistent. That's why they both point to a container like this.
  * Last change:  E    16 Nov 97    1:57 am
  */
-public class VariableContainer implements Serializable {
+public class VariableContainer implements Serializable, Copyable<VariableContainer> {
     protected AgoraObject variableValue;
 
     /**
@@ -45,15 +46,15 @@ public class VariableContainer implements Serializable {
      * Copying the variable container consists of looking it up in the cloning map.
      * If it is not there, it is really copied. Otherwise the copy is returned.
      *
-     * @param cloneMap A table of already-copied-things such that nothing gets copied twice.
+     * @param cache A table of already-copied-things such that nothing gets copied twice.
      * @return A copy of this attribute.
      */
-    public Object copy(Hashtable<Object, Object> cloneMap) {
-        var myclone = cloneMap.get(this);
-        if (myclone != null) return myclone;
-        var newclone = new VariableContainer(this.variableValue);
-        cloneMap.put(this, newclone);
-        return newclone;
+    public VariableContainer copy(Hashtable<Object, Object> cache) {
+        var exist = (VariableContainer) cache.get(this);
+        if (exist != null) return exist;
+        var result = new VariableContainer(this.variableValue);
+        cache.put(this, result);
+        return result;
     }
 
 }

@@ -26,7 +26,6 @@ public class VarGetAttribute implements Attribute {
      *                 sure both variable read and write slots point to the same object.
      */
     public VarGetAttribute(VariableContainer variable) {
-        super();
         this.theContents = variable;
     }
 
@@ -63,19 +62,15 @@ public class VarGetAttribute implements Attribute {
     /**
      * Makes a copy of the attribute and its associated variable container.
      *
-     * @param cloneMap A table of already-copied-things such that nothing is copied twice.
+     * @param cache A table of already-copied-things such that nothing is copied twice.
      * @return A clone of this attribute.
      */
-    public VarGetAttribute copy(Hashtable<Object, Object> cloneMap) {
-        var myclone = (VarGetAttribute) cloneMap.get(this);
-        if (myclone != null)
-            return myclone;
-        else {
-            var clonedAttribute = new VarGetAttribute(null);
-            cloneMap.put(this, clonedAttribute);
-            clonedAttribute.theContents = (VariableContainer) (this.theContents.copy(cloneMap));
-            //We cannot avoid this type cast because of the genericity of clone maps.
-            return clonedAttribute;
-        }
+    public VarGetAttribute copy(Hashtable<Object, Object> cache) {
+        var exist = (VarGetAttribute) cache.get(this);
+        if (exist != null) return exist;
+        var result = new VarGetAttribute(null);
+        cache.put(this, result);
+        result.theContents = this.theContents.copy(cache);
+        return result;
     }
 }
