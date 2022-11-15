@@ -19,10 +19,9 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Hashtable;
 
-import static java.lang.reflect.Modifier.isStatic;
+import static java.lang.reflect.Modifier.*;
 
 /**
  * This class consists of procedural code. Normally, the Agora design requires that
@@ -155,9 +154,9 @@ public class Up implements Serializable {
             {
                 var pattern = new KeywordPattern();
                 var parameters = x.getParameters();
-                for (int i = 0; i < parameters.length; i++) {
-                    var annotation = parameters[i].getAnnotation(Keyword.class);
-                    if (annotation != null) pattern.atPut(i, annotation.value());
+                for (var parameter : parameters) {
+                    var annotation = parameter.getAnnotation(Keyword.class);
+                    if (annotation != null) pattern.add(annotation.value());
                 }
                 if (pattern.size() > 0) {
                     if (reified != null) pattern.setReifier();
@@ -192,15 +191,15 @@ public class Up implements Serializable {
     private void putFieldsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
         var fields = c.getDeclaredFields();
         for (var field : fields) {
-            if (!Modifier.isPublic(field.getModifiers()) ||
-                    (Modifier.isAbstract(field.getModifiers())) ||
-                    (Modifier.isInterface(field.getModifiers())) ||
-                    (!(isInstance | (Modifier.isStatic(field.getModifiers()))))) // not isInstance -> isStatic
+            if (!isPublic(field.getModifiers()) ||
+                    isAbstract(field.getModifiers()) ||
+                    isInterface(field.getModifiers()) ||
+                    !(isInstance | isStatic(field.getModifiers()))) // not isInstance -> isStatic
             {
                 continue;
             }
             q.put(createVariableReadPatFor(field), createVariableReadAttFor(field));
-            if (!(Modifier.isFinal(field.getModifiers()))) { // Only a write pattern if the field is non-final (i.e. not constant)
+            if (!isFinal(field.getModifiers())) { // Only a write pattern if the field is non-final (i.e. not constant)
                 q.put(createVariableWritePatFor(field), createVariableWriteAttFor(field));
             }
         }
@@ -214,10 +213,10 @@ public class Up implements Serializable {
     private void putMethodsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
         var methods = c.getDeclaredMethods();
         for (var method : methods) {
-            if (!Modifier.isPublic(method.getModifiers()) ||
-                    Modifier.isAbstract(method.getModifiers()) ||
-                    Modifier.isInterface(method.getModifiers()) ||
-                    !(isInstance | Modifier.isStatic(method.getModifiers()))) // not isInstance -> isStatic
+            if (!isPublic(method.getModifiers()) ||
+                    isAbstract(method.getModifiers()) ||
+                    isInterface(method.getModifiers()) ||
+                    !(isInstance | isStatic(method.getModifiers()))) // not isInstance -> isStatic
             {
                 continue;
             }
@@ -233,10 +232,10 @@ public class Up implements Serializable {
     private void putConstructorsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
         var constructors = c.getDeclaredConstructors();
         for (var constructor : constructors) {
-            if (!Modifier.isPublic(constructor.getModifiers()) ||
-                    Modifier.isNative(constructor.getModifiers()) ||
-                    Modifier.isAbstract(constructor.getModifiers()) ||
-                    Modifier.isInterface(constructor.getModifiers()) ||
+            if (!isPublic(constructor.getModifiers()) ||
+                    isNative(constructor.getModifiers()) ||
+                    isAbstract(constructor.getModifiers()) ||
+                    isInterface(constructor.getModifiers()) ||
                     isInstance) {
                 continue;
             }
@@ -283,11 +282,11 @@ public class Up implements Serializable {
     private Pattern createMethodPatFor(Method m) {
         var types = m.getParameterTypes();
         if (types.length == 0) return new UnaryPattern(m.getName());
-        var pat = new KeywordPattern();
-        pat.add(decaps(m.getName()) + typeNameFor(types[0]) + ":");
+        var pattern = new KeywordPattern();
+        pattern.add(decaps(m.getName()) + typeNameFor(types[0]) + ":");
         for (var j = 1; j < types.length; j++)
-            pat.add(typeNameFor(types[j]) + ":");
-        return pat;
+            pattern.add(typeNameFor(types[j]) + ":");
+        return pattern;
     }
 
     /**
@@ -305,17 +304,12 @@ public class Up implements Serializable {
      */
     private Pattern createConstructorPatFor(Constructor<?> c) {
         var types = c.getParameterTypes();
-        if (types.length == 0)
-            return new UnaryPattern("new");
-        var pat = new KeywordPattern();
-        if (types.length == 1) {
-            pat.add("new" + typeNameFor(types[0]) + ":");
-            return pat;
-        }
-        pat.add("new" + typeNameFor(types[0]) + ":");
+        if (types.length == 0) return new UnaryPattern("new");
+        var pattern = new KeywordPattern();
+        pattern.add("new" + typeNameFor(types[0]) + ":");
         for (var j = 1; j < types.length; j++)
-            pat.add(typeNameFor(types[j]) + ":");
-        return pat;
+            pattern.add(typeNameFor(types[j]) + ":");
+        return pattern;
     }
 
     /**

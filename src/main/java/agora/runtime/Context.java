@@ -112,7 +112,7 @@ public class Context implements Serializable {
      *                of the new client.
      * @return A new Client object with the given actuals.
      */
-    public Client newClient(Object[] actuals) {
+    public Client newClient(Object... actuals) {
         return new Client(actuals, this.currentException);
     }
 

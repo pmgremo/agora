@@ -18,16 +18,7 @@ public abstract class Pattern implements Serializable, Copyable<Pattern>
     This variable indicates whether it concerns a reifier pattern or an
     ordinary pattern
     */
-  protected boolean reifierPattern;
-
-  /**
-    The default constructor initializes the pattern. The boolean 'reifierPattern' is set 
-    to false.
-    */
-  public Pattern()
-  {
-    this.reifierPattern = false;
-  }
+  protected boolean reifierPattern = false;
 
   /**
     Sets the 'reifierPattern' variable to 'true'.

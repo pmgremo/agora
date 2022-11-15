@@ -37,9 +37,9 @@ public class UnaryPattern extends Pattern implements Serializable {
      * read-pattern.
      */
     public KeywordPattern makeWritePattern() {
-        var writePat = new KeywordPattern();
-        writePat.atPut(0, pattern.concat(":"));
-        return writePat;
+        var result = new KeywordPattern();
+        result.add(pattern.concat(":"));
+        return result;
     }
 
     /**

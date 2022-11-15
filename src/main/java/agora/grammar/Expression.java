@@ -704,37 +704,28 @@ abstract public class Expression implements Serializable {
             @Keyword("TRY:") Expression pattern,
             @Keyword("CATCH:") Expression catchcode
     ) throws AgoraError {
+        if (!(pattern instanceof UserPattern pat)) {
+            throw new ProgramError("TRY:xxx CATCH: pattern is not a valid pattern");
+        }
         try {
-            return this.eval(context.setException(new AgoraException(catchcode)));
+            return eval(context.setException(new AgoraException(catchcode)));
         } catch (AgoraException ex) {
-            if (pattern instanceof UserPattern pat) {
-                var formalPattern = pat.makePattern(context);
-                var actualPattern = ex.getPattern();
-                if (formalPattern.equals(actualPattern)) {
-                    var formals = pat.makeFormals(context);
-                    var actuals = ex.getClient();
-                    var theAtt = new MethAttribute(formals, catchcode);
-                    return theAtt.doAttributeValue(actualPattern, actuals, context);
-                } else
-                    throw ex;
-            } else
-                throw new ProgramError("TRY:xxx CATCH: pattern is not a valid pattern");
+            var formalPattern = pat.makePattern(context);
+            var actualPattern = ex.getPattern();
+            if (!formalPattern.equals(actualPattern)) throw ex;
+            var formals = pat.makeFormals(context);
+            var actuals = ex.getClient();
+            var attribute = new MethAttribute(formals, catchcode);
+            return attribute.doAttributeValue(actualPattern, actuals, context);
         } catch (AgoraError ex) {
-            if (pattern instanceof UserPattern pat) {
-                var agoError = new KeywordPattern();
-                agoError.atPut(0, "agoraError:");
-                var formalPattern = pat.makePattern(context);
-                if (formalPattern.equals(agoError)) {
-                    var formals = pat.makeFormals(context);
-                    var args = new Object[1];
-                    args[0] = Up.glob.up(ex);
-                    var actuals = context.newClient(args);
-                    var theAtt = new MethAttribute(formals, catchcode);
-                    return theAtt.doAttributeValue(agoError, actuals, context);
-                }
-                throw ex;
-            } else
-                throw new ProgramError("TRY:XXX CATCH: pattern is not a valid pattern");
+            var agoraError = new KeywordPattern();
+            agoraError.add("agoraError:");
+            var formalPattern = pat.makePattern(context);
+            if (!formalPattern.equals(agoraError)) throw ex;
+            var formals = pat.makeFormals(context);
+            var actuals = context.newClient(Up.glob.up(ex));
+            var attribute = new MethAttribute(formals, catchcode);
+            return attribute.doAttributeValue(agoraError, actuals, context);
         }
     }
 

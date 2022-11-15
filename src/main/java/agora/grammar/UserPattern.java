@@ -57,22 +57,20 @@ abstract public class UserPattern extends Pattern {
     @Unary(value = "RAISE")
     @Reified
     public AgoraObject raise(Context context) throws AgoraError {
-        var agoError = new KeywordPattern();
-        agoError.add("agoraError:");
-        var runtimePat = this.makePattern(context);
-        var theClient = this.makeClient(context, null);
-        theClient.actualsEval(context);
-        if (agoError.equals(runtimePat)) {
-            var actuals = theClient.getActuals();
-            if (((AgoraObject) actuals[0]).down() instanceof AgoraError e)
-                throw e;
-            else
-                throw new ProgramError("agoraError: is a reserved exception pattern. Its argument must be an exception.");
+        var agoraError = new KeywordPattern();
+        agoraError.add("agoraError:");
+        var pattern = makePattern(context);
+        var client = makeClient(context, null);
+        client.actualsEval(context);
+        if (agoraError.equals(pattern)) {
+            var actuals = client.getActuals();
+            if (((AgoraObject) actuals[0]).down() instanceof AgoraError e) throw e;
+            throw new ProgramError("agoraError: is a reserved exception pattern. Its argument must be an exception.");
         }
-        var theException = context.getException();
-        theException.setPattern(runtimePat);
-        theException.setClient(theClient);
-        throw theException;
+        var exception = context.getException();
+        exception.setPattern(pattern);
+        exception.setClient(client);
+        throw exception;
     }
 
     /**
