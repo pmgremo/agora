@@ -1,6 +1,6 @@
 package agora.objects;
 
-import agora.Inspector;
+import agora.awt.Inspector;
 import agora.errors.AgoraError;
 import agora.errors.MessageNotUnderstood;
 import agora.patterns.Pattern;
@@ -20,7 +20,7 @@ import java.util.Hashtable;
  * @author Wolfgang De Meuter (Programming Technology Lab)
  * Last change:  E    17 Nov 97    1:03 am
  */
-public class EmptyGenerator extends AbstractGenerator implements Serializable {
+public class EmptyGenerator extends Generator implements Serializable {
     /**
      * Create a new empty generator.
      *
@@ -41,7 +41,7 @@ public class EmptyGenerator extends AbstractGenerator implements Serializable {
      *                                 them (i.e. we cannot inherit from primitive agora.objects). If this happens, the exception is
      *                                 thrown.
      */
-    public AbstractGenerator funcAddLayer(String NameOfFrame) throws AgoraError {
+    public Generator funcAddLayer(String NameOfFrame) throws AgoraError {
         //Should never ocur
         return null;
     }
@@ -74,16 +74,18 @@ public class EmptyGenerator extends AbstractGenerator implements Serializable {
      *                                 thrown. This would be a bug somewhere in the implementation.
      */
     public void inspect(Context context) throws AgoraError {
-        var d = new Inspector(AgoraGlobals.glob.agoraWindow,
-                "Empty Method Frame",
+        var d = new Inspector(
+                AgoraGlobals.glob.agoraWindow,
+                name,
                 null,
                 null,
                 null,
                 null,
                 null,
-                context);
+                context,
+                this);
         d.pack();
-        d.show();
+        d.setVisible(true);
     }
 
     /**

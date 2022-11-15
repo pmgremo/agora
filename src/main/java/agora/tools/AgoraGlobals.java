@@ -46,7 +46,7 @@ public class AgoraGlobals implements Serializable {
     /**
      * The root parent part. This is an empty generator.
      */
-    public AbstractGenerator rootParent;
+    public Generator rootParent;
 
     /**
      * The root public part, i.e. all the messages understood by SELF in the

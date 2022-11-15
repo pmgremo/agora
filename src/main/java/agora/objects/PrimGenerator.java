@@ -1,7 +1,7 @@
 package agora.objects;
 
-import agora.Inspector;
 import agora.attributes.Attribute;
+import agora.awt.Inspector;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.patterns.Pattern;
@@ -31,7 +31,7 @@ public class PrimGenerator extends MethodsGenerator {
      *                    patterns to their corresponding agora.attributes.
      * @param parent      This initial value of the parent link of this generator.
      */
-    public PrimGenerator(String nameOfFrame, Hashtable<Pattern, Attribute> table, AbstractGenerator parent) {
+    public PrimGenerator(String nameOfFrame, Hashtable<Pattern, Attribute> table, Generator parent) {
         super(nameOfFrame, table, parent);
     }
 
@@ -57,7 +57,7 @@ public class PrimGenerator extends MethodsGenerator {
     /**
      * Opens an inspector for the object.
      *
-     * @param context The context in which the inspect is sent. This is needed to show
+     * @param context The context in which inspect is sent. This is needed to show
      *                object values in the inspector (the values are in the context parts).
      * @throws agora.errors.AgoraError If an error occurs during inspection, this exception is
      *                                 thrown. This would be a bug somewhere in the implementation.
@@ -65,14 +65,14 @@ public class PrimGenerator extends MethodsGenerator {
     public void inspect(Context context) throws AgoraError {
         var d = new Inspector(
                 AgoraGlobals.glob.agoraWindow,
-                this.name,
-                this.theMethodTable,
+                name,
+                theMethodTable,
                 null,
-                this.parent,
+                parent,
                 null,
                 null,
-                context
-        );
+                context,
+                this);
         d.pack();
         d.setVisible(true);
     }

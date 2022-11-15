@@ -1,7 +1,7 @@
 package agora.objects;
 
-import agora.Inspector;
 import agora.attributes.Attribute;
+import agora.awt.Inspector;
 import agora.errors.AgoraError;
 import agora.patterns.Pattern;
 import agora.runtime.Category;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
- * An internal generator is a frame of methods for ex-nihilo created agora.objects
+ * An internal generator is a frame of methods for ex-nihilo created objects
  * Such a generator contains a method table, a link to a private part and a parent part.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab)
@@ -22,7 +22,7 @@ import java.util.Hashtable;
 public class InternalGenerator extends MethodsGenerator implements Serializable {
     /**
      * The private part of the methods generator. The private part of the private part
-     * is that part itself. Internalgenerators are used both for representing public
+     * is that part itself. InternalGenerators are used both for representing public
      * parts and private parts.
      */
     protected InternalGenerator privPart;
@@ -30,28 +30,30 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
     /**
      * Opens an inspector for the object.
      *
-     * @param context The context in which the inspect is sent. This is needed to show
+     * @param context The context in which inspect is sent. This is needed to show
      *                object values in the inspector (the values are in the context parts).
      */
     public void inspect(Context context) {
-        var d = new Inspector(AgoraGlobals.glob.agoraWindow,
-                this.name,
+        var d = new Inspector(
+                AgoraGlobals.glob.agoraWindow,
+                name,
                 theMethodTable,
                 privPart,
                 parent,
                 this,
                 null,
-                context);
+                context,
+                this);
         d.pack();
-        d.show();
+        d.setVisible(true);
     }
 
     /**
      * Creates a new internal generator as part of an object.
      *
      * @param nameOfFrame The name of the generator that has to be used in inspectors.
-     * @param myPart      A hashtable in which the keys are agora.runtime agora.patterns and in which
-     *                    the values are agora.attributes. Hence this is the method table of the generator.
+     * @param myPart      A hashtable in which the keys are runtime patterns and in which
+     *                    the values are attributes. Hence, this is the method table of the generator.
      * @param privPart    An initial private part.
      * @param parentPart  The generator to which this method frame has to be linked
      *                    with a parent-of link.
@@ -59,7 +61,7 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
     public InternalGenerator(String nameOfFrame,
                              Hashtable<Pattern, Attribute> myPart,
                              InternalGenerator privPart,
-                             AbstractGenerator parentPart) {
+                             Generator parentPart) {
         super(nameOfFrame, myPart, parentPart);
         this.privPart = privPart;
     }

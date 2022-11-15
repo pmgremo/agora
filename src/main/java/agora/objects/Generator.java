@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:49 am
  */
-public abstract class AbstractGenerator implements Serializable, Copyable<AbstractGenerator> {
+public abstract class Generator implements Serializable, Copyable<Generator> {
 
     /**
      * This variable is a string that gives a name to a generator. An example
@@ -33,7 +33,7 @@ public abstract class AbstractGenerator implements Serializable, Copyable<Abstra
      *
      * @param nameOfFrame The name to be used in inspectors for this generator frame.
      */
-    public AbstractGenerator(String nameOfFrame) {
+    public Generator(String nameOfFrame) {
         super();
         this.name = nameOfFrame;
     }

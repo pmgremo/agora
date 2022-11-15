@@ -1,9 +1,8 @@
 package agora.javaAdditions;
 
-import agora.errors.AgoraError;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JV_BooleanTest {
 

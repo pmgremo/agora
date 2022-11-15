@@ -2,7 +2,7 @@ package agora.runtime;
 
 import agora.errors.AgoraError;
 import agora.errors.AgoraException;
-import agora.objects.AbstractGenerator;
+import agora.objects.Generator;
 import agora.objects.IdentityGenerator;
 import agora.objects.InternalGenerator;
 import agora.objects.MethodsGenerator;
@@ -40,7 +40,7 @@ public class Context implements Serializable {
     /**
      * The 'current' parent.
      */
-    protected AbstractGenerator currentParent;
+    protected Generator currentParent;
 
     /**
      * The evaluation category in which evaluation is 'currently' happening.
@@ -76,7 +76,7 @@ public class Context implements Serializable {
             InternalGenerator priv,
             MethodsGenerator pub,
             int cat,
-            AbstractGenerator parent,
+            Generator parent,
             AgoraException except
     ) {
         this.currentException = except;
@@ -172,7 +172,7 @@ public class Context implements Serializable {
      * @param parent The updated parent to be stored in the new context.
      * @return A new context in which everything is the same, but the given argument.
      */
-    public Context setParent(AbstractGenerator parent) {
+    public Context setParent(Generator parent) {
         var newC = this.newContext(this);
         newC.currentParent = parent;
         return newC;
@@ -225,7 +225,7 @@ public class Context implements Serializable {
      *
      * @param parent The new parent part.
      */
-    public void impSetParent(AbstractGenerator parent) {
+    public void impSetParent(Generator parent) {
         this.currentParent = parent;
     }
 
@@ -259,7 +259,7 @@ public class Context implements Serializable {
     public Context setMultiple(
             IdentityGenerator self,
             InternalGenerator priv,
-            AbstractGenerator parent
+            Generator parent
     ) {
         var newC = this.newContext(this);
         newC.currentParent = parent;
@@ -295,7 +295,7 @@ public class Context implements Serializable {
     public Context setMultiple(
             InternalGenerator priv,
             int cat,
-            AbstractGenerator parent
+            Generator parent
     ) {
         var newC = this.newContext(this);
         newC.currentPriv = priv;
@@ -320,7 +320,7 @@ public class Context implements Serializable {
             InternalGenerator priv,
             MethodsGenerator pub,
             int cat,
-            AbstractGenerator parent
+            Generator parent
     ) {
         var newC = this.newContext(this);
         newC.currentSelf = self;
@@ -336,7 +336,7 @@ public class Context implements Serializable {
      *
      * @return The parent part that resides in this context.
      */
-    public AbstractGenerator getParent() {
+    public Generator getParent() {
         return currentParent;
     }
 

@@ -16,6 +16,6 @@ public class Agora {
         var parser = new Parser(new Scanner(() -> input));
         var x = parser.parseExpression().defaultEval();
         System.out.println();
-        System.out.println(x);
+        System.out.println(x.down());
     }
 }

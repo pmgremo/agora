@@ -29,4 +29,9 @@ public class JV_Nil {
     public boolean equals(Object arg) {
         return arg instanceof JV_Nil;
     }
+
+    @Override
+    public String toString() {
+        return "Nil";
+    }
 }

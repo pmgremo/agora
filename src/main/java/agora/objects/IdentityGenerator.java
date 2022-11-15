@@ -13,7 +13,7 @@ import agora.runtime.Context;
  * of the Java object it represents.
  * Last change:  E    16 Nov 97    1:49 am
  */
-abstract public class IdentityGenerator extends AbstractGenerator {
+abstract public class IdentityGenerator extends Generator {
     protected Object downedVersion;
     protected MethodsGenerator myMethods;
 
@@ -51,7 +51,7 @@ abstract public class IdentityGenerator extends AbstractGenerator {
 
     /**
      * Get the downed Java version of the object representing this Agora object identity.
-     * For upped agora.objects, this simply returns the object that was upped. For ex nihilo created agora.objects,
+     * For upped objects, this simply returns the object that was upped. For ex nihilo created agora.objects,
      * it will construct a new Java object with the same interface as the corresponding Agora object.
      * At the moment this is not yet implemented: we will do this in the future by generating appropriate
      * Class files using the Jas assembler.
@@ -67,9 +67,9 @@ abstract public class IdentityGenerator extends AbstractGenerator {
 
     /**
      * This method 'wraps' the identity to an Agora object. This is needed for encapsulation.
-     * Although identities understand many methods, Agora agora.objects may understand only one meta
-     * level method: the 'send'. THerefore the identity must be wrapped in an Agora object.
-     * From that moment on, it is not longer possible to access the identity. Only the Agora object
+     * Although identities understand many methods, Agora objects may understand only one meta
+     * level method: the 'send'. Therefor the identity must be wrapped in an Agora object.
+     * From that moment on, it is no longer possible to access the identity. Only the Agora object
      * can still do this since the identity is encapsulated inside the Agora object.
      *
      * @return A real Agora object that encapsulates this generator. The generator understands many meta

@@ -9,7 +9,7 @@ import java.util.Hashtable;
 /**
  * A UserIdentityGenerator represents an object ID for an ex-nihilo
  * created Agora object. It consists of a method table and possibly caches
- * its downed version if this already happend. The method table is usually an
+ * its downed version if this already happened. The method table is usually an
  * 'InternalGenerator'.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab).

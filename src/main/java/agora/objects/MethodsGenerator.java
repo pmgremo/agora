@@ -15,7 +15,7 @@ import java.util.Hashtable;
  * @author Wolfgang De Meuter (Programming technology Lab).
  * Last change:  E    16 Nov 97    1:48 am
  */
-public abstract class MethodsGenerator extends AbstractGenerator {
+public abstract class MethodsGenerator extends Generator {
     /**
      * Each methodsGenerator has a hashtable that links patterns to agora.attributes.
      */
@@ -24,7 +24,7 @@ public abstract class MethodsGenerator extends AbstractGenerator {
      * Each methodsGenerator is linked to another generator, which is the next generator
      * in the inheritance chain.
      */
-    protected AbstractGenerator parent;
+    protected Generator parent;
 
     /**
      * Create a new methods generator.
@@ -36,7 +36,7 @@ public abstract class MethodsGenerator extends AbstractGenerator {
     public MethodsGenerator(
             String nameOfFrame,
             Hashtable<Pattern, Attribute> table,
-            AbstractGenerator parent
+            Generator parent
     ) {
         super(nameOfFrame);
         this.theMethodTable = table;
@@ -48,7 +48,7 @@ public abstract class MethodsGenerator extends AbstractGenerator {
      *
      * @param newParent The new parent after doing the re-assigning.
      */
-    public void setParent(AbstractGenerator newParent) {
+    public void setParent(Generator newParent) {
         this.parent = newParent;
     }
 
@@ -57,7 +57,7 @@ public abstract class MethodsGenerator extends AbstractGenerator {
      *
      * @return The parent-of link of this generator.
      */
-    public AbstractGenerator getParent() {
+    public Generator getParent() {
         return this.parent;
     }
 

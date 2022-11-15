@@ -51,7 +51,7 @@ public class CloningAttribute extends MethAttribute {
         var clone = (IdentityGenerator) context.getSelf().copy(cloningMap);
         var privclone = (InternalGenerator) context.getPrivate().copy(cloningMap);
         var pubclone = (MethodsGenerator) context.getPub().copy(cloningMap);
-        var superclone = (AbstractGenerator) context.getParent().copy(cloningMap);
+        var superclone = (Generator) context.getParent().copy(cloningMap);
         // actual parameters binding
         privclone = this.bind(client.getActuals(), privclone);
         // evaluate cloning method
