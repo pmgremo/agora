@@ -79,17 +79,15 @@ public class Agorique implements Serializable {
             }
 			// ... TO HERE
 			// Due to a bug in the JDK Java interpreter and appletviewer.
-            Expression selectedExpression = null;
+            Expression selectedExpression;
             try {
                 selectedExpression = new Parser(new Scanner(new StringReader(input))).parseExpression();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
             try {
-                if (selectedExpression != null)
-                    selectedExpression.defaultEval();
-                else
-                    throw new ProgramError("Parse Error");
+                if (selectedExpression == null) throw new ProgramError("Parse Error");
+                selectedExpression.defaultEval();
             } catch (AgoraError error) {
                 ErrorDialog.setUpErrorDialog(error.getMessage(), error.getCode(), null);
             }

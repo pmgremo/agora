@@ -227,22 +227,17 @@ public class Scanner implements Serializable {
         theChar = lastChar;
         if (lastChar == '\\') {
             nextChar();
-            if (lastChar == 0)
-                return _ERROR_;
-            if (lastChar == 'n')
-                theChar = '\n';
-            if (lastChar == 'r')
-                theChar = '\r';
-            if (lastChar == 'f')
-                theChar = '\f';
-            if (lastChar == 't')
-                theChar = '\t';
-            if (lastChar == '\\')
-                theChar = '\\';
-            if (lastChar == '\'')
-                theChar = '\'';
-            if (lastChar == '\"')
-                theChar = '\"';
+            if (lastChar == 0) return _ERROR_;
+            theChar = switch (lastChar) {
+                case 'n' -> '\n';
+                case 'r' -> '\r';
+                case 'f' -> '\f';
+                case 't' -> '\t';
+                case '\\' -> '\\';
+                case '\'' -> '\'';
+                case '\"' -> '\"';
+                default -> theChar;
+            };
         }
         nextChar();
         if ((lastChar == 0) || (lastChar != '\''))
@@ -299,43 +294,43 @@ public class Scanner implements Serializable {
         eatSpaces();
         if (lastChar == 0)
             return _EOFTOKEN_;
-        if (lastChar == '(') {
+        else if (lastChar == '(') {
             nextChar();
             return _LPAR_;
         }
-        if (lastChar == ')') {
+        else if (lastChar == ')') {
             nextChar();
             return _RPAR_;
         }
-        if (lastChar == '[') {
+        else if (lastChar == '[') {
             nextChar();
             return _LBRACK_;
         }
-        if (lastChar == ']') {
+        else if (lastChar == ']') {
             nextChar();
             return _RBRACK_;
         }
-        if (lastChar == '{') {
+        else if (lastChar == '{') {
             nextChar();
             return _LBRACE_;
         }
-        if (lastChar == '}') {
+        else if (lastChar == '}') {
             nextChar();
             return _RBRACE_;
         }
-        if (lastChar == ';') {
+        else if (lastChar == ';') {
             nextChar();
             return _SEMI_;
         }
-        if (letter())
+        else if (letter())
             return scan_identifier();
-        if (digit())
+        else if (digit())
             return scan_number();
-        if (lastChar == '"')
+        else if (lastChar == '"')
             return scan_string();
-        if (operatorchar())
+        else if (operatorchar())
             return scan_operator();
-        if (lastChar == '\'')
+        else if (lastChar == '\'')
             return scan_character();
         return _ERROR_;
     }

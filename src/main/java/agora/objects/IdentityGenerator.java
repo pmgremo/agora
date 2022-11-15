@@ -77,7 +77,7 @@ abstract public class IdentityGenerator extends Generator {
      * generator encapsulates all this. The object only understands send, up and down.
      */
     public AgoraObject wrap() {
-        return (new AgoraObject(this));
+        return new AgoraObject(this);
     }
 
     /**

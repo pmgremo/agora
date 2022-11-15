@@ -69,7 +69,7 @@ public class PrimVarSetAttribute extends PrimAttribute {
     ) throws AgoraError {
         try {
             f.set(context.getSelf().down(), ((AgoraObject) client.getActuals()[0]).down());
-            return AgoraGlobals.glob.uppedNull;
+            return AgoraGlobals.glob.up.up(null);
         } catch (IllegalAccessException e) {
             throw new ProgramError("Illegal Access Exception while accessing a primitive assignment");
         }

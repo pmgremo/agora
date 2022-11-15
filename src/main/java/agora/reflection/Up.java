@@ -42,6 +42,12 @@ public class Up implements Serializable {
      */
     private final Hashtable<String, PrimGenerator> cache = new Hashtable<>(30);
 
+    private final AgoraObject nil;
+
+    public Up() {
+        nil = up(JV_Nil.instance);
+    }
+
     /**
      * This is a  public procedure.
      * It wraps any Java implementation level object into a corresponding Agora object.
@@ -55,10 +61,12 @@ public class Up implements Serializable {
      *                                 a generatorcreator might be invoked that accesses a Java method that does not exist.
      */
     public AgoraObject up(Object o) throws AgoraError {
-        if (o == null) o = new JV_Nil();
-        return o instanceof Class<?> c ?
-                new PrimIdentityGenerator(c.getSimpleName(), generatorFor(c, false), o).wrap() :
-                new PrimIdentityGenerator(Object.class.getSimpleName(), generatorFor(o.getClass(), true), o).wrap();
+        if (o == null) return nil;
+
+        var result = o instanceof Class<?> c ?
+                new PrimIdentityGenerator(c.getSimpleName(), generatorFor(c, false), o) :
+                new PrimIdentityGenerator(Object.class.getSimpleName(), generatorFor(o.getClass(), true), o);
+        return result.wrap();
     }
 
     /**
@@ -160,7 +168,7 @@ public class Up implements Serializable {
         if (table.isEmpty()) return null;
         var frame = type.getAnnotation(Frame.class);
         var name = frame != null ? frame.value() : type.getSimpleName();
-        return new PrimGenerator(name, table, null);
+        return new PrimGenerator(name, table);
     }
 
     /**
@@ -173,7 +181,7 @@ public class Up implements Serializable {
         putFieldsInQueue(c, theTable, isInstance);                       // Insert patterns and fields
         putMethodsInQueue(c, theTable, isInstance);                      // Insert patterns and methods
         putConstructorsInQueue(c, theTable, isInstance);                 // Insert patterns and constructors
-        return new PrimGenerator(c.getName(), theTable, null);    // Create a new generator with the members
+        return new PrimGenerator(c.getName(), theTable);    // Create a new generator with the members
     }
 
     /**
@@ -182,8 +190,7 @@ public class Up implements Serializable {
      * all in a queue.
      */
     private void putFieldsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
-        var fields = c.getDeclaredFields();
-        for (var field : fields) {
+        for (var field : c.getDeclaredFields()) {
             if (!isPublic(field.getModifiers()) ||
                     isAbstract(field.getModifiers()) ||
                     isInterface(field.getModifiers()) ||
@@ -204,8 +211,7 @@ public class Up implements Serializable {
      * a queue.
      */
     private void putMethodsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
-        var methods = c.getDeclaredMethods();
-        for (var method : methods) {
+        for (var method : c.getDeclaredMethods()) {
             if (!isPublic(method.getModifiers()) ||
                     isAbstract(method.getModifiers()) ||
                     isInterface(method.getModifiers()) ||
@@ -223,8 +229,7 @@ public class Up implements Serializable {
      * All the patterns and the attributes are gathered together in a queue.
      */
     private void putConstructorsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
-        var constructors = c.getDeclaredConstructors();
-        for (var constructor : constructors) {
+        for (var constructor : c.getDeclaredConstructors()) {
             if (!isPublic(constructor.getModifiers()) ||
                     isNative(constructor.getModifiers()) ||
                     isAbstract(constructor.getModifiers()) ||

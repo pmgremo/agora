@@ -35,11 +35,11 @@ public class CharLiteral extends Literal {
      */
     public String unparse(int hor) {
         var msg = AwtIo.makeSpaces(hor);
-        if (this.theChar == '\n') {
+        if (theChar == '\n') {
             msg = msg + "'eoln'";
         } else {
             msg = msg + "'";
-            msg = msg + this.theChar;
+            msg = msg + theChar;
             msg = msg + "'";
         }
         return msg;
@@ -54,7 +54,7 @@ public class CharLiteral extends Literal {
      * @throws agora.errors.AgoraError When something goes wrong.
      */
     public AgoraObject eval(Context context) throws AgoraError {
-        return AgoraGlobals.glob.up.up(this.theChar);
+        return AgoraGlobals.glob.up.up(theChar);
     }
 
     /**

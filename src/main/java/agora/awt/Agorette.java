@@ -80,17 +80,15 @@ public class Agorette extends java.applet.Applet {
             }
             // ... TO HERE
             // Due to a bug in the JDK Java interpreter and appletviewer.
-            Expression selectedExpression = null;
+            Expression selectedExpression;
             try {
                 selectedExpression = new Parser(new Scanner(new StringReader(input))).parseExpression();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
             try {
-                if (selectedExpression != null)
-                    selectedExpression.defaultEval();
-                else
-                    throw new ProgramError("Parse Error");
+                if (selectedExpression == null) throw new ProgramError("Parse Error");
+                selectedExpression.defaultEval();
             } catch (MessageNotUnderstood error) {
                 ErrorDialog.setUpErrorDialog(error.getMessage(), error.getCode(), error.getReceiver());
             } catch (AgoraError error) {

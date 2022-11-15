@@ -17,6 +17,12 @@ import agora.reflection.Operator;
  */
 @Frame("Public")
 public class JV_Nil {
+
+    public static JV_Nil instance = new JV_Nil();
+
+    private JV_Nil() {
+    }
+
     /**
      * Overrides the same method in 'java.lang.Object'. If its argument is of type
      * JV_Nil, true is returned because there is only one Null object in the

@@ -88,7 +88,7 @@ public class Aggregate extends Expression {
             for (var expression : expressions) expression.eval(exnihiloCont);
             return exnihiloSelf.wrap();
         }
-        var result = AgoraGlobals.glob.uppedNull;
+        var result = AgoraGlobals.glob.up.up(null);
         for (var expression : expressions) result = expression.eval(context);
         return result;
     }

@@ -29,10 +29,9 @@ public class PrimGenerator extends MethodsGenerator {
      * @param nameOfFrame The name of the generator to be used in the inspector.
      * @param table       The initial value of the methods hashtable. This table links
      *                    patterns to their corresponding agora.attributes.
-     * @param parent      This initial value of the parent link of this generator.
      */
-    public PrimGenerator(String nameOfFrame, Hashtable<Pattern, Attribute> table, Generator parent) {
-        super(nameOfFrame, table, parent);
+    public PrimGenerator(String nameOfFrame, Hashtable<Pattern, Attribute> table) {
+        super(nameOfFrame, table, null);
     }
 
     /**

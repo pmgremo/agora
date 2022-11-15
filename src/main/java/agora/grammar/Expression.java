@@ -102,7 +102,7 @@ abstract public class Expression implements Serializable {
             context.getPrivate().installPattern(getPat.makeWritePattern(), varSetAtt);
             context.getPrivate().installPattern(getPat, varGetAtt);
         }
-        return AgoraGlobals.glob.uppedNull;
+        return AgoraGlobals.glob.up.up(null);
     }
 
     /**
@@ -257,7 +257,7 @@ abstract public class Expression implements Serializable {
         if (Category.contains(theCat, Category.local)) {
             context.getPrivate().installPattern(thePattern, methAtt);
         }
-        return AgoraGlobals.glob.uppedNull;
+        return AgoraGlobals.glob.up.up(null);
     }
 
     /**
@@ -291,7 +291,7 @@ abstract public class Expression implements Serializable {
         if (Category.contains(theCat, Category.local)) {
             context.getPrivate().installPattern(thePattern, methAtt);
         }
-        return AgoraGlobals.glob.uppedNull;
+        return AgoraGlobals.glob.up.up(null);
     }
 
     /**
@@ -324,7 +324,7 @@ abstract public class Expression implements Serializable {
         if (Category.contains(theCat, Category.local)) {
             context.getPrivate().installPattern(thePattern, methAtt);
         }
-        return AgoraGlobals.glob.uppedNull;
+        return AgoraGlobals.glob.up.up(null);
     }
 
     /**
@@ -358,7 +358,7 @@ abstract public class Expression implements Serializable {
         if (Category.contains(theCat, Category.local)) {
             context.getPrivate().installPattern(thePattern, methAtt);
         }
-        return AgoraGlobals.glob.uppedNull;
+        return AgoraGlobals.glob.up.up(null);
     }
 
     /**
@@ -427,7 +427,7 @@ abstract public class Expression implements Serializable {
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
         var locCont = context.setPrivate(newPriv);
-        var result = AgoraGlobals.glob.uppedNull;
+        var result = AgoraGlobals.glob.up.up(null);
         for (var current = init; current <= term; current++) {
             theVarCont.write(AgoraGlobals.glob.up.up(current));
             result = doblock.eval(locCont);
@@ -464,7 +464,7 @@ abstract public class Expression implements Serializable {
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
         var locCont = context.setPrivate(newPriv);
-        var result = AgoraGlobals.glob.uppedNull;
+        var result = AgoraGlobals.glob.up.up(null);
         for (var current = init; current >= term; current--) {
             theVarCont.write(AgoraGlobals.glob.up.up(current));
             result = doblock.eval(locCont);
@@ -509,7 +509,7 @@ abstract public class Expression implements Serializable {
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
         var locCont = context.setPrivate(newPriv);
-        var result = AgoraGlobals.glob.uppedNull;
+        var result = AgoraGlobals.glob.up.up(null);
         for (var current = init; current <= term; current = current + step) {
             theVarCont.write(AgoraGlobals.glob.up.up(current));
             result = doblock.eval(locCont);
@@ -548,7 +548,7 @@ abstract public class Expression implements Serializable {
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
         var locCont = context.setPrivate(newPriv);
-        var result = AgoraGlobals.glob.uppedNull;
+        var result = AgoraGlobals.glob.up.up(null);
         for (var current = init; current >= term; current = current - step) {
             theVarCont.write(AgoraGlobals.glob.up.up(current));
             result = doblock.eval(locCont);
@@ -568,7 +568,7 @@ abstract public class Expression implements Serializable {
      */
     @Reified
     public AgoraObject ifTrue(Context context, @Keyword("IFTRUE:") Expression thenPart) throws AgoraError {
-        return evalAsBoolean(context) ? thenPart.eval(context) : AgoraGlobals.glob.uppedNull;
+        return evalAsBoolean(context) ? thenPart.eval(context) : AgoraGlobals.glob.up.up(null);
     }
 
     /**
@@ -582,7 +582,7 @@ abstract public class Expression implements Serializable {
      */
     @Reified
     public AgoraObject ifFalse(Context context, @Keyword("IFFALSE:") Expression thenPart) throws AgoraError {
-        return evalAsBoolean(context) ? AgoraGlobals.glob.uppedNull : thenPart.eval(context);
+        return evalAsBoolean(context) ? AgoraGlobals.glob.up.up(null) : thenPart.eval(context);
     }
 
     /**
@@ -624,7 +624,7 @@ abstract public class Expression implements Serializable {
      */
     @Reified
     public AgoraObject whileTrue(Context context, @Keyword("WHILETRUE:") Expression body) throws AgoraError {
-        var result = AgoraGlobals.glob.uppedNull;
+        var result = AgoraGlobals.glob.up.up(null);
         while (this.evalAsBoolean(context))
             result = body.eval(context);
         return result;
@@ -637,7 +637,7 @@ abstract public class Expression implements Serializable {
      */
     @Reified
     public AgoraObject whileFalse(Context context, @Keyword("WHILEFALSE:") Expression body) throws AgoraError {
-        var result = AgoraGlobals.glob.uppedNull;
+        var result = AgoraGlobals.glob.up.up(null);
         while (!this.evalAsBoolean(context))
             result = body.eval(context);
         return result;
@@ -654,7 +654,7 @@ abstract public class Expression implements Serializable {
      */
     @Reified
     public AgoraObject untilTrue(Context context, @Keyword("UNTILTRUE:") Expression testExp) throws AgoraError {
-        var result = AgoraGlobals.glob.uppedNull;
+        var result = AgoraGlobals.glob.up.up(null);
         do {
             result = this.eval(context);
         } while (!testExp.evalAsBoolean(context));
@@ -671,7 +671,7 @@ abstract public class Expression implements Serializable {
         do {
             this.eval(context);
         } while (testExp.evalAsBoolean(context));
-        return AgoraGlobals.glob.uppedNull;
+        return AgoraGlobals.glob.up.up(null);
     }
 
     /**
@@ -683,7 +683,7 @@ abstract public class Expression implements Serializable {
     @Unary("COMMENT")
     @Reified
     public AgoraObject comment(Context context) {
-        return AgoraGlobals.glob.uppedNull;
+        return AgoraGlobals.glob.up.up(null);
     }
 
     /**
@@ -853,7 +853,7 @@ abstract public class Expression implements Serializable {
         if (Category.contains(theCat, Category.local)) {
             context.getPrivate().installPattern(thePattern, methAtt);
         }
-        return AgoraGlobals.glob.uppedNull;
+        return AgoraGlobals.glob.up.up(null);
     }
 
     /**

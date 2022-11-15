@@ -55,13 +55,6 @@ public class AgoraGlobals implements Serializable {
     public IdentityGenerator rootIdentity;
 
     /**
-     * There is only one Agora 'null' object that will not be upped each time
-     * the evaluator needs to return 'null'. Hence, we made it a unique
-     * global variable.
-     */
-    public AgoraObject uppedNull;
-
-    /**
      * This constructor must be called at System startup time. It creates the
      * global variables, and fills the root objects with the standardly
      * available methods.
@@ -89,7 +82,6 @@ public class AgoraGlobals implements Serializable {
         this.window = window;
 
         // Create heavily used constants (cache them for efficiency reasons)
-        uppedNull = up.up(null);
 
         // Fill the ROOT object with the standard methods
         // java
@@ -100,7 +92,7 @@ public class AgoraGlobals implements Serializable {
 
         //null
         var nil = new UnaryPattern("null");
-        var nilObject = new VariableContainer(uppedNull);
+        var nilObject = new VariableContainer(up.up(null));
         var nilReader = new VarGetAttribute(nilObject);
         rootPrivate.installPattern(nil, nilReader);
 

@@ -1,8 +1,6 @@
 package agora.awt;
 
 import java.awt.*;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 
 /**
  * This class is an abstract layer for all Agora IO that occurs during the execution
@@ -33,7 +31,6 @@ public class AwtIo {
      */
     public static int inspectorX = 10;
     public static int inspectorY = 10;
-    private final ByteArrayInputStream inputStream;
 
     /**
      * Initialises AgoraIO with a given string and a textarea.
@@ -47,7 +44,6 @@ public class AwtIo {
         theInput = i;
         theOutput = o;
         count = 0;
-        inputStream = new ByteArrayInputStream(theInput.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
@@ -67,7 +63,7 @@ public class AwtIo {
      * @return A string consisting of so many spaces as indicated by the input.
      */
     public static String makeSpaces(int i) {
-      return " " + (i == 0 ? "" : makeSpaces(i - 1));
+        return " " + (i == 0 ? "" : makeSpaces(i - 1));
     }
 }
 
