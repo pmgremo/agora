@@ -9,7 +9,6 @@ import agora.patterns.UnaryPattern;
 import agora.reflection.Keyword;
 import agora.reflection.Reified;
 import agora.reflection.Unary;
-import agora.reflection.Up;
 import agora.runtime.Category;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
@@ -92,7 +91,7 @@ abstract public class Expression implements Serializable {
                 !Category.contains(theCat, Category.publik))
             theCat = theCat | Category.publik;
         // Install variable and initial value in the appropriate object part(s)
-        var theVarCont = new VariableContainer(Up.glob.up(0));
+        var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(0));
         var varSetAtt = new VarSetAttribute(theVarCont);
         var varGetAtt = new VarGetAttribute(theVarCont);
         if (Category.contains(theCat, Category.publik)) {
@@ -202,7 +201,7 @@ abstract public class Expression implements Serializable {
             throw new PrimException(e, "Expression::array");
             // impossible because we created it large enough
         }
-        return Up.glob.up(theArray);
+        return AgoraGlobals.glob.up.up(theArray);
     }
 
     /**
@@ -225,7 +224,7 @@ abstract public class Expression implements Serializable {
             throw new PrimException(e, "Expression::arrayColon");
             // impossible because we created it large enough
         }
-        return Up.glob.up(theArray);
+        return AgoraGlobals.glob.up.up(theArray);
     }
 
     /**
@@ -374,7 +373,7 @@ abstract public class Expression implements Serializable {
     public AgoraObject publik(Context context) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context).down();
         leftside.cat = leftside.cat | Category.publik;
-        return Up.glob.up(leftside);
+        return AgoraGlobals.glob.up.up(leftside);
     }
 
     /**
@@ -389,7 +388,7 @@ abstract public class Expression implements Serializable {
     public AgoraObject local(Context context) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context).down();
         leftside.cat = leftside.cat | Category.local;
-        return Up.glob.up(leftside);
+        return AgoraGlobals.glob.up.up(leftside);
     }
 
     /**
@@ -422,7 +421,7 @@ abstract public class Expression implements Serializable {
         // Extend Private Temporarily and install variable and initial value in the new private object part
         var newPriv = context.getPrivate().funcAddLayer("FOR:TO:DO: scope");
         newPriv.setPrivate(newPriv);
-        var theVarCont = new VariableContainer(Up.glob.up(init));
+        var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
         var varGetAtt = new VarGetAttribute(theVarCont);
         var getPat = new UnaryPattern(((UnaryPattern) thePattern).getUnaryPattern());
         newPriv.installPattern(getPat, varGetAtt);
@@ -430,7 +429,7 @@ abstract public class Expression implements Serializable {
         var locCont = context.setPrivate(newPriv);
         var result = AgoraGlobals.glob.uppedNull;
         for (var current = init; current <= term; current++) {
-            theVarCont.write(Up.glob.up(current));
+            theVarCont.write(AgoraGlobals.glob.up.up(current));
             result = doblock.eval(locCont);
         }
         return result;
@@ -459,7 +458,7 @@ abstract public class Expression implements Serializable {
         // Extend Private Temporarily and install variable and initial value in the new private object part
         var newPriv = context.getPrivate().funcAddLayer("FOR:DOWNTO:DO: scope");
         newPriv.setPrivate(newPriv);
-        var theVarCont = new VariableContainer(Up.glob.up(init));
+        var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
         var varGetAtt = new VarGetAttribute(theVarCont);
         var getPat = new UnaryPattern(((UnaryPattern) thePattern).getUnaryPattern());
         newPriv.installPattern(getPat, varGetAtt);
@@ -467,7 +466,7 @@ abstract public class Expression implements Serializable {
         var locCont = context.setPrivate(newPriv);
         var result = AgoraGlobals.glob.uppedNull;
         for (var current = init; current >= term; current--) {
-            theVarCont.write(Up.glob.up(current));
+            theVarCont.write(AgoraGlobals.glob.up.up(current));
             result = doblock.eval(locCont);
         }
         return result;
@@ -504,7 +503,7 @@ abstract public class Expression implements Serializable {
         // Extend Private Temporarily and Install variable and initial value in the new private object part
         var newPriv = context.getPrivate().funcAddLayer("FOR:TO:BY:DO: scope");
         newPriv.setPrivate(newPriv);
-        var theVarCont = new VariableContainer(Up.glob.up(init));
+        var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
         var varGetAtt = new VarGetAttribute(theVarCont);
         var getPat = new UnaryPattern(((UnaryPattern) thePattern).getUnaryPattern());
         newPriv.installPattern(getPat, varGetAtt);
@@ -512,7 +511,7 @@ abstract public class Expression implements Serializable {
         var locCont = context.setPrivate(newPriv);
         var result = AgoraGlobals.glob.uppedNull;
         for (var current = init; current <= term; current = current + step) {
-            theVarCont.write(Up.glob.up(current));
+            theVarCont.write(AgoraGlobals.glob.up.up(current));
             result = doblock.eval(locCont);
         }
         return result;
@@ -543,7 +542,7 @@ abstract public class Expression implements Serializable {
         // Install variable and initial value in the new private object part
         var newPriv = context.getPrivate().funcAddLayer("FOR:DOWNTO:BY:DO: scope");
         newPriv.setPrivate(newPriv);
-        var theVarCont = new VariableContainer(Up.glob.up(init));
+        var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
         var varGetAtt = new VarGetAttribute(theVarCont);
         var getPat = new UnaryPattern(((UnaryPattern) thePattern).getUnaryPattern());
         newPriv.installPattern(getPat, varGetAtt);
@@ -551,7 +550,7 @@ abstract public class Expression implements Serializable {
         var locCont = context.setPrivate(newPriv);
         var result = AgoraGlobals.glob.uppedNull;
         for (var current = init; current >= term; current = current - step) {
-            theVarCont.write(Up.glob.up(current));
+            theVarCont.write(AgoraGlobals.glob.up.up(current));
             result = doblock.eval(locCont);
         }
         return result;
@@ -723,7 +722,7 @@ abstract public class Expression implements Serializable {
             var formalPattern = pat.makePattern(context);
             if (!formalPattern.equals(agoraError)) throw ex;
             var formals = pat.makeFormals(context);
-            var actuals = context.newClient(Up.glob.up(ex));
+            var actuals = context.newClient(AgoraGlobals.glob.up.up(ex));
             var attribute = new MethAttribute(formals, catchcode);
             return attribute.doAttributeValue(agoraError, actuals, context);
         }
@@ -741,7 +740,7 @@ abstract public class Expression implements Serializable {
     public AgoraObject java(Context context) throws AgoraError {
         var res = this.evalAsString(context);
         try {
-            return Up.glob.up(Class.forName(res));
+            return AgoraGlobals.glob.up.up(Class.forName(res));
         } catch (ClassNotFoundException e) {
             throw new ProgramError("No Such Class : " + res);
         }
@@ -757,7 +756,7 @@ abstract public class Expression implements Serializable {
     @Unary("QUOTE")
     @Reified
     public AgoraObject quote(Context context) throws AgoraError {
-        return Up.glob.up(this);
+        return AgoraGlobals.glob.up.up(this);
     }
 
     /**
@@ -789,7 +788,7 @@ abstract public class Expression implements Serializable {
     @Unary("UP")
     @Reified
     public AgoraObject up(Context context) throws AgoraError {
-        return Up.glob.up(this.eval(context));
+        return AgoraGlobals.glob.up.up(this.eval(context));
     }
 
     /**

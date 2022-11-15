@@ -4,9 +4,9 @@ import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
-import agora.reflection.Up;
 import agora.runtime.Client;
 import agora.runtime.Context;
+import agora.tools.AgoraGlobals;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -62,7 +62,7 @@ public class PrimVarGetAttribute extends PrimAttribute {
      */
     public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         try {
-            return Up.glob.up(f.get(context.getSelf().down()));
+            return AgoraGlobals.glob.up.up(f.get(context.getSelf().down()));
         } catch (IllegalAccessException e) {
             throw new ProgramError("Illegal Access Exception while accessing a primitive variable");
         }

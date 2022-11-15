@@ -5,9 +5,9 @@ import agora.errors.PrimException;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
-import agora.reflection.Up;
 import agora.runtime.Client;
 import agora.runtime.Context;
+import agora.tools.AgoraGlobals;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,7 +45,7 @@ public class PrimStaticMethAttribute extends PrimMethAttribute {
             Context context
     ) throws AgoraError {
         try {
-            return Up.glob.up(this.m.invoke(null, client.makeNativeArguments()));
+            return AgoraGlobals.glob.up.up(this.m.invoke(null, client.makeNativeArguments()));
         } catch (IllegalAccessException e) {
             throw new ProgramError("IllegalAccesException while accessing a primitive static method");
         } catch (InvocationTargetException e) {

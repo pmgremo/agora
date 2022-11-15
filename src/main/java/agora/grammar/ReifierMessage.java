@@ -2,9 +2,9 @@ package agora.grammar;
 
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
-import agora.reflection.Up;
 import agora.runtime.Context;
 import agora.awt.AwtIo;
+import agora.tools.AgoraGlobals;
 
 /**
  * Representation of reifier message expressions.
@@ -31,7 +31,7 @@ public class ReifierMessage extends Message {
     public AgoraObject eval(Context context) throws AgoraError {
         try {
             AwtIo.checkEscape();
-            var receiver = Up.glob.up(this.receiver);
+            var receiver = AgoraGlobals.glob.up.up(this.receiver);
             var client = this.pattern.makeClient(context, receiver);
             var pattern = this.pattern.makePattern(context);
             client.actualsUp();

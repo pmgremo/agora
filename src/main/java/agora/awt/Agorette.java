@@ -6,7 +6,6 @@ import agora.errors.ProgramError;
 import agora.grammar.Expression;
 import agora.grammar.Parser;
 import agora.grammar.Scanner;
-import agora.reflection.Up;
 import agora.tools.AgoraGlobals;
 import agora.tools.SingleRoot;
 
@@ -110,7 +109,7 @@ public class Agorette extends java.applet.Applet {
                     var fos = new FileOutputStream(fileName);
                     var gos = new GZIPOutputStream(fos);
                     var os = new ObjectOutputStream(gos);
-                    os.writeObject(new SingleRoot(AgoraGlobals.glob, Up.glob));
+                    os.writeObject(new SingleRoot(AgoraGlobals.glob, AgoraGlobals.glob.up));
                     os.flush();
                     os.close();
                     window.setCursor(oldCursor);
@@ -133,7 +132,7 @@ public class Agorette extends java.applet.Applet {
                     var s = new ObjectInputStream(gis);
                     var newRoot = (SingleRoot) s.readObject();
                     AgoraGlobals.glob = newRoot.globalStructures;
-                    Up.glob = newRoot.reflectionWrappers;
+                    AgoraGlobals.glob.up = newRoot.reflectionWrappers;
                     s.close();
                     AgoraGlobals.glob.updateApplet(Agorette.this);
                     AgoraGlobals.glob.agoraWindow = window;

@@ -7,9 +7,9 @@ import agora.objects.FormalsAndPattern;
 import agora.patterns.KeywordPattern;
 import agora.reflection.Reified;
 import agora.reflection.Unary;
-import agora.reflection.Up;
 import agora.runtime.Category;
 import agora.runtime.Context;
+import agora.tools.AgoraGlobals;
 
 /**
  * This abstract class represents agora.patterns for ordinary messages. It has subclasses
@@ -32,7 +32,7 @@ abstract public class UserPattern extends Pattern {
         try {
             // Patterns in Flags Category Must Be Declared: Just Return a new pattern
             if (Category.contains(context.getCategory(), Category.flags))
-                return Up.glob.up(new FormalsAndPattern(this.makeFormals(context),
+                return AgoraGlobals.glob.up.up(new FormalsAndPattern(this.makeFormals(context),
                         this.makePattern(context),
                         Category.emptyCategory));
 

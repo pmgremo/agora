@@ -2,9 +2,9 @@ package agora.grammar;
 
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
-import agora.reflection.Up;
 import agora.runtime.Context;
 import agora.awt.AwtIo;
+import agora.tools.AgoraGlobals;
 
 
 /**
@@ -48,7 +48,7 @@ public class IntegerLiteral extends Literal {
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
     public AgoraObject eval(Context context) throws AgoraError {
-        return Up.glob.up(this.theInt);
+        return AgoraGlobals.glob.up.up(this.theInt);
     }
 
     /**

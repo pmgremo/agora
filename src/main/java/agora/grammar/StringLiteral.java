@@ -5,8 +5,8 @@ import agora.errors.AgoraHalt;
 import agora.objects.AgoraObject;
 import agora.reflection.Reified;
 import agora.reflection.Unary;
-import agora.reflection.Up;
 import agora.runtime.Context;
+import agora.tools.AgoraGlobals;
 
 /**
  * Parse tree node type for string literals.
@@ -61,7 +61,7 @@ public class StringLiteral extends Literal {
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
     public AgoraObject eval(Context context) throws AgoraError {
-        return Up.glob.up(this.theString);
+        return AgoraGlobals.glob.up.up(this.theString);
     }
 
     /**

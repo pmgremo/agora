@@ -5,9 +5,9 @@ import agora.errors.PrimException;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
-import agora.reflection.Up;
 import agora.runtime.Client;
 import agora.runtime.Context;
+import agora.tools.AgoraGlobals;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -83,7 +83,7 @@ public class PrimCloningAttribute extends PrimAttribute {
     public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         try {
             client.actualsDown();
-            return Up.glob.up(c.newInstance(client.getActuals()));
+            return AgoraGlobals.glob.up.up(c.newInstance(client.getActuals()));
         } catch (IllegalAccessException e) {
             throw new ProgramError("Illegal Access Exception when invoking constructor");
         } catch (InvocationTargetException e) {

@@ -5,9 +5,9 @@ import agora.errors.PrimException;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
-import agora.reflection.Up;
 import agora.runtime.Client;
 import agora.runtime.Context;
+import agora.tools.AgoraGlobals;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -51,7 +51,7 @@ public class PrimFunctionAttribute extends PrimMethAttribute {
             fakedActuals[0] = context.getSelf().down();
             for (var j = 0; j < realActuals.length; j++)
                 fakedActuals[j + 1] = ((AgoraObject) realActuals[j]).down();
-            return Up.glob.up(this.m.invoke(null, fakedActuals));
+            return AgoraGlobals.glob.up.up(this.m.invoke(null, fakedActuals));
         } catch (IllegalAccessException e) {
             throw new ProgramError("IllegalAccesException while accessing a primitive function method");
         } catch (InvocationTargetException e) {

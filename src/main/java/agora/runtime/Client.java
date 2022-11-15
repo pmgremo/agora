@@ -6,7 +6,7 @@ import agora.grammar.Expression;
 import agora.objects.AgoraObject;
 import agora.objects.IdentityGenerator;
 import agora.objects.MethodsGenerator;
-import agora.reflection.Up;
+import agora.tools.AgoraGlobals;
 
 import java.io.Serializable;
 
@@ -120,7 +120,7 @@ public class Client implements Serializable {
      */
     public void actualsUp() throws AgoraError {
         for (var j = 0; j < actuals.length; j++)
-            actuals[j] = Up.glob.up(actuals[j]);
+            actuals[j] = AgoraGlobals.glob.up.up(actuals[j]);
     }
 
     /**

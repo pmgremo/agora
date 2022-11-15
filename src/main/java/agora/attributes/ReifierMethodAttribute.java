@@ -6,9 +6,9 @@ import agora.grammar.Expression;
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
 import agora.patterns.UnaryPattern;
-import agora.reflection.Up;
 import agora.runtime.Client;
 import agora.runtime.Context;
+import agora.tools.AgoraGlobals;
 
 /**
  * This class represents reifier agora.attributes written by the Agora programmer.
@@ -49,7 +49,7 @@ public class ReifierMethodAttribute extends MethAttribute {
         var localPub = context.getPub().funcAddLayer("Formals-Actuals Frame");
         localPub.setPrivate(localPriv);
         localPriv.installPattern(this.contextPattern,
-                new VarGetAttribute(new VariableContainer(Up.glob.up(client.newContext()))));
+                new VarGetAttribute(new VariableContainer(AgoraGlobals.glob.up.up(client.newContext()))));
         // We ask the client for a context. Because this is a reifier method, the client
         // is a reifier client, and thus client.newContext() is the context of invocation
         var result = this.methodCode.eval(context.setMultiple(context.getSelf(),

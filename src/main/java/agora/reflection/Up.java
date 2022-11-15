@@ -35,13 +35,6 @@ import static java.lang.reflect.Modifier.*;
 public class Up implements Serializable {
 
     /**
-     * This is the only instance of this class. The only valid way to
-     * instantiate this class is:<p>
-     * Up.glob = new Up();
-     */
-    static public Up glob;
-
-    /**
      * This private variable caches the generators created by Up, such that all the work
      * to 'up' a Java implementation level object is done only once. The table maps
      * Java class names onto generators that contain the method tables for the

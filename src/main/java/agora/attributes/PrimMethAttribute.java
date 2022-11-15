@@ -5,9 +5,9 @@ import agora.errors.PrimException;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
-import agora.reflection.Up;
 import agora.runtime.Client;
 import agora.runtime.Context;
+import agora.tools.AgoraGlobals;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -84,7 +84,7 @@ public class PrimMethAttribute extends PrimAttribute {
      */
     public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         try {
-            return Up.glob.up(this.m.invoke(context.getSelf().down(), client.makeNativeArguments()));
+            return AgoraGlobals.glob.up.up(this.m.invoke(context.getSelf().down(), client.makeNativeArguments()));
         } catch (IllegalAccessException e) {
             throw new ProgramError("Illegal Access Exception while accessing a primitive method");
         } catch (InvocationTargetException e) {
