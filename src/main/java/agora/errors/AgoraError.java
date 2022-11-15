@@ -44,8 +44,7 @@ public abstract class AgoraError extends RuntimeException {
      * @param code The expression that was last evaluated	before the error occured.
      */
     public void setCode(Expression code) {
-        if (this.code == null)
-            this.code = code;
+        if (this.code == null) this.code = code;
     }
 
     public Expression getCode() {

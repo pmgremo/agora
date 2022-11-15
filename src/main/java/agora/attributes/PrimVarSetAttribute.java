@@ -36,9 +36,9 @@ public class PrimVarSetAttribute extends PrimAttribute {
             var nme = (String) stream.readObject();
             f = decl.getDeclaredField(nme);
         } catch (NoSuchFieldException e) {
-            java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchfield)");
+            System.out.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchfield)");
         } catch (ClassNotFoundException error) {
-            java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchclass)");
+            System.out.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchclass)");
         }
     }
 
@@ -50,7 +50,7 @@ public class PrimVarSetAttribute extends PrimAttribute {
      */
     public PrimVarSetAttribute(Field variable) {
         super();
-        this.f = variable;
+        f = variable;
     }
 
     /**
@@ -79,7 +79,7 @@ public class PrimVarSetAttribute extends PrimAttribute {
      * Converts the attribute to a string.
      */
     public String toString() {
-        return "PRIM         VARSET: ";
+        return "PRIMITIVE VARIABLE SETTER";
     }
 
     /**

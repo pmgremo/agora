@@ -58,8 +58,7 @@ public class MessageNotUnderstood extends AgoraError {
     @Override
     public String getMessage() {
         var x = "";
-        if (this.msg.isReifier())
-            x = "Reifier ";
+        if (this.msg.isReifier()) x = "Reifier ";
         x = x + "Message Not Understood: \n\n" + msg.toString();
         return x;
     }

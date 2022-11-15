@@ -22,19 +22,19 @@ abstract public class ReifPattern extends Pattern {
             // Patterns in Flags Category Must Be Declared: Just Return a new pattern
             if (Category.contains(context.getCategory(), Category.flags))
                 return Up.glob.up(
-                        new FormalsAndPattern(this.makeFormals(context),
+                        new FormalsAndPattern(
+                                this.makeFormals(context),
                                 this.makePattern(context),
                                 Category.emptyCategory
                         )
                 );
-                // Patterns in Other Categories Denote Accesses in the Local Part of An Object
-            else {
-                var client = this.makeClient(context, Up.glob.up(context));
-                client.actualsUp();
-                return (AgoraObject) context.getPrivate().delegate(this.makePattern(context), client, context).down();
-                //The result of downing the result is surely an Agora object. This is where the dynamic
-                //typing of Agora meets the static typing of Java => Impossible to remove the cast.
-            }
+
+            // Patterns in Other Categories Denote Accesses in the Local Part of An Object
+            var client = this.makeClient(context, Up.glob.up(context));
+            client.actualsUp();
+            return (AgoraObject) context.getPrivate().delegate(this.makePattern(context), client, context).down();
+            //The result of downing the result is surely an Agora object. This is where the dynamic
+            //typing of Agora meets the static typing of Java => Impossible to remove the cast.
         } catch (AgoraError ex) {
             ex.setCode(this);
             throw ex;

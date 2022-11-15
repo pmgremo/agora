@@ -65,8 +65,6 @@ public class AgoraGlobals implements Serializable {
      * global variable.
      */
     public AgoraObject uppedNull;
-    AgoraObject uppedTrue;
-    AgoraObject uppedFalse;
 
     /**
      * This constructor must be called at System startup time. It creates the
@@ -98,8 +96,6 @@ public class AgoraGlobals implements Serializable {
 
         // Create heavily used constants (cache them for efficiency reasons)
         this.uppedNull = Up.glob.up(null);
-        this.uppedTrue = Up.glob.up(true);
-        this.uppedFalse = Up.glob.up(false);
 
         // Fill the ROOT object with the standard methods
         this.standardMethods(agora);
@@ -129,13 +125,13 @@ public class AgoraGlobals implements Serializable {
 
         //true
         var trueP = new UnaryPattern("true");
-        var trueObject = new VariableContainer(uppedTrue);
+        var trueObject = new VariableContainer(Up.glob.up(true));
         Attribute trueReader = new VarGetAttribute(trueObject);
         this.rootPrivate.installPattern(trueP, trueReader);
 
         //false
         var falseP = new UnaryPattern("false");
-        var falseObject = new VariableContainer(uppedFalse);
+        var falseObject = new VariableContainer(Up.glob.up(false));
         Attribute falseReader = new VarGetAttribute(falseObject);
         this.rootPrivate.installPattern(falseP, falseReader);
 
@@ -173,18 +169,6 @@ public class AgoraGlobals implements Serializable {
         } catch (Throwable e) {
             throw new PrimException(e, "AgoraGlobals::standardMethods");
         }
-    }
-
-    /**
-     * Given a native boolean, this method returns the correspoding upped version of the Java
-     * wrapper. Otherwise, the if-test executed in this code would be in the evaluator
-     * for about a 100 times.
-     *
-     * @param b The boolean of which the Agora version is required.
-     * @return The corresponding Agora version of the boolean.
-     */
-    public AgoraObject cachedUppedBoolean(boolean b) {
-        return b ? uppedTrue : uppedFalse;
     }
 
     /**

@@ -88,10 +88,8 @@ public class PrimMethAttribute extends PrimAttribute {
         } catch (IllegalAccessException e) {
             throw new ProgramError("Illegal Access Exception while accessing a primitive method");
         } catch (InvocationTargetException e) {
-            if (e.getTargetException() instanceof AgoraError)
-                throw (AgoraError) e.getTargetException();
-            else
-                throw new PrimException(e.getTargetException(), "PrimMethAttribute::doAttributeValue");
+            if (e.getTargetException() instanceof AgoraError a) throw a;
+            throw new PrimException(e.getTargetException(), "PrimMethAttribute::doAttributeValue");
         }
 
     }

@@ -87,10 +87,8 @@ public class PrimCloningAttribute extends PrimAttribute {
         } catch (IllegalAccessException e) {
             throw new ProgramError("Illegal Access Exception when invoking constructor");
         } catch (InvocationTargetException e) {
-            if (e.getTargetException() instanceof AgoraError)
-                throw (AgoraError) e.getTargetException();
-            else
-                throw new PrimException(e.getTargetException(), "PrimCloningMethAttribute::doAttributeValue");
+            if (e.getTargetException() instanceof AgoraError a) throw a;
+            throw new PrimException(e.getTargetException(), "PrimCloningMethAttribute::doAttributeValue");
         } catch (InstantiationException e) {
             throw new ProgramError("Primitive CLoning Method (constructor) could not instantiate");
         }

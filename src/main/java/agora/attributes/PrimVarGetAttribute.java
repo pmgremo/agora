@@ -72,7 +72,7 @@ public class PrimVarGetAttribute extends PrimAttribute {
      * Converts the attribute to a string.
      */
     public String toString() {
-        return "PRIMiTIVE VARIABLE READER";
+        return "PRIMITIVE VARIABLE READER";
     }
 
     /**

@@ -49,10 +49,8 @@ public class PrimStaticMethAttribute extends PrimMethAttribute {
         } catch (IllegalAccessException e) {
             throw new ProgramError("IllegalAccesException while accessing a primitive static method");
         } catch (InvocationTargetException e) {
-            if (e.getTargetException() instanceof AgoraError)
-                throw (AgoraError) e.getTargetException();
-            else
-                throw new PrimException(e.getTargetException(), "PrimStaticMethAttribute::doAttributeValue");
+            if (e.getTargetException() instanceof AgoraError a) throw a;
+            throw new PrimException(e.getTargetException(), "PrimStaticMethAttribute::doAttributeValue");
         }
     }
 

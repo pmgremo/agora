@@ -55,10 +55,8 @@ public class PrimFunctionAttribute extends PrimMethAttribute {
         } catch (IllegalAccessException e) {
             throw new ProgramError("IllegalAccesException while accessing a primitive function method");
         } catch (InvocationTargetException e) {
-            if (e.getTargetException() instanceof AgoraError)
-                throw (AgoraError) e.getTargetException();
-            else
-                throw new PrimException(e.getTargetException(), "PrimFunctionAttribute::doAttributeValue");
+            if (e.getTargetException() instanceof AgoraError a) throw a;
+            throw new PrimException(e.getTargetException(), "PrimFunctionAttribute::doAttributeValue");
         }
     }
 

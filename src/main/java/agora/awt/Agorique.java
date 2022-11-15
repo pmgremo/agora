@@ -1,6 +1,5 @@
 package agora.awt;
 
-import agora.ErrorDialog;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.grammar.Expression;

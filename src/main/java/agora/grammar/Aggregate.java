@@ -87,12 +87,10 @@ public class Aggregate extends Expression {
             );
             for (var expression : expressions) expression.eval(exnihiloCont);
             return exnihiloSelf.wrap();
-        } else // leftDel=='{'
-        {
-            var result = AgoraGlobals.glob.uppedNull;
-            for (var expression : expressions) result = expression.eval(context);
-            return result;
         }
+        var result = AgoraGlobals.glob.uppedNull;
+        for (var expression : expressions) result = expression.eval(context);
+        return result;
     }
 
     /**

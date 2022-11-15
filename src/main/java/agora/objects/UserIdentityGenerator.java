@@ -72,7 +72,7 @@ public class UserIdentityGenerator extends IdentityGenerator implements Serializ
         if (existing != null) return existing;
         var result = new UserIdentityGenerator(getFrameName(), null, null);
         cache.put(this, result);
-        result.myMethods = (MethodsGenerator) (myMethods.copy(cache));
+        result.myMethods = (MethodsGenerator) myMethods.copy(cache);
         return result;
     }
 }

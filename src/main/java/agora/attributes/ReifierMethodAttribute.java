@@ -57,10 +57,11 @@ public class ReifierMethodAttribute extends MethAttribute {
                 localPub,
                 context.getCategory(),
                 context.getParent()));
-        if (!(result.down() instanceof AgoraObject))
-            throw new ProgramError("Result of reifier method would yield an invalid base-level object");
-        else
+        if (result.down() instanceof AgoraObject) {
             return result;
+        } else {
+            throw new ProgramError("Result of reifier method would yield an invalid base-level object");
+        }
     }
 
     /**

@@ -9,9 +9,9 @@ import agora.javaAdditions.JV_Nil;
 import agora.objects.AgoraObject;
 import agora.objects.PrimGenerator;
 import agora.objects.PrimIdentityGenerator;
-import agora.patterns.Pattern;
 import agora.patterns.KeywordPattern;
 import agora.patterns.OperatorPattern;
+import agora.patterns.Pattern;
 import agora.patterns.UnaryPattern;
 import agora.tools.AgoraGlobals;
 
@@ -60,14 +60,13 @@ public class Up implements Serializable {
      * @return The upped version of the input. This upped version understands
      * send and down.
      * @throws agora.errors.AgoraError When something goes wrong during the upping. For example,
-     *                                 a generatorcreator might be invoked that accesses a Java method that does not exists.
+     *                                 a generatorcreator might be invoked that accesses a Java method that does not exist.
      */
     public AgoraObject up(Object o) throws AgoraError {
         if (o == null) o = new JV_Nil();
-        if (o instanceof Class<?> c)
-            return new PrimIdentityGenerator(c.getSimpleName(), generatorFor(c, false), o).wrap();
-        else
-            return new PrimIdentityGenerator(Object.class.getSimpleName(), generatorFor(o.getClass(), true), o).wrap();
+        return o instanceof Class<?> c ?
+                new PrimIdentityGenerator(c.getSimpleName(), generatorFor(c, false), o).wrap() :
+                new PrimIdentityGenerator(Object.class.getSimpleName(), generatorFor(o.getClass(), true), o).wrap();
     }
 
     /**
@@ -102,7 +101,7 @@ public class Up implements Serializable {
      */
     private PrimGenerator createGeneratorFor(Class<?> type, Class<?> superType, boolean isInstance) throws AgoraError {
         var name = type.getName();
-        if (!isInstance) name += "CLASS";
+        if (!isInstance) name += " CLASS";
 
         var generator = cache.get(name);
         if (generator != null) return generator;

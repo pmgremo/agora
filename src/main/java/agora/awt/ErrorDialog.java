@@ -1,4 +1,4 @@
-package agora;
+package agora.awt;
 
 import agora.errors.AgoraError;
 import agora.errors.MessageNotUnderstood;
@@ -6,7 +6,6 @@ import agora.grammar.Expression;
 import agora.objects.AgoraObject;
 import agora.patterns.UnaryPattern;
 import agora.runtime.Client;
-import agora.awt.AwtIo;
 
 import java.awt.*;
 
