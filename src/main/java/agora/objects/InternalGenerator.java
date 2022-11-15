@@ -35,7 +35,7 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
      */
     public void inspect(Context context) {
         var d = new Inspector(
-                AgoraGlobals.glob.agoraWindow,
+                AgoraGlobals.glob.window,
                 name,
                 theMethodTable,
                 privPart,

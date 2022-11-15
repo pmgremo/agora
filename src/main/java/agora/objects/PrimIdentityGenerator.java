@@ -58,7 +58,7 @@ public class PrimIdentityGenerator extends IdentityGenerator implements Serializ
      *                                 thrown. This would be a bug somewhere in the implementation.
      */
     public void inspect(Context context) throws AgoraError {
-        var d = new Inspector(AgoraGlobals.glob.agoraWindow,
+        var d = new Inspector(AgoraGlobals.glob.window,
                 this.name,
                 this.myMethods.getHashTable(),
                 null,

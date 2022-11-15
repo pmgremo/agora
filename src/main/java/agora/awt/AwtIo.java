@@ -1,10 +1,7 @@
 package agora.awt;
 
-import agora.tools.Io;
-
 import java.awt.*;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -17,7 +14,7 @@ import java.nio.charset.StandardCharsets;
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    15 Nov 97   11:46 pm
  */
-public class AwtIo implements Io {
+public class AwtIo {
     /**
      * The input string used to initialise AgoraIO.
      */
@@ -71,11 +68,6 @@ public class AwtIo implements Io {
      */
     public static String makeSpaces(int i) {
       return " " + (i == 0 ? "" : makeSpaces(i - 1));
-    }
-
-    @Override
-    public InputStream in() {
-        return inputStream;
     }
 }
 

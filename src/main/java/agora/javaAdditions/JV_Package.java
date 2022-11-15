@@ -34,7 +34,7 @@ public class JV_Package {
      *
      * @param s The string to be added to the current string in the package.
      * @return If the result of adding the argument to the package is a class in Java,
-     * that class is returned. Otherwise a new package is created with the concatenation
+     * that class is returned. Otherwise, a new package is created with the concatenation
      * of both strings (with an extra dot in between them).
      */
     @Operator(".")

@@ -75,7 +75,7 @@ public class EmptyGenerator extends Generator implements Serializable {
      */
     public void inspect(Context context) throws AgoraError {
         var d = new Inspector(
-                AgoraGlobals.glob.agoraWindow,
+                AgoraGlobals.glob.window,
                 name,
                 null,
                 null,

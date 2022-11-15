@@ -1,8 +1,7 @@
 package agora.grammar;
 
-import agora.tools.Io;
-
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Serializable;
 
 /**
@@ -35,7 +34,7 @@ public class Scanner implements Serializable {
     public static int _SEMI_ = 16;
     public static int _ERROR_ = 17;
     public static int _EOFTOKEN_ = 18;
-    private final Io io;
+    private final Reader in;
 
     // ACCESIBLE RETURN VALUES (After Calleing scan())
 
@@ -55,9 +54,9 @@ public class Scanner implements Serializable {
     /**
      * Creates a new scanner.
      */
-    public Scanner(Io io) throws IOException {
-        this.io = io;
-        lastChar = (char) io.in().read();
+    public Scanner(Reader in) throws IOException {
+        this.in = in;
+        lastChar = (char) in.read();
         lastRKeyword = null;
         lastUKeyword = null;
         lastROperator = null;
@@ -76,7 +75,7 @@ public class Scanner implements Serializable {
      * characters from a file.
      */
     protected void nextChar() throws IOException {
-        lastChar = (char) io.in().read();
+        lastChar = (char) in.read();
     }
 
     private boolean caps() {

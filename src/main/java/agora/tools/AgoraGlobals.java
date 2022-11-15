@@ -32,12 +32,13 @@ public class AgoraGlobals implements Serializable {
      * AgoraGlobals.glob = new AgoraGlobals(this) where this is the applet.
      */
     public static AgoraGlobals glob;
+
     public Up up;
 
     /**
      * The top level window of Agora
      */
-    public Frame agoraWindow;
+    public Frame window;
     /**
      * The root private part.
      */
@@ -65,12 +66,12 @@ public class AgoraGlobals implements Serializable {
      * global variables, and fills the root objects with the standardly
      * available methods.
      *
-     * @param agora       The Agora applet or null if it concerns the application.
-     * @param agoraWindow The top level window in which Agora runs.
+     * @param applet       The Agora applet or null if it concerns the application.
+     * @param window The top level window in which Agora runs.
      * @throws agora.errors.AgoraError When something goes wrong during initialisation of the root
      *                                 object (e.g. when a bug exists in some upping procedure or so...).
      */
-    public AgoraGlobals(Applet agora, Frame agoraWindow) throws AgoraError {
+    public AgoraGlobals(Applet applet, Frame window) throws AgoraError {
         glob = this;
 
         // Construct The Root Object
@@ -80,52 +81,52 @@ public class AgoraGlobals implements Serializable {
         var privateRoot = new InternalGenerator("Root Private", new Hashtable<>(3), null, privateTop);
         rootPublic.setPrivate(privateRoot);
         privateRoot.setPrivate(privateRoot);
-        this.rootParent = publicTop;
-        this.rootPrivate = privateRoot;
-        this.rootIdentity = new UserIdentityGenerator("Root Object", rootPublic, null);
+        rootParent = publicTop;
+        rootPrivate = privateRoot;
+        rootIdentity = new UserIdentityGenerator("Root Object", rootPublic, null);
 
-        this.up = new Up();
-        this.agoraWindow = agoraWindow;
+        up = new Up();
+        this.window = window;
 
         // Create heavily used constants (cache them for efficiency reasons)
-        this.uppedNull = up.up(null);
+        uppedNull = up.up(null);
 
         // Fill the ROOT object with the standard methods
         // java
         var java = new UnaryPattern("java");
         var javaPackage = new VariableContainer(up.up(new JV_Package("java")));
         var javaReader = new VarGetAttribute(javaPackage);
-        this.rootPrivate.installPattern(java, javaReader);
+        rootPrivate.installPattern(java, javaReader);
 
         //null
         var nil = new UnaryPattern("null");
         var nilObject = new VariableContainer(uppedNull);
         var nilReader = new VarGetAttribute(nilObject);
-        this.rootPrivate.installPattern(nil, nilReader);
+        rootPrivate.installPattern(nil, nilReader);
 
         //true
         var trueP = new UnaryPattern("true");
         var trueObject = new VariableContainer(up.up(true));
         var trueReader = new VarGetAttribute(trueObject);
-        this.rootPrivate.installPattern(trueP, trueReader);
+        rootPrivate.installPattern(trueP, trueReader);
 
         //false
         var falseP = new UnaryPattern("false");
         var falseObject = new VariableContainer(up.up(false));
         var falseReader = new VarGetAttribute(falseObject);
-        this.rootPrivate.installPattern(falseP, falseReader);
+        rootPrivate.installPattern(falseP, falseReader);
 
         //agora
         var agoraP = new UnaryPattern("agora");
         var agoraObject = new VariableContainer(rootIdentity.wrap());
         var agoraReader = new VarGetAttribute(agoraObject);
-        this.rootPrivate.installPattern(agoraP, agoraReader);
+        rootPrivate.installPattern(agoraP, agoraReader);
 
         //applet
         var appletP = new UnaryPattern("applet");
-        var appletObject = new VariableContainer(up.up(agora));
+        var appletObject = new VariableContainer(up.up(applet));
         var appletReader = new VarGetAttribute(appletObject);
-        this.rootPrivate.installPattern(appletP, appletReader);
+        rootPrivate.installPattern(appletP, appletReader);
 
         //primitive
         var primitiveP = new UnaryPattern("primitive");
@@ -136,7 +137,7 @@ public class AgoraGlobals implements Serializable {
             var selfP = new UnaryPattern("SELF");
             selfP.setReifier();
             var selfMeth = new PrimReifierMethAttribute(Context.class.getMethod("Self", Context.class));
-            this.rootPrivate.installPattern(selfP, selfMeth);
+            rootPrivate.installPattern(selfP, selfMeth);
         } catch (Throwable e) {
             throw new PrimException(e, "AgoraGlobals::standardMethods");
         }
@@ -162,7 +163,7 @@ public class AgoraGlobals implements Serializable {
             var appletPat = new UnaryPattern("applet");
             var appletObject = new VariableContainer(up.up(applet));
             var appletReader = new VarGetAttribute(appletObject);
-            this.rootPrivate.getHashTable().put(appletPat, appletReader);
+            rootPrivate.getHashTable().put(appletPat, appletReader);
         } catch (AgoraError ex) {
             java.lang.System.out.println("A SERIOUS SYSTEM ERROR HAS OCCURED:updateApplet");
         }

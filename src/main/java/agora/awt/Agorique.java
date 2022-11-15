@@ -81,7 +81,7 @@ public class Agorique implements Serializable {
 			// Due to a bug in the JDK Java interpreter and appletviewer.
             Expression selectedExpression = null;
             try {
-                selectedExpression = new Parser(new Scanner(new AwtIo(input, textArea))).parseExpression();
+                selectedExpression = new Parser(new Scanner(new StringReader(input))).parseExpression();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -132,7 +132,7 @@ public class Agorique implements Serializable {
                     AgoraGlobals.glob.up = newRoot.reflectionWrappers;
 					s.close();
 					window.setCursor(oldCursor);
-					AgoraGlobals.glob.agoraWindow = window;
+					AgoraGlobals.glob.window = window;
 				} catch (IOException error) {
                     ErrorDialog.setUpErrorDialog("Load Image ActionListener", null, null);
                 } catch (ClassNotFoundException error2) {

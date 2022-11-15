@@ -64,7 +64,7 @@ public class PrimGenerator extends MethodsGenerator {
      */
     public void inspect(Context context) throws AgoraError {
         var d = new Inspector(
-                AgoraGlobals.glob.agoraWindow,
+                AgoraGlobals.glob.window,
                 name,
                 theMethodTable,
                 null,

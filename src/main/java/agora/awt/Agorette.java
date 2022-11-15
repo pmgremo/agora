@@ -82,7 +82,7 @@ public class Agorette extends java.applet.Applet {
             // Due to a bug in the JDK Java interpreter and appletviewer.
             Expression selectedExpression = null;
             try {
-                selectedExpression = new Parser(new Scanner(new AwtIo(input, textArea))).parseExpression();
+                selectedExpression = new Parser(new Scanner(new StringReader(input))).parseExpression();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -135,7 +135,7 @@ public class Agorette extends java.applet.Applet {
                     AgoraGlobals.glob.up = newRoot.reflectionWrappers;
                     s.close();
                     AgoraGlobals.glob.updateApplet(Agorette.this);
-                    AgoraGlobals.glob.agoraWindow = window;
+                    AgoraGlobals.glob.window = window;
                     window.setCursor(oldCursor);
                 } catch (IOException error) {
                     ErrorDialog.setUpErrorDialog("Load Image ActionListener", null, null);
