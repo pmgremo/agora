@@ -1,14 +1,10 @@
 package agora.javaAdditions;
 
-import agora.errors.AgoraError;
-import agora.errors.ProgramError;
 import agora.reflection.Operator;
 import agora.reflection.Unary;
 
-import static java.lang.Boolean.FALSE;
-
 /**
- * An Agora float will be programmed as an 'up'ed Java float and all Agora
+ * An Agora float will be programmed as an up-ed Java float and all Agora
  * messages on floats will be forwarded to the underlying Java messages.
  * However, java.lang.Float does not contain messages like +, and it is
  * forbidden to make a subclass of java.lang.Float to implement +.
@@ -26,38 +22,26 @@ public class JV_Float {
      *
      * @param receiver The float indicating the receiver of the method
      * @param arg      The object indicating the argument.
+     * @return A new float being the '+' of the receiver and the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new float being the '+' of the receiver and the argument.
      */
     @Operator("+")
-    public static Object plus(Float receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer i) {
-            return receiver + i;
-        } else if (arg instanceof Float f) {
-            return receiver + f;
-        } else {
-            throw new ProgramError("Illegal Argument for +");
-        }
+    public static Float plus(Float receiver, Number arg) {
+        return receiver + arg.floatValue();
     }
 
     /**
-     * Substraction.
+     * Subtraction.
      * The receiver is a float. The argument can be an integer or a float.
      *
      * @param receiver The float indicating the receiver of the method
      * @param arg      The object indicating the argument.
+     * @return A new float being the '-' of the receiver and the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new float being the '-' of the receiver and the argument.
      */
     @Operator("-")
-    public static Object min(Float receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer i) {
-            return receiver - i;
-        } else if (arg instanceof Float f) {
-            return receiver - f;
-        } else {
-            throw new ProgramError("Illegal Argument for -");
-        }
+    public static Float min(Float receiver, Number arg) {
+        return receiver - arg.floatValue();
     }
 
     /**
@@ -66,18 +50,12 @@ public class JV_Float {
      *
      * @param receiver The float indicating the receiver of the method
      * @param arg      The object indicating the argument.
+     * @return A new float being the '*' of the receiver and the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new float being the '*' of the receiver and the argument.
      */
     @Operator("*")
-    public static Object mult(Float receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer i) {
-            return receiver * i;
-        } else if (arg instanceof Float f) {
-            return receiver * f;
-        } else {
-            throw new ProgramError("Illegal Argument for *");
-        }
+    public static Float multiply(Float receiver, Number arg) {
+        return receiver * arg.floatValue();
     }
 
     /**
@@ -86,18 +64,12 @@ public class JV_Float {
      *
      * @param receiver The float indicating the receiver of the method
      * @param arg      The object indicating the argument.
+     * @return A new float being the '/' of the receiver and the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new float being the '/' of the receiver and the argument.
      */
     @Operator("/")
-    public static Object divide(Float receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer i) {
-            return receiver / i;
-        } else if (arg instanceof Float f) {
-            return receiver / f;
-        } else {
-            throw new ProgramError("Illegal Argument for /");
-        }
+    public static Float divide(Float receiver, Number arg) {
+        return receiver / arg.floatValue();
     }
 
     /**
@@ -106,35 +78,26 @@ public class JV_Float {
      *
      * @param receiver The float indicating the receiver of the method
      * @param arg      The object indicating the argument.
+     * @return A new float being the '^' of the receiver and the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new float being the '^' of the receiver and the argument.
      */
     @Operator("^")
-    public static Object power(Float receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer i) {
-            return (float) (int) Math.pow(receiver, i);
-        } else if (arg instanceof Float f) {
-            return (float) Math.pow(receiver, f);
-        } else {
-            throw new ProgramError("Illegal Argument for ^");
-        }
+    public static Float power(Float receiver, Number arg) {
+        return (float) Math.pow(receiver, arg.doubleValue());
     }
 
     /**
-     * Comparision =.
-     * The receiver must be float and the argument can be anything.
+     * Comparison =.
+     * The receiver must be a float and the argument can be anything.
      *
      * @param receiver The float indicating the receiver of the method
      * @param arg      The object indicating the argument.
+     * @return A new boolean being the comparison of the receiver and the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the comparision of the receiver and the argument.
      */
     @Operator("=")
-    public static Object equalsF(Float receiver, Object arg) throws AgoraError {
-        if (arg instanceof Number n) {
-            return receiver == n.intValue();
-        } else
-            return FALSE;
+    public static Boolean equalsF(Float receiver, Number arg) {
+        return receiver == arg.floatValue();
     }
 
     /**
@@ -143,101 +106,78 @@ public class JV_Float {
      *
      * @param receiver The float indicating the receiver of the method
      * @param arg      The object indicating the argument.
+     * @return A new boolean being the comparison of the receiver and the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the comparision of the receiver and the argument.
      */
     @Operator("<")
-    public static Object smF(Float receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer i) {
-            return receiver < i;
-        } else if (arg instanceof Float f) {
-            return receiver < f;
-        } else {
-            throw new ProgramError("Illegal Argument for <");
-        }
+    public static Boolean smF(Float receiver, Number arg) {
+        return receiver.compareTo(arg.floatValue()) < 0;
     }
 
     /**
      * Greater than test.
-     * The receiver must be float, the argument integer or float.
+     * The receiver must be a float, the argument integer or float.
      *
      * @param receiver The float indicating the receiver of the method
      * @param arg      The object indicating the argument.
+     * @return A new boolean being the comparison of the receiver and the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the comparision of the receiver and the argument.
      */
     @Operator(">")
-    public static Object gtF(Float receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer i) {
-            return receiver > i;
-        } else if (arg instanceof Float f) {
-            return receiver > f;
-        } else {
-            throw new ProgramError("Illegal Argument for >");
-        }
+    public static Boolean gtF(Float receiver, Number arg) {
+        return receiver.compareTo(arg.floatValue()) > 0;
+
     }
 
     /**
      * Smaller than or equal.
-     * Receiver must be float, the argument integer or float.
+     * Receiver must be a float, the argument integer or float.
      *
      * @param receiver The float indicating the receiver of the method
      * @param arg      The object indicating the argument.
+     * @return A new boolean being the comparison of the receiver and the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the comparision of the receiver and the argument.
      */
     @Operator("<=")
-    public static Object smeF(Float receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer i) {
-            return receiver <= i;
-        } else if (arg instanceof Float f) {
-            return receiver <= f;
-        } else {
-            throw new ProgramError("Illegal Argument for <=");
-        }
+    public static Boolean smeF(Float receiver, Number arg) {
+        return receiver.compareTo(arg.floatValue()) <= 0;
     }
 
     /**
      * Greater than or equal.
-     * The receiver must be float, the argument integer or float.
+     * The receiver must be a float, the argument integer or float.
      *
      * @param receiver The float indicating the receiver of the method
      * @param arg      The object indicating the argument.
+     * @return A new boolean being the comparison of the receiver and the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the comparision of the receiver and the argument.
      */
     @Operator(">=")
-    public static Object gteF(Float receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer i) {
-            return receiver >= i;
-        } else if (arg instanceof Float f) {
-            return receiver >= f;
-        } else {
-            throw new ProgramError("Illegal Argument for >=");
-        }
+    public static Boolean gteF(Float receiver, Number arg) {
+        return receiver.compareTo(arg.floatValue()) >= 0;
     }
 
     /**
-     * Absolute value. Receiver is floatr.
+     * Absolute value. Receiver is float.
      *
      * @param receiver The receiver of the abs message
      * @return The float indicating the absolute value of the receiver.
      * @throws agora.errors.AgoraError Is never thrown in this case.
      */
     @Unary("abs")
-    public static Object abs(Float receiver) throws AgoraError {
+    public static Float abs(Float receiver) {
         return Math.abs(receiver);
     }
 
     /**
-     * Square Root. Receicer is float.
+     * Square Root. Receiver is float.
      *
      * @param receiver The receiver of the sqrt message
      * @return The float indicating the square root of the receiver.
      * @throws agora.errors.AgoraError Is never thrown in this case.
      */
     @Unary
-    public static Object sqrt(Float receiver) throws AgoraError {
+    public static Float sqrt(Float receiver) {
         return (float) Math.sqrt(receiver);
     }
 
@@ -249,8 +189,7 @@ public class JV_Float {
      * @throws agora.errors.AgoraError Is never thrown in this case.
      */
     @Unary
-    public static Object sqr(Float receiver) throws AgoraError {
+    public static Float sqr(Float receiver) {
         return receiver * receiver;
     }
-
 }

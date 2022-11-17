@@ -1,7 +1,6 @@
 package agora.javaAdditions;
 
 import agora.errors.AgoraError;
-import agora.errors.ProgramError;
 import agora.reflection.Operator;
 import agora.reflection.Unary;
 
@@ -20,16 +19,12 @@ public class JV_Boolean {
      *
      * @param receiver The boolean indicating the receiver of the method
      * @param arg      The object indicating the argument.
-     * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @return A new boolean being the 'and' of the receiver and the argument.
+     * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      */
     @Operator("&&")
-    public static Boolean andB(Boolean receiver, Object arg) throws AgoraError {
-        if (arg instanceof Boolean b) {
-            return receiver & b;
-        } else {
-            throw new ProgramError("Illegal Argument for &&");
-        }
+    public static Boolean andB(Boolean receiver, Boolean arg) throws AgoraError {
+        return receiver & arg;
     }
 
     /**
@@ -37,16 +32,12 @@ public class JV_Boolean {
      *
      * @param receiver The boolean indicating the receiver of the method
      * @param arg      The object indicating the argument.
-     * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      * @return A new boolean being the 'or' of the receiver and the argument.
+     * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
      */
     @Operator("||")
-    public static Boolean orB(Boolean receiver, Object arg) throws AgoraError {
-        if (arg instanceof Boolean b) {
-            return receiver | b;
-        } else {
-            throw new ProgramError("Illegal Argument for ||");
-        }
+    public static Boolean orB(Boolean receiver, Boolean arg) throws AgoraError {
+        return receiver | arg;
     }
 
     /**

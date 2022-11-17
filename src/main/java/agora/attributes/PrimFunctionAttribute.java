@@ -42,16 +42,20 @@ public class PrimFunctionAttribute extends PrimMethAttribute {
      * @param context The context of the object in which this attribute resides.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
-    public AgoraObject doAttributeValue(Pattern msg,
-                                        Client client,
-                                        Context context) throws AgoraError {
+    public AgoraObject doAttributeValue(
+            Pattern msg,
+            Client client,
+            Context context
+    ) throws AgoraError {
         try {
             var realActuals = client.getActuals();
             var fakedActuals = new Object[realActuals.length + 1];
             fakedActuals[0] = context.getSelf().down();
             for (var j = 0; j < realActuals.length; j++)
                 fakedActuals[j + 1] = ((AgoraObject) realActuals[j]).down();
-            return AgoraGlobals.glob.up.up(this.m.invoke(null, fakedActuals));
+            return AgoraGlobals.glob.up.up(m.invoke(null, fakedActuals));
+        } catch (IllegalArgumentException e) {
+            throw new ProgramError("Illegal Argument for " + msg.toString());
         } catch (IllegalAccessException e) {
             throw new ProgramError("IllegalAccesException while accessing a primitive function method");
         } catch (InvocationTargetException e) {

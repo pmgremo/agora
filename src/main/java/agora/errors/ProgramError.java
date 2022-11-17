@@ -13,7 +13,7 @@ public class ProgramError extends AgoraError {
      * @param msg The error message to be displayed when reporting this error.
      */
     public ProgramError(String msg) {
-        super("Program Error:\n\n" + msg);
+        super(msg);
     }
 }
 

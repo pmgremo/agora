@@ -27,7 +27,6 @@ public class VarSetAttribute implements Attribute {
      *                 to make sure write and read slots both point to the same object.
      */
     public VarSetAttribute(VariableContainer variable) {
-        super();
         this.theContents = variable;
     }
 
@@ -60,7 +59,7 @@ public class VarSetAttribute implements Attribute {
         if (myclone != null) return myclone;
         var clonedAttribute = new VarSetAttribute(null);
         cloneMap.put(this, clonedAttribute);
-        clonedAttribute.theContents = (VariableContainer) (this.theContents.copy(cloneMap));
+        clonedAttribute.theContents = this.theContents.copy(cloneMap);
         // We cannot avoid this type cast because of the genericity of clone maps.
         return clonedAttribute;
     }

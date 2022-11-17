@@ -84,14 +84,13 @@ public class PrimMethAttribute extends PrimAttribute {
      */
     public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         try {
-            return AgoraGlobals.glob.up.up(this.m.invoke(context.getSelf().down(), client.makeNativeArguments()));
+            return AgoraGlobals.glob.up.up(m.invoke(context.getSelf().down(), client.makeNativeArguments()));
         } catch (IllegalAccessException e) {
             throw new ProgramError("Illegal Access Exception while accessing a primitive method");
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof AgoraError a) throw a;
             throw new PrimException(e.getTargetException(), "PrimMethAttribute::doAttributeValue");
         }
-
     }
 
     /**

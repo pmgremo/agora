@@ -116,8 +116,8 @@ public class Aggregate extends Expression {
      * @return The string representation of the aggregate.
      */
     public String unparse(int hor) {
-        var msg = new StringBuilder(AwtIo.makeSpaces(hor));
-        msg.append(Character.valueOf(leftDel).toString());
+        var msg = new StringBuilder(AwtIo.makeSpaces(hor))
+                .append(leftDel);
         if (expressions.length != 0) {
             for (var i = 0; i < expressions.length; i++) {
                 if (i == 0) msg.append(expressions[i].unparse(hor));

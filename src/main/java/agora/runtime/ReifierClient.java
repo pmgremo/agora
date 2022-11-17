@@ -3,6 +3,8 @@ package agora.runtime;
 import agora.errors.AgoraError;
 import agora.errors.AgoraException;
 
+import static java.lang.System.arraycopy;
+
 /**
  * During normal message passing, a client object transports the actual arguments
  * from the sender of the message to the receiver of the message. But when the
@@ -73,10 +75,10 @@ public class ReifierClient extends Client {
      *                                 downing of the actuals.
      */
     public Object[] makeNativeArguments() throws AgoraError {
-        this.actualsDown();
-        var result = new Object[this.actuals.length + 1];
-        result[0] = this.context;
-        System.arraycopy(this.actuals, 0, result, 1, this.actuals.length);
+        actualsDown();
+        var result = new Object[actuals.length + 1];
+        result[0] = context;
+        arraycopy(actuals, 0, result, 1, actuals.length);
         return result;
     }
 }

@@ -29,17 +29,11 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new float or int being the sum of the receiver and the argument.
+     * @return A new float or int being the sum of the receiver and the argument.
      */
     @Operator("+")
-    public static Object plus(Integer receiver, Object arg) throws AgoraError {
-        if (arg instanceof Integer i) {
-            return receiver + i;
-        } else if (arg instanceof Float f) {
-            return receiver + f;
-        } else {
-            throw new ProgramError("Illegal Argument for +");
-        }
+    public static Integer plus(Integer receiver, Number arg) throws AgoraError {
+        return receiver + arg.intValue();
     }
 
     /**
@@ -49,7 +43,7 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new float or int being the substraction of the receiver and the argument.
+     * @return A new float or int being the substraction of the receiver and the argument.
      */
     @Operator("-")
     public static Object min(Integer receiver, Object arg) throws AgoraError {
@@ -69,7 +63,7 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new float or int being the multiplication of the receiver and the argument.
+     * @return A new float or int being the multiplication of the receiver and the argument.
      */
     @Operator("*")
     public static Object mult(Integer receiver, Object arg) throws AgoraError {
@@ -89,7 +83,7 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new float being the floating division of the receiver and the argument.
+     * @return A new float being the floating division of the receiver and the argument.
      */
     @Operator("/")
     public static Object divide(Integer receiver, Object arg) throws AgoraError {
@@ -109,7 +103,7 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new integer being the integer division of the receiver and the argument.
+     * @return A new integer being the integer division of the receiver and the argument.
      */
     @Operator("#")
     public static Object div(Integer receiver, Object arg) throws AgoraError {
@@ -127,7 +121,7 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new integer being the remainder of dividing the receiver and the argument.
+     * @return A new integer being the remainder of dividing the receiver and the argument.
      */
     @Operator("%")
     public static Object mod(Integer receiver, Object arg) throws AgoraError {
@@ -145,7 +139,7 @@ public class JV_Integer {
      * @param receiver The int indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new float or integer being the power of the receiver and the argument.
+     * @return A new float or integer being the power of the receiver and the argument.
      */
     @Operator("^")
     public static Object power(Integer receiver, Object arg) throws AgoraError {
@@ -164,7 +158,7 @@ public class JV_Integer {
      *
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
-     * @returns A new boolean being the comparision of the receiver and the argument.
+     * @return A new boolean being the comparision of the receiver and the argument.
      */
     @Operator("=")
     public static Object equalsI(Integer receiver, Object arg) {
@@ -181,7 +175,7 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the comparision of the receiver and the argument.
+     * @return A new boolean being the comparision of the receiver and the argument.
      */
     @Operator("<")
     public static Object smI(Integer receiver, Object arg) throws AgoraError {
@@ -201,7 +195,7 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the comparision of the receiver and the argument.
+     * @return A new boolean being the comparision of the receiver and the argument.
      */
     @Operator(">")
     public static Object gtI(Integer receiver, Object arg) throws AgoraError {
@@ -221,7 +215,7 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the comparision of the receiver and the argument.
+     * @return A new boolean being the comparision of the receiver and the argument.
      */
     @Operator("<=")
     public static Object smeI(Integer receiver, Object arg) throws AgoraError {
@@ -241,7 +235,7 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the comparision of the receiver and the argument.
+     * @return A new boolean being the comparision of the receiver and the argument.
      */
     @Operator(">=")
     public static Object gteI(Integer receiver, Object arg) throws AgoraError {
@@ -261,7 +255,7 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the comparision of the receiver and the argument.
+     * @return A new boolean being the comparision of the receiver and the argument.
      */
     @Operator("|")
     public static Object orI(Integer receiver, Object arg) throws AgoraError {
@@ -279,7 +273,7 @@ public class JV_Integer {
      * @param receiver The integer indicating the receiver of the method
      * @param arg      The object indicating the argument.
      * @throws agora.errors.AgoraError Is thrown when the argument is of wrong type.
-     * @returns A new boolean being the comparision of the receiver and the argument.
+     * @return A new boolean being the comparision of the receiver and the argument.
      */
     @Operator("&")
     public static Object andI(Integer receiver, Object arg) throws AgoraError {

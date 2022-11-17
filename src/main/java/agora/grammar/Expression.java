@@ -804,11 +804,9 @@ abstract public class Expression implements Serializable {
     @Unary("down")
     @Reified
     public AgoraObject down(Context context) throws AgoraError {
-        var res = this.eval(context).down();
-        if (res instanceof AgoraObject a)
-            return a;
-        else
-            throw new ProgramError("DOWN must yield a valid Agora Object");
+        var res = eval(context).down();
+        if (res instanceof AgoraObject a) return a;
+        throw new ProgramError("DOWN must yield a valid Agora Object");
     }
 
     /**

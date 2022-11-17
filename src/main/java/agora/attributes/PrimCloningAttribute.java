@@ -55,9 +55,9 @@ public class PrimCloningAttribute extends PrimAttribute {
             }
             c = decl.getConstructor(sig);
         } catch (NoSuchMethodException error) {
-            java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchconstructor)");
+            System.out.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchconstructor)");
         } catch (ClassNotFoundException error) {
-            java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchclass");
+            System.out.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchclass");
         }
     }
 
@@ -82,15 +82,14 @@ public class PrimCloningAttribute extends PrimAttribute {
      */
     public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         try {
-            client.actualsDown();
-            return AgoraGlobals.glob.up.up(c.newInstance(client.getActuals()));
+            return AgoraGlobals.glob.up.up(c.newInstance(client.makeNativeArguments()));
         } catch (IllegalAccessException e) {
             throw new ProgramError("Illegal Access Exception when invoking constructor");
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof AgoraError a) throw a;
             throw new PrimException(e.getTargetException(), "PrimCloningMethAttribute::doAttributeValue");
         } catch (InstantiationException e) {
-            throw new ProgramError("Primitive CLoning Method (constructor) could not instantiate");
+            throw new ProgramError("Primitive Cloning Method (constructor) could not instantiate");
         }
     }
 

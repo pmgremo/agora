@@ -57,7 +57,7 @@ public class Client implements Serializable {
      * @return a new Context object containing this information.
      */
     public Context newContext(int cat, IdentityGenerator self, MethodsGenerator publik) {
-        return new Context(self, null, publik, cat, null, this.currentException);
+        return new Context(self, null, publik, cat, null, currentException);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Client implements Serializable {
      * copied.
      */
     public Context newContext(int cat) {
-        return new Context(null, null, null, cat, null, this.currentException);
+        return new Context(null, null, null, cat, null, currentException);
     }
 
     /**
@@ -81,17 +81,17 @@ public class Client implements Serializable {
      * @return A new context in which the client information is transparantly copied.
      */
     public Context newContext() {
-        return new Context(null, null, null, Category.emptyCategory, null, this.currentException);
+        return new Context(null, null, null, Category.emptyCategory, null, currentException);
     }
 
     /**
      * Get the actual arguments our of the client. The type is an array of Object's, because
-     * actual arguments may be evaluated agora.objects (i.e. AgoraObject's) or expressions.
+     * actual arguments may be evaluated objects (i.e. AgoraObject's) or expressions.
      *
      * @return An array of actual arguments.
      */
     public Object[] getActuals() {
-        return this.actuals;
+        return actuals;
     }
 
     /**
@@ -109,11 +109,11 @@ public class Client implements Serializable {
      * @return The exception that is passed around.
      */
     public AgoraException getException() {
-        return this.currentException;
+        return currentException;
     }
 
     /**
-     * Asuming that the arguments are all expressions, this method up's them one by one.
+     * Assuming that the arguments are all expressions, this method up's them one by one.
      *
      * @throws agora.errors.AgoraError This exception is thrown when something goes wrong during
      *                                 the upping process (exception propagated by Up.up).
@@ -124,7 +124,7 @@ public class Client implements Serializable {
     }
 
     /**
-     * Assuming all actuals are upped agora.objects, this method downs them one by one.
+     * Assuming all actuals are upped objects, this method downs them one by one.
      */
     public void actualsDown() {
         for (var j = 0; j < actuals.length; j++)
@@ -132,7 +132,7 @@ public class Client implements Serializable {
     }
 
     /**
-     * Assuming all actuals are expression agora.objects, this method evaluates the one by one.
+     * Assuming all actuals are expression objects, this method evaluates the one by one.
      *
      * @param context The evaluation context in which the actual arguments are to be evaluated.
      * @throws agora.errors.AgoraError When something goes wrong during the evaluation of the
@@ -144,7 +144,7 @@ public class Client implements Serializable {
     }
 
     /**
-     * Assuming that all arguments are upped agora.objects, this method downs them and returns them
+     * Assuming that all arguments are upped objects, this method downs them and returns them
      * as an array of agora.objects. This array is usually used to be passed to 'invoke' such that
      * a Java method is invoked with the appropriate set of downed Java agora.objects.
      *
@@ -153,7 +153,7 @@ public class Client implements Serializable {
      *                                 of agora.objects.
      */
     public Object[] makeNativeArguments() throws AgoraError {
-        this.actualsDown();
-        return this.actuals;
+        actualsDown();
+        return actuals;
     }
 }

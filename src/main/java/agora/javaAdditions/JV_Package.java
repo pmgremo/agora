@@ -39,11 +39,11 @@ public class JV_Package {
      */
     @Operator(".")
     public Object more(String s) {
-        var newName = this.packageName.concat(".".concat(s)); // Determine new name
+        var result = packageName.concat(".".concat(s)); // Determine new name
         try {
-            return Class.forName(newName);                // Try to return the class of that name
-        } catch (Throwable e) {
-            return new JV_Package(newName);             // If it isn't there, create a new package
+            return Class.forName(result);                // Try to return the class of that name
+        } catch (ClassNotFoundException e) {
+            return new JV_Package(result);             // If it isn't there, create a new package
         }
     }
 }

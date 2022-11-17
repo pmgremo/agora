@@ -30,7 +30,6 @@ public class MethAttribute implements Attribute {
      * @param body    The body expression of the method.
      */
     public MethAttribute(String[] formals, Expression body) {
-        super();
         this.formals = formals;
         this.methodCode = body;
     }
