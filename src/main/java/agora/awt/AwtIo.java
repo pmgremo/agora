@@ -54,16 +54,5 @@ public class AwtIo {
      */
     public static void checkEscape() {
     }
-
-    /**
-     * Returns a string consisting of spaces whose length is indicated by the integer
-     * parameter.	This method is heavily used by the unparser to do indentation properly.
-     *
-     * @param i Integer value denoting the number of spaces required.
-     * @return A string consisting of so many spaces as indicated by the input.
-     */
-    public static String makeSpaces(int i) {
-        return " " + (i == 0 ? "" : makeSpaces(i - 1));
-    }
 }
 

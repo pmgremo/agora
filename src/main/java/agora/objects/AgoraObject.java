@@ -8,9 +8,9 @@ import agora.runtime.Client;
 import java.io.Serializable;
 
 /**
- * This class represents Agora agora.objects as seen through the eyes of the evaluator.
+ * This class represents Agora objects as seen through the eyes of the evaluator.
  * In other words, this class represents Agora meta agora.objects. There are only two
- * methods understood by the agora.objects of this class. This is why Agora is the
+ * methods understood by the objects of this class. This is why Agora is the
  * language with the simplest MOP in the world.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab).
@@ -44,7 +44,7 @@ public class AgoraObject implements Serializable {
      * @param client A client object that contains the actual arguments of the message. The
      *               client can also contain a hidden context argument if the message is a reifier message
      * @return The Result of sending the message is an Agora object, just like the arguments
-     * in the client ought to be agora agora.objects.
+     * in the client ought to be agora objects.
      * @throws agora.errors.AgoraError If inside the object an error occurs (e.g. message not understood
      *                                 or an error while evaluating a method), this exception is thrown.
      * @see agora.runtime.Client

@@ -6,7 +6,6 @@ import agora.patterns.Pattern;
 import agora.patterns.UnaryPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
-import agora.awt.AwtIo;
 
 /**
  * This class represents reifier unary agora.patterns like SELF.
@@ -43,7 +42,7 @@ public class ReifUnaryPattern extends ReifPattern {
      * @return The string representation of this reifier unary patttern.
      */
     public String unparse(int hor) {
-        return AwtIo.makeSpaces(hor) + this.unary;
+        return " ".repeat(hor) + this.unary;
     }
 
     /**

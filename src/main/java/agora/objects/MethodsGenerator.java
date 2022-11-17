@@ -27,7 +27,7 @@ public abstract class MethodsGenerator extends Generator {
     protected Generator parent;
 
     /**
-     * Create a new methods generator.
+     * Create a new method generator.
      *
      * @param nameOfFrame The name of the methodsgenerator to be used in inspectors.
      * @param table       The initial hashtable of the methodsgenerator.

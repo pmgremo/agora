@@ -1,6 +1,5 @@
 package agora.grammar;
 
-import agora.awt.AwtIo;
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
 import agora.patterns.OperatorPattern;
@@ -116,17 +115,17 @@ public class Aggregate extends Expression {
      * @return The string representation of the aggregate.
      */
     public String unparse(int hor) {
-        var msg = new StringBuilder(AwtIo.makeSpaces(hor))
+        var padding = " ".repeat(hor);
+        var result = new StringBuilder(padding)
                 .append(leftDel);
         if (expressions.length != 0) {
             for (var i = 0; i < expressions.length; i++) {
-                if (i == 0) msg.append(expressions[i].unparse(hor));
-                else msg.append(expressions[i].unparse(hor + 2));
-                if (i < expressions.length - 1) msg.append(";\n");
+                result.append(expressions[i].unparse(i == 0 ? hor : hor + 2));
+                if (i < expressions.length - 1) result.append(";\n");
             }
-            msg.append(AwtIo.makeSpaces(hor));
+            result.append(padding);
         }
-        msg.append(rightDel);
-        return msg.toString();
+        result.append(rightDel);
+        return result.toString();
     }
 }

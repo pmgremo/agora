@@ -1,6 +1,5 @@
 package agora.patterns;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -11,7 +10,7 @@ import java.util.Objects;
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:50 am
  */
-public class OperatorPattern extends Pattern implements Serializable {
+public class OperatorPattern extends Pattern {
     /**
      * String representing the operator.
      */

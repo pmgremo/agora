@@ -3,11 +3,10 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
-import agora.patterns.Pattern;
 import agora.patterns.KeywordPattern;
+import agora.patterns.Pattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
-import agora.awt.AwtIo;
 
 /**
  * This class represents reifier keyword agora.patterns like METHOD:{}
@@ -68,10 +67,10 @@ public class ReifKeywordPattern extends ReifPattern {
      * Unparses the keyword pattern.
      *
      * @return The string representation representing the unparsed keyword pattern.
-     * @arg hor The number of spaces that must lead the unparsed version.
+     * @param hor The number of spaces that must lead the unparsed version.
      */
     public String unparse(int hor) {
-        var msg = new StringBuilder(AwtIo.makeSpaces(hor));
+        var msg = new StringBuilder(" ".repeat(hor));
         for (var i = 0; i < this.size; i++) {
             msg.append(keywords[i]).append(arguments[i].unparse(0));
             if (i < size - 1) msg.append(" ");
@@ -120,13 +119,12 @@ public class ReifKeywordPattern extends ReifPattern {
     public String[] makeFormals(Context context) throws AgoraError {
         var formals = new String[arguments.length];
         for (var i = 0; i < arguments.length; i++) {
-            if (arguments[i] instanceof UserUnaryPattern u)
-                formals[i] = u.getUnary();
-            else {
+            if (!(arguments[i] instanceof UserUnaryPattern u)) {
                 var ex = new ProgramError("Formal parameters must be  identifiers");
                 ex.setCode(this);
                 throw ex;
             }
+            formals[i] = u.getUnary();
         }
         return formals;
     }

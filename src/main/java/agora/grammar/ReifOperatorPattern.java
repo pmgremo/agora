@@ -7,7 +7,6 @@ import agora.patterns.Pattern;
 import agora.patterns.OperatorPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
-import agora.awt.AwtIo;
 
 /**
  * Reifier Operator Patterns are currently not used in Agora, because there is no
@@ -36,7 +35,7 @@ public class ReifOperatorPattern extends ReifPattern {
     }
 
     public String unparse(int hor) {
-        return AwtIo.makeSpaces(hor) + this.operator + " " + this.operand.unparse(0);
+        return " ".repeat(hor) + this.operator + " " + this.operand.unparse(0);
     }
 
     public Client makeClient(Context context, AgoraObject receiver) {

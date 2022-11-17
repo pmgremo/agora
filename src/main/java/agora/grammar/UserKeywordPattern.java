@@ -7,10 +7,9 @@ import agora.patterns.Pattern;
 import agora.patterns.KeywordPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
-import agora.awt.AwtIo;
 
 /**
- * This class represents user keyword agora.patterns like at:3 put:5 or at:i put:thing.
+ * This class represents user keyword patterns like at:3 put:5 or at:i put:thing.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:43 am
@@ -70,7 +69,7 @@ public class UserKeywordPattern extends UserPattern {
      * @return The stringrepresentation of the node.
      */
     public String unparse(int hor) {
-        var msg = new StringBuilder(AwtIo.makeSpaces(hor));
+        var msg = new StringBuilder(" ".repeat(hor));
         for (var i = 0; i < this.size; i++) {
             msg
                     .append(keywords[i])
@@ -121,13 +120,12 @@ public class UserKeywordPattern extends UserPattern {
     public String[] makeFormals(Context context) throws AgoraError {
         var formals = new String[arguments.length];
         for (var i = 0; i < arguments.length; i++) {
-            if (arguments[i] instanceof UserUnaryPattern u)
-                formals[i] = u.getUnary();
-            else {
+            if (!(arguments[i] instanceof UserUnaryPattern u)) {
                 var ex = new ProgramError("Formal parameters must be identifiers");
                 ex.setCode(this);
                 throw ex;
             }
+            formals[i] = u.getUnary();
         }
         return formals;
     }

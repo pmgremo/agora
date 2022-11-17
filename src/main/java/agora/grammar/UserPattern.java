@@ -32,14 +32,14 @@ abstract public class UserPattern extends Pattern {
         try {
             // Patterns in Flags Category Must Be Declared: Just Return a new pattern
             if (Category.contains(context.getCategory(), Category.flags))
-                return AgoraGlobals.glob.up.up(new FormalsAndPattern(this.makeFormals(context),
+                return AgoraGlobals.glob.up.up(new FormalsAndPattern(makeFormals(context),
                         this.makePattern(context),
                         Category.emptyCategory));
 
             // Patterns in Other Categories Denote Accesses in the Local Part of An Object
-            var client = this.makeClient(context, context.getSelf().wrap());
+            var client = makeClient(context, context.getSelf().wrap());
             client.actualsEval(context);
-            return context.getPrivate().delegate(this.makePattern(context), client, context);
+            return context.getPrivate().delegate(makePattern(context), client, context);
         } catch (AgoraError ex) {
             ex.setCode(this);
             throw ex;
@@ -83,8 +83,8 @@ abstract public class UserPattern extends Pattern {
     @Unary(value = "SUPER")
     @Reified
     public AgoraObject superReifier(Context context) throws AgoraError {
-        var client = this.makeClient(context, context.getSelf().wrap());
-        var pattern = this.makePattern(context);
+        var client = makeClient(context, context.getSelf().wrap());
+        var pattern = makePattern(context);
         client.actualsEval(context);
         return context.getParent().delegate(pattern, client, context);
     }

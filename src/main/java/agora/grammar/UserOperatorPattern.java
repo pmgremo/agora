@@ -7,7 +7,6 @@ import agora.patterns.Pattern;
 import agora.patterns.OperatorPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
-import agora.awt.AwtIo;
 
 /**
  * This class represents user operator agora.patterns like + 4 or +arg.
@@ -53,10 +52,10 @@ public class UserOperatorPattern extends UserPattern {
      * Unparses the operator pattern.
      *
      * @param hor The number of spaces leading the unparsed representation.
-     * @returns A string that is the unparsed version of this expression.
+     * @return A string that is the unparsed version of this expression.
      */
     public String unparse(int hor) {
-        return AwtIo.makeSpaces(hor) + this.operator + " " + this.operand.unparse(0);
+        return " ".repeat(hor) + operator + " " + operand.unparse(0);
     }
 
     /**

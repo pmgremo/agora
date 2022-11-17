@@ -6,7 +6,6 @@ import agora.patterns.Pattern;
 import agora.patterns.UnaryPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
-import agora.awt.AwtIo;
 
 /**
  * A UserUnaryPattern is an Agora expression denoting ordinary unary agora.patterns.
@@ -44,7 +43,7 @@ public class UserUnaryPattern extends UserPattern {
      * @return The user unary pattern as a string.
      */
     public String unparse(int hor) {
-        return AwtIo.makeSpaces(hor) + this.unary;
+        return " ".repeat(hor) + this.unary;
     }
 
     /**
@@ -56,15 +55,15 @@ public class UserUnaryPattern extends UserPattern {
      * @return A new client object with zero unevaluated arguments.
      */
     public Client makeClient(Context context, AgoraObject receiver) {
-        return context.newClient(new Object[0]);
+        return context.newClient();
     }
 
     /**
-     * Creates a agora.runtime pattern corresponding to this syntactic pattern.
+     * Creates a runtime pattern corresponding to this syntactic pattern.
      *
-     * @param context The evaluation context where the agora.runtime pattern is needed (right
+     * @param context The evaluation context where the runtime pattern is needed (right
      *                before send or delegate.
-     * @return A new agora.runtime pattern representing this syntactic pattern.
+     * @return A new runtime pattern representing this syntactic pattern.
      */
     public Pattern makePattern(Context context) {
         return new UnaryPattern(this.unary);

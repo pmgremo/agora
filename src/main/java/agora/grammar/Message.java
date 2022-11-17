@@ -1,7 +1,5 @@
 package agora.grammar;
 
-import agora.awt.AwtIo;
-
 /**
  * Abstract class representing Agora message expressions. This class normally has
  * two subclasses representing ordinary messages and reifier messages.
@@ -57,9 +55,6 @@ public abstract class Message extends Expression {
      * @return A string representation of this message expression.
      */
     public String unparse(int hor) {
-        var msg = AwtIo.makeSpaces(hor);
-        msg = msg + this.receiver.unparse(hor);
-        msg = msg + " " + this.pattern.unparse(0);
-        return msg;
+        return " ".repeat(hor) + receiver.unparse(hor) + " " + pattern.unparse(0);
     }
 }

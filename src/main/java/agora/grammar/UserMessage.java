@@ -10,7 +10,7 @@ import agora.awt.AwtIo;
  * expression as the receiver of that message, and a UserPattern as the name
  * of the message and possible arguments.
  * Last change:  E    16 Nov 97    2:26 pm
- * @author: Wolfgang De Meuter(Programming technology Lab).
+ * @author Wolfgang De Meuter(Programming technology Lab).
  */
 
 public class UserMessage extends Message {
@@ -35,9 +35,9 @@ public class UserMessage extends Message {
     public AgoraObject eval(Context context) throws AgoraError {
         try {
             AwtIo.checkEscape();
-            var client = this.pattern.makeClient(context, null);
+            var client = pattern.makeClient(context, null);
             client.actualsEval(context);
-            return this.receiver.eval(context).send(this.pattern.makePattern(context), client);
+            return receiver.eval(context).send(pattern.makePattern(context), client);
         } catch (AgoraError ex) {
             ex.setCode(this);
             throw ex;

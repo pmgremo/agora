@@ -67,7 +67,7 @@ public abstract class Generator implements Serializable, Copyable<Generator> {
     /**
      * Opens an inspector for the object.
      *
-     * @param context The context in which the inspect is sent. This is needed to show
+     * @param context The context in which inspect is sent. This is needed to show
      *                object values in the inspector (the values are in the context parts).
      * @throws agora.errors.AgoraError If an error occurs during inspection, this exception is
      *                                 thrown. This would be a bug somewhere in the implementation.
