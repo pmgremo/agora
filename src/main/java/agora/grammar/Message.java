@@ -31,7 +31,7 @@ public abstract class Message extends Expression {
      *
      * @return The receiver expression of this message expression.
      */
-    public Expression getReceiver() {
+    public Expression receiver() {
         return this.receiver;
     }
 
@@ -41,8 +41,8 @@ public abstract class Message extends Expression {
      * @return The pattern indicating the message name and actuals, associated to this message
      * expression
      */
-    public Pattern getPattern() {
-        return this.pattern;
+    public Pattern pattern() {
+        return pattern;
     }
 
     /**

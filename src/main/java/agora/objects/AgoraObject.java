@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  * This class represents Agora objects as seen through the eyes of the evaluator.
- * In other words, this class represents Agora meta agora.objects. There are only two
+ * In other words, this class represents Agora meta-objects. There are only two
  * methods understood by the objects of this class. This is why Agora is the
  * language with the simplest MOP in the world.
  *
@@ -51,26 +51,26 @@ public class AgoraObject implements Serializable {
      * @see agora.runtime.ReifierClient
      */
     public AgoraObject send(Pattern msg, Client client) throws AgoraError {
-        return this.objectID.delegate(
+        return objectID.delegate(
                 msg,
                 client,
                 client.newContext(
                         Category.emptyCategory,
-                        this.objectID,
-                        this.objectID.getMe()
+                        objectID,
+                        objectID.getMe()
                 )
         );
     }
 
     /**
-     * REturns the Java-analog of this Agora object.
+     * Returns the Java-analog of this Agora object.
      *
      * @return The Java version of this Agora Object. This is either the original Java
      * object (if this Agora object was an upped one) or a dynamically created Java
      * object that encapsulates this object.
      */
-    public Object down() {
-        return this.objectID.down();
+    public <T> T down() {
+        return (T) objectID.down();
     }
 
 }

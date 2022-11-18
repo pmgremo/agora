@@ -102,9 +102,7 @@ public class UserKeywordPattern extends UserPattern {
      * @return A agora.runtime representation of this syntactic pattern.
      */
     public Pattern makePattern(Context context) {
-        var pattern = new KeywordPattern();
-        for (var keyword : keywords) pattern.add(keyword);
-        return pattern;
+        return KeywordPattern.keywordPattern(keywords);
     }
 
     /**

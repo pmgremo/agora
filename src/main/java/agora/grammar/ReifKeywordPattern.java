@@ -3,10 +3,12 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
-import agora.patterns.KeywordPattern;
+import agora.patterns.KeywordReifierPattern;
 import agora.patterns.Pattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
+
+import static agora.patterns.KeywordReifierPattern.keywordReifierPattern;
 
 /**
  * This class represents reifier keyword agora.patterns like METHOD:{}
@@ -94,16 +96,13 @@ public class ReifKeywordPattern extends ReifPattern {
     }
 
     /**
-     * Creates a agora.runtime pattern that goes with this syntactic pattern.
+     * Creates a runtime pattern that goes with this syntactic pattern.
      *
-     * @param context The context of the expression in which the agora.runtime argument is needed.
-     * @return A agora.runtime pattern asssociated to this syntactic pattern.
+     * @param context The context of the expression in which the runtime argument is needed.
+     * @return A runtime pattern asssociated to this syntactic pattern.
      */
     public Pattern makePattern(Context context) {
-        var pattern = new KeywordPattern();
-        for (var keyword : keywords) pattern.add(keyword);
-        pattern.setReifier();
-        return pattern;
+        return keywordReifierPattern(keywords);
     }
 
     /**

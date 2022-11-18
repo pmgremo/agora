@@ -34,7 +34,6 @@ public class UserMessage extends Message {
      */
     public AgoraObject eval(Context context) throws AgoraError {
         try {
-            AwtIo.checkEscape();
             var client = pattern.makeClient(context, null);
             client.actualsEval(context);
             return receiver.eval(context).send(pattern.makePattern(context), client);

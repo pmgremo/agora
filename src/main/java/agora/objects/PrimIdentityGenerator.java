@@ -6,8 +6,6 @@ import agora.errors.ProgramError;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
-import java.io.Serializable;
-
 /**
  * A PrimIdentityGenerator represents the part of an Agora object that is the
  * very identity of the object, in this case a primitive (upped) object.
@@ -18,7 +16,7 @@ import java.io.Serializable;
  * @author Wolfgang De Meuter (Programming Technology Lab)
  * Last change:  E    17 Nov 97    1:03 am
  */
-public class PrimIdentityGenerator extends IdentityGenerator implements Serializable {
+public class PrimIdentityGenerator extends IdentityGenerator {
 
     /**
      * To create a new primitive identity generator with a given name, a given public part (normally

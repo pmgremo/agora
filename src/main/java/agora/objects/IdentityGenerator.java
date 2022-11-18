@@ -8,7 +8,7 @@ import agora.runtime.Context;
 /**
  * This class represents Agora object identities. It normally has two
  * subclasses: one for primitive object identities, and one for
- * identities representing ex nihilo created agora.objects.
+ * identities representing ex nihilo created objects.
  * An identity contains a method table and (possibly) a downed version
  * of the Java object it represents.
  * Last change:  E    16 Nov 97    1:49 am
@@ -51,7 +51,7 @@ abstract public class IdentityGenerator extends Generator {
 
     /**
      * Get the downed Java version of the object representing this Agora object identity.
-     * For upped objects, this simply returns the object that was upped. For ex nihilo created agora.objects,
+     * For upped objects, this simply returns the object that was upped. For ex nihilo created objects,
      * it will construct a new Java object with the same interface as the corresponding Agora object.
      * At the moment this is not yet implemented: we will do this in the future by generating appropriate
      * Class files using the Jas assembler.
@@ -59,10 +59,7 @@ abstract public class IdentityGenerator extends Generator {
      * @return The downed version of the object this identity generator represents.
      */
     public Object down() {
-        // Here manual downing must be implemented
-        // If you compute the downed version, store it in
-        // downedVersion so that it only gets computed once.
-        return this.downedVersion == null ? null : downedVersion;
+        return downedVersion;
     }
 
     /**

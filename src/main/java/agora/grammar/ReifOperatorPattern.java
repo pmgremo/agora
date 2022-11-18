@@ -3,8 +3,8 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
+import agora.patterns.OperatorReifierPattern;
 import agora.patterns.Pattern;
-import agora.patterns.OperatorPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
@@ -27,15 +27,15 @@ public class ReifOperatorPattern extends ReifPattern {
     }
 
     public String getOperator() {
-        return this.operator;
+        return operator;
     }
 
     public Expression getOperand() {
-        return this.operand;
+        return operand;
     }
 
     public String unparse(int hor) {
-        return " ".repeat(hor) + this.operator + " " + this.operand.unparse(0);
+        return " ".repeat(hor) + operator + " " + operand.unparse(0);
     }
 
     public Client makeClient(Context context, AgoraObject receiver) {
@@ -45,9 +45,7 @@ public class ReifOperatorPattern extends ReifPattern {
     }
 
     public Pattern makePattern(Context context) {
-        var pattern = new OperatorPattern(this.operator);
-        pattern.setReifier();
-        return pattern;
+        return new OperatorReifierPattern(operator);
     }
 
     /**
@@ -55,7 +53,7 @@ public class ReifOperatorPattern extends ReifPattern {
      *                                 is not a formal pattern, but an actual pattern).
      */
     public String[] makeFormals(Context context) throws AgoraError {
-        if (this.operand instanceof UserUnaryPattern u) return new String[]{u.getUnary()};
+        if (operand instanceof UserUnaryPattern u) return new String[]{u.getUnary()};
         var ex = new ProgramError("Formal parameters must be identifiers");
         ex.setCode(this);
         throw ex;

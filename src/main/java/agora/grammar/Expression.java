@@ -5,6 +5,7 @@ import agora.errors.*;
 import agora.objects.AgoraObject;
 import agora.objects.FormalsAndPattern;
 import agora.patterns.KeywordPattern;
+import agora.patterns.Reifier;
 import agora.patterns.UnaryPattern;
 import agora.reflection.Keyword;
 import agora.reflection.Reified;
@@ -55,7 +56,7 @@ abstract public class Expression implements Serializable {
      * @throws agora.errors.AgoraError Errors occuring during evaluation.
      */
     public AgoraObject defaultEval() throws AgoraError {
-        return this.eval(
+        return eval(
                 new Context(
                         AgoraGlobals.glob.rootIdentity,
                         AgoraGlobals.glob.rootPrivate,
@@ -78,29 +79,25 @@ abstract public class Expression implements Serializable {
     @Unary({"VARIABLE", "VAR"})
     @Reified
     public AgoraObject variable(Context context) throws AgoraError {
-        var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
-        var theCat = leftside.cat;
-        // Validate Pattern
-        if (!(thePattern instanceof UnaryPattern getPat))
+        var left = eval(context.setCat(Category.flags)).<FormalsAndPattern>down();
+        var pattern = left.pattern;
+        var cat = left.cat;
+        if (!(pattern instanceof UnaryPattern getPat))
             throw new ReifierMisused("VARIABLE can only be sent to unary agora.patterns");
-        if (!Category.containsLessThan(theCat, Category.local | Category.publik))
+        if (!Category.containsLessThan(cat, Category.local | Category.publik))
             throw new ReifierMisused("Illegal Adjectives Used With VARIABLE");
-        // Fill In Default Values
-        if (!Category.contains(theCat, Category.local) &&
-                !Category.contains(theCat, Category.publik))
-            theCat = theCat | Category.publik;
-        // Install variable and initial value in the appropriate object part(s)
-        var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(0));
-        var varSetAtt = new VarSetAttribute(theVarCont);
-        var varGetAtt = new VarGetAttribute(theVarCont);
-        if (Category.contains(theCat, Category.publik)) {
-            context.getPub().installPattern(getPat.makeWritePattern(), varSetAtt);
-            context.getPub().installPattern(getPat, varGetAtt);
+        if (!Category.contains(cat, Category.local) && !Category.contains(cat, Category.publik))
+            cat |= Category.publik;
+        var container = new VariableContainer(AgoraGlobals.glob.up.up(0));
+        var setter = new VarSetAttribute(container);
+        var getter = new VarGetAttribute(container);
+        if (Category.contains(cat, Category.publik)) {
+            context.getPub().installPattern(getPat.makeWritePattern(), setter);
+            context.getPub().installPattern(getPat, getter);
         }
-        if (Category.contains(theCat, Category.local)) {
-            context.getPrivate().installPattern(getPat.makeWritePattern(), varSetAtt);
-            context.getPrivate().installPattern(getPat, varGetAtt);
+        if (Category.contains(cat, Category.local)) {
+            context.getPrivate().installPattern(getPat.makeWritePattern(), setter);
+            context.getPrivate().installPattern(getPat, getter);
         }
         return AgoraGlobals.glob.up.up(null);
     }
@@ -117,32 +114,29 @@ abstract public class Expression implements Serializable {
      */
     @Reified
     public AgoraObject variableColon(Context context, @Keyword("VARIABLE:") Expression value) throws AgoraError {
-        var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
-        var theCat = leftside.cat;
-        // Validate Pattern
-        if (!(thePattern instanceof UnaryPattern getPat))
+        var left = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
+        var pattern = left.pattern;
+        var cat = left.cat;
+        if (!(pattern instanceof UnaryPattern getPat))
             throw new ReifierMisused("VARIABLE can only be sent to unary pattern");
-        if (!Category.containsLessThan(theCat, Category.local | Category.publik))
+        if (!Category.containsLessThan(cat, Category.local | Category.publik))
             throw new ReifierMisused("Illegal Adjectives Used With VARIABLE");
-        // Fill In Default Values
-        if (!Category.contains(theCat, Category.local) &&
-                !Category.contains(theCat, Category.publik))
-            theCat = theCat | Category.publik;
-        //Install variable and initial value
-        var initValue = value.eval(context);
-        var theVarCont = new VariableContainer(initValue);
-        var varSetAtt = new VarSetAttribute(theVarCont);
-        var varGetAtt = new VarGetAttribute(theVarCont);
-        if (Category.contains(theCat, Category.publik)) {
-            context.getPub().installPattern(getPat.makeWritePattern(), varSetAtt);
-            context.getPub().installPattern(getPat, varGetAtt);
+        if (!Category.contains(cat, Category.local) &&
+                !Category.contains(cat, Category.publik))
+            cat |= Category.publik;
+        var result = value.eval(context);
+        var container = new VariableContainer(result);
+        var setter = new VarSetAttribute(container);
+        var getter = new VarGetAttribute(container);
+        if (Category.contains(cat, Category.publik)) {
+            context.getPub().installPattern(getPat.makeWritePattern(), setter);
+            context.getPub().installPattern(getPat, getter);
         }
-        if (Category.contains(theCat, Category.local)) {
-            context.getPrivate().installPattern(getPat.makeWritePattern(), varSetAtt);
-            context.getPrivate().installPattern(getPat, varGetAtt);
+        if (Category.contains(cat, Category.local)) {
+            context.getPrivate().installPattern(getPat.makeWritePattern(), setter);
+            context.getPrivate().installPattern(getPat, getter);
         }
-        return initValue;
+        return result;
     }
 
     /**
@@ -423,7 +417,7 @@ abstract public class Expression implements Serializable {
         newPriv.setPrivate(newPriv);
         var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
         var varGetAtt = new VarGetAttribute(theVarCont);
-        var getPat = new UnaryPattern(((UnaryPattern) thePattern).getUnaryPattern());
+        var getPat = new UnaryPattern(((UnaryPattern) thePattern).pattern());
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
         var locCont = context.setPrivate(newPriv);
@@ -460,7 +454,7 @@ abstract public class Expression implements Serializable {
         newPriv.setPrivate(newPriv);
         var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
         var varGetAtt = new VarGetAttribute(theVarCont);
-        var getPat = new UnaryPattern(((UnaryPattern) thePattern).getUnaryPattern());
+        var getPat = new UnaryPattern(((UnaryPattern) thePattern).pattern());
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
         var locCont = context.setPrivate(newPriv);
@@ -505,7 +499,7 @@ abstract public class Expression implements Serializable {
         newPriv.setPrivate(newPriv);
         var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
         var varGetAtt = new VarGetAttribute(theVarCont);
-        var getPat = new UnaryPattern(((UnaryPattern) thePattern).getUnaryPattern());
+        var getPat = new UnaryPattern(((UnaryPattern) thePattern).pattern());
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
         var locCont = context.setPrivate(newPriv);
@@ -544,7 +538,7 @@ abstract public class Expression implements Serializable {
         newPriv.setPrivate(newPriv);
         var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
         var varGetAtt = new VarGetAttribute(theVarCont);
-        var getPat = new UnaryPattern(((UnaryPattern) thePattern).getUnaryPattern());
+        var getPat = new UnaryPattern(((UnaryPattern) thePattern).pattern());
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
         var locCont = context.setPrivate(newPriv);
@@ -717,8 +711,7 @@ abstract public class Expression implements Serializable {
             var attribute = new MethAttribute(formals, catchcode);
             return attribute.doAttributeValue(actualPattern, actuals, context);
         } catch (AgoraError ex) {
-            var agoraError = new KeywordPattern();
-            agoraError.add("agoraError:");
+            var agoraError = KeywordPattern.keywordPattern("agoraError:");
             var formalPattern = pat.makePattern(context);
             if (!formalPattern.equals(agoraError)) throw ex;
             var formals = pat.makeFormals(context);
@@ -831,26 +824,23 @@ abstract public class Expression implements Serializable {
         var theCat = leftside.cat;
         var formals = leftside.formals;
         // Validate Pattern
-        if (!(Category.containsLessThan(theCat, Category.local | Category.publik)))
+        if (!Category.containsLessThan(theCat, Category.local | Category.publik))
             throw new ReifierMisused("Illegal Adjectives Used With REIFIER:IS:");
-        if (!(thePattern.isReifier()))
+        if (!(thePattern instanceof Reifier))
             throw new ReifierMisused("REIFIER:IS: can only be sent to a reifier pattern.");
         if (!(contextParameter instanceof UserUnaryPattern))
             throw new ReifierMisused("Context parameter of REIFIER:IS: should be an ordinary identifier");
         var contextNamePattern
                 = (UnaryPattern) ((FormalsAndPattern) contextParameter.eval(context.setCat(Category.flags)).down()).pattern;
         // Fill In Default Values
-        if (!Category.contains(theCat, Category.local) &&
-                !Category.contains(theCat, Category.publik))
+        if (!Category.contains(theCat, Category.local) && !Category.contains(theCat, Category.publik))
             theCat = theCat | Category.publik;
         // Install method in the appropriate object part(s)
         var methAtt = new ReifierMethodAttribute(formals, bodyparameter, contextNamePattern);
-        if (Category.contains(theCat, Category.publik)) {
+        if (Category.contains(theCat, Category.publik))
             context.getPub().installPattern(thePattern, methAtt);
-        }
-        if (Category.contains(theCat, Category.local)) {
+        if (Category.contains(theCat, Category.local))
             context.getPrivate().installPattern(thePattern, methAtt);
-        }
         return AgoraGlobals.glob.up.up(null);
     }
 

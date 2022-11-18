@@ -3,7 +3,6 @@ package agora.objects;
 import agora.errors.AgoraError;
 import agora.runtime.Context;
 
-import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
@@ -15,7 +14,7 @@ import java.util.Hashtable;
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:48 am
  */
-public class UserIdentityGenerator extends IdentityGenerator implements Serializable {
+public class UserIdentityGenerator extends IdentityGenerator {
 
     /**
      * Create a new identity with the given name, a method table (usually an InternalGenerator)
@@ -51,7 +50,7 @@ public class UserIdentityGenerator extends IdentityGenerator implements Serializ
     /**
      * Opens an inspector for the object.
      *
-     * @param context The context in which the inspect is sent. This is needed to show
+     * @param context The context in which inspect is sent. This is needed to show
      *                object values in the inspector (the values are in the context parts).
      * @throws agora.errors.AgoraError If an error occurs during inspection, this exception is
      *                                 thrown. This would be a bug somewhere in the implementation.

@@ -33,7 +33,7 @@ abstract public class UserPattern extends Pattern {
             // Patterns in Flags Category Must Be Declared: Just Return a new pattern
             if (Category.contains(context.getCategory(), Category.flags))
                 return AgoraGlobals.glob.up.up(new FormalsAndPattern(makeFormals(context),
-                        this.makePattern(context),
+                        makePattern(context),
                         Category.emptyCategory));
 
             // Patterns in Other Categories Denote Accesses in the Local Part of An Object
@@ -57,8 +57,7 @@ abstract public class UserPattern extends Pattern {
     @Unary(value = "RAISE")
     @Reified
     public AgoraObject raise(Context context) throws AgoraError {
-        var agoraError = new KeywordPattern();
-        agoraError.add("agoraError:");
+        var agoraError = KeywordPattern.keywordPattern("agoraError:");
         var pattern = makePattern(context);
         var client = makeClient(context, null);
         client.actualsEval(context);

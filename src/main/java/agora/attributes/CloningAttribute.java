@@ -41,7 +41,7 @@ public class CloningAttribute extends MethAttribute {
      */
     public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         if (Category.contains(context.getCategory(), Category.dontClone))
-            return this.methodCode.eval(context);
+            return methodCode.eval(context);
         var cloningMap = new Hashtable<>(3);
         // Prevent root from beeing cloned
         cloningMap.put(AgoraGlobals.glob.rootParent, AgoraGlobals.glob.rootParent);
@@ -53,9 +53,9 @@ public class CloningAttribute extends MethAttribute {
         var pubclone = (MethodsGenerator) context.getPub().copy(cloningMap);
         var superclone = (Generator) context.getParent().copy(cloningMap);
         // actual parameters binding
-        privclone = this.bind(client.getActuals(), privclone);
+        privclone = bind(client.getActuals(), privclone);
         // evaluate cloning method
-        this.methodCode.eval(context.setMultiple(clone,
+        methodCode.eval(context.setMultiple(clone,
                 privclone,
                 pubclone,
                 Category.dontClone,
@@ -77,7 +77,7 @@ public class CloningAttribute extends MethAttribute {
      * @throws agora.errors.AgoraError When something goes wrong while inspecting.
      */
     public String inspect(Context context) throws AgoraError {
-        return "CLONING:\n" + this.methodCode.unparse(0);
+        return "CLONING:\n" + methodCode.unparse(0);
     }
 }
 

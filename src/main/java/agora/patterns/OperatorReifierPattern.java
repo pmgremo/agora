@@ -5,11 +5,10 @@ package agora.patterns;
  * is essentially nothing but a string (containing the operator symbols) with
  * the appropriate methods defined on it.
  *
- * @param operator String representing the operator.
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:50 am
  */
-public record OperatorPattern(String operator) implements Pattern {
+public record OperatorReifierPattern(String operator) implements Pattern, Reifier {
     @Override
     public String toString() {
         return operator;

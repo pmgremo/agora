@@ -9,10 +9,7 @@ import agora.javaAdditions.JV_Nil;
 import agora.objects.AgoraObject;
 import agora.objects.PrimGenerator;
 import agora.objects.PrimIdentityGenerator;
-import agora.patterns.KeywordPattern;
-import agora.patterns.OperatorPattern;
-import agora.patterns.Pattern;
-import agora.patterns.UnaryPattern;
+import agora.patterns.*;
 import agora.tools.AgoraGlobals;
 
 import java.io.Serializable;
@@ -20,6 +17,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
+import java.util.LinkedList;
 
 import static java.lang.reflect.Modifier.*;
 
@@ -136,9 +134,10 @@ public class Up implements Serializable {
                 var annotation = x.getAnnotation(Operator.class);
                 if (annotation != null) {
                     for (var name : annotation.value()) {
-                        var pattern = new OperatorPattern(name);
-                        if (reified != null) pattern.setReifier();
-                        table.put(pattern, attribute);
+                        table.put(
+                                reified == null ? new OperatorPattern(name) : new OperatorReifierPattern(name),
+                                attribute
+                        );
                     }
                 }
             }
@@ -146,22 +145,24 @@ public class Up implements Serializable {
                 var annotation = x.getAnnotation(Unary.class);
                 if (annotation != null) {
                     for (var name : annotation.value()) {
-                        var pattern = new UnaryPattern(name);
-                        if (reified != null) pattern.setReifier();
-                        table.put(pattern, attribute);
+                        table.put(
+                                reified == null ? new UnaryPattern(name) : new UnaryReifierPattern(name),
+                                attribute
+                        );
                     }
                 }
             }
             {
-                var pattern = new KeywordPattern();
-                var parameters = x.getParameters();
-                for (var parameter : parameters) {
+                var words = new LinkedList<String>();
+                for (var parameter : x.getParameters()) {
                     var annotation = parameter.getAnnotation(Keyword.class);
-                    if (annotation != null) pattern.add(annotation.value());
+                    if (annotation != null) words.add(annotation.value());
                 }
-                if (pattern.size() > 0) {
-                    if (reified != null) pattern.setReifier();
-                    table.put(pattern, attribute);
+                if (words.size() > 0) {
+                    table.put(
+                            reified == null ? new KeywordPattern(words) : new KeywordReifierPattern(words),
+                            attribute
+                    );
                 }
             }
         }
@@ -259,9 +260,7 @@ public class Up implements Serializable {
      * Creates a variable write pattern for a field f, i.e. the name of f with a colon.
      */
     private Pattern createVariableWritePatFor(Field f) {
-        var writePat = new KeywordPattern();
-        writePat.add(decaps(f.getName()) + ":");
-        return writePat;
+        return KeywordPattern.keywordPattern(decaps(f.getName()) + ":");
     }
 
     /**
@@ -280,11 +279,11 @@ public class Up implements Serializable {
     private Pattern createMethodPatFor(Method m) {
         var types = m.getParameterTypes();
         if (types.length == 0) return new UnaryPattern(m.getName());
-        var pattern = new KeywordPattern();
-        pattern.add(decaps(m.getName()) + typeNameFor(types[0]) + ":");
+        var words = new LinkedList<String>();
+        words.add(decaps(m.getName()) + typeNameFor(types[0]) + ":");
         for (var j = 1; j < types.length; j++)
-            pattern.add(typeNameFor(types[j]) + ":");
-        return pattern;
+            words.add(typeNameFor(types[j]) + ":");
+        return new KeywordPattern(words);
     }
 
     /**
@@ -303,11 +302,11 @@ public class Up implements Serializable {
     private Pattern createConstructorPatFor(Constructor<?> c) {
         var types = c.getParameterTypes();
         if (types.length == 0) return new UnaryPattern("new");
-        var pattern = new KeywordPattern();
-        pattern.add("new" + typeNameFor(types[0]) + ":");
+        var words = new LinkedList<String>();
+        words.add("new" + typeNameFor(types[0]) + ":");
         for (var j = 1; j < types.length; j++)
-            pattern.add(typeNameFor(types[j]) + ":");
-        return pattern;
+            words.add(typeNameFor(types[j]) + ":");
+        return new KeywordPattern(words);
     }
 
     /**

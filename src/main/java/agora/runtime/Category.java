@@ -30,7 +30,7 @@ public class Category implements Serializable {
     static public final int mixin = 4;
     /**
      * The flags category. This is used when evaluating a pattern such that the pattern must
-     * return itself instead of looking it up in some object. Hence this is used when
+     * return itself instead of looking it up in some object. Hence, this is used when
      * evaluating the receiver of things like VARIABLE:
      */
     static public final int flags = 8;
@@ -44,21 +44,11 @@ public class Category implements Serializable {
      */
     static public final int local = 64;
     /**
-     * I think this comes from the old C++ implementation. I can't remember still using
-     * this category in the Java implementation.
-     */
-    static public final int cloning = 128;
-    /**
      * When evaluating a cloning method, all it's super sends have to evaluated in the
      * dontClone category otherwise each cloning method in the inheritance chain would
      * create its own copy of the receiver.
      */
     static public final int dontClone = 256;
-    /**
-     * I don't think this is still used in the Java implementation. That is because we
-     * did a serious simplification of the implemented reifiers (over the C++ implementation)
-     */
-    static public final int method = 512;
 
     /**
      * Tests whether the query bits contains more than or the same bits that the given
@@ -82,7 +72,7 @@ public class Category implements Serializable {
      * @return Returns true if all bits of the query are at least also in the bitset.
      */
     static public boolean containsLessThan(int query, int bits) {
-        return ((~query) | bits) == (~0);
+        return (~query | bits) == ~0;
     }
 
     /**

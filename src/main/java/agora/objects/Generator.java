@@ -34,7 +34,6 @@ public abstract class Generator implements Serializable, Copyable<Generator> {
      * @param nameOfFrame The name to be used in inspectors for this generator frame.
      */
     public Generator(String nameOfFrame) {
-        super();
         this.name = nameOfFrame;
     }
 

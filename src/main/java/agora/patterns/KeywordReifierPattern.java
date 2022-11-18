@@ -13,10 +13,10 @@ import java.util.List;
  * @author Wolfgang De Meuter (Programming technology Lab)
  * Last change:  E    16 Nov 97    1:50 am
  */
-public record KeywordPattern(List<String> keywords) implements Pattern {
+public record KeywordReifierPattern(List<String> keywords) implements Pattern {
 
-    public static KeywordPattern keywordPattern(String... words) {
-        return new KeywordPattern(Arrays.asList(words));
+    public static KeywordReifierPattern keywordReifierPattern(String... words) {
+        return new KeywordReifierPattern(Arrays.asList(words));
     }
 
     /**

@@ -2,13 +2,13 @@ package agora.grammar;
 
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
-import agora.patterns.OperatorPattern;
+import agora.patterns.OperatorReifierPattern;
 import agora.patterns.Pattern;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
 /**
- * This class represents the parsetree node for aggregates of Agora expressions.
+ * This class represents the parse tree node for aggregates of Agora expressions.
  * These can be [] and {} expressions.
  *
  * @author Wolfgang De Meuter
@@ -16,12 +16,12 @@ import agora.tools.AgoraGlobals;
  */
 public class Aggregate extends Expression {
     /**
-     * Represents the left delimitting character of the aggregate (usually [ or {)
+     * Represents the left delimiting character of the aggregate (usually [ or {)
      */
     protected char leftDel;
 
     /**
-     * Represents the right delimitting character of the aggregate (usually ] or })
+     * Represents the right delimiting character of the aggregate (usually ] or })
      */
     protected char rightDel;
 
@@ -32,7 +32,7 @@ public class Aggregate extends Expression {
 
     /**
      * Constructor takes the number of expressions the aggregate contains, and the left and
-     * right delimitting characters
+     * right delimiting characters
      *
      * @param sz    The initial number of expressions in the aggregate.
      * @param left  The left delimiter of the aggregate.
@@ -102,9 +102,7 @@ public class Aggregate extends Expression {
      * @return The operator pattern corresponding to this [] or {} expression.
      */
     public Pattern makePattern(Context context) {
-        var pat = new OperatorPattern(leftDel == '[' ? "[]" : "{}");
-        pat.setReifier();
-        return pat;
+        return new OperatorReifierPattern(leftDel == '[' ? "[]" : "{}");
     }
 
     /**

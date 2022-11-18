@@ -3,7 +3,7 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
-import agora.patterns.UnaryPattern;
+import agora.patterns.UnaryReifierPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
@@ -66,9 +66,7 @@ public class ReifUnaryPattern extends ReifPattern {
      *                expression that uses this pattern.
      */
     public Pattern makePattern(Context context) {
-        var unary = new UnaryPattern(this.unary);
-        unary.setReifier();
-        return unary;
+        return new UnaryReifierPattern(this.unary);
     }
 
     /**

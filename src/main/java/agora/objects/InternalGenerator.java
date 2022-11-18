@@ -28,6 +28,24 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
     protected InternalGenerator privPart;
 
     /**
+     * Creates a new internal generator as part of an object.
+     *
+     * @param nameOfFrame The name of the generator that has to be used in inspectors.
+     * @param myPart      A hashtable in which the keys are runtime patterns and in which
+     *                    the values are attributes. Hence, this is the method table of the generator.
+     * @param privPart    An initial private part.
+     * @param parentPart  The generator to which this method frame has to be linked
+     *                    with a parent-of link.
+     */
+    public InternalGenerator(String nameOfFrame,
+                             Hashtable<Pattern, Attribute> myPart,
+                             InternalGenerator privPart,
+                             Generator parentPart) {
+        super(nameOfFrame, myPart, parentPart);
+        this.privPart = privPart;
+    }
+
+    /**
      * Opens an inspector for the object.
      *
      * @param context The context in which inspect is sent. This is needed to show
@@ -46,24 +64,6 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
                 this);
         d.pack();
         d.setVisible(true);
-    }
-
-    /**
-     * Creates a new internal generator as part of an object.
-     *
-     * @param nameOfFrame The name of the generator that has to be used in inspectors.
-     * @param myPart      A hashtable in which the keys are runtime patterns and in which
-     *                    the values are attributes. Hence, this is the method table of the generator.
-     * @param privPart    An initial private part.
-     * @param parentPart  The generator to which this method frame has to be linked
-     *                    with a parent-of link.
-     */
-    public InternalGenerator(String nameOfFrame,
-                             Hashtable<Pattern, Attribute> myPart,
-                             InternalGenerator privPart,
-                             Generator parentPart) {
-        super(nameOfFrame, myPart, parentPart);
-        this.privPart = privPart;
     }
 
     /**

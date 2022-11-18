@@ -8,6 +8,7 @@ import agora.errors.PrimException;
 import agora.javaAdditions.JV_Package;
 import agora.objects.*;
 import agora.patterns.UnaryPattern;
+import agora.patterns.UnaryReifierPattern;
 import agora.reflection.Up;
 import agora.runtime.Context;
 
@@ -126,8 +127,7 @@ public class AgoraGlobals implements Serializable {
 
         //SELF
         try {
-            var selfP = new UnaryPattern("SELF");
-            selfP.setReifier();
+            var selfP = new UnaryReifierPattern("SELF");
             var selfMeth = new PrimReifierMethAttribute(Context.class.getMethod("Self", Context.class));
             rootPrivate.installPattern(selfP, selfMeth);
         } catch (Throwable e) {

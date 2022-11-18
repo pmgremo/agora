@@ -7,9 +7,9 @@ import agora.patterns.Pattern;
 import java.util.Hashtable;
 
 /**
- * MethodsGenerator is the abstract class of internal method frames of agora.objects. Currently
+ * MethodsGenerator is the abstract class of internal method frames of agora.objects. Currently,
  * it has two subclasses: InternalGenerator and PrimGenerator. InternalGenerator is the
- * type of generator ex nihilo created agora.objects use. PrimGenerator is the type of generator
+ * type of generator ex nihilo created objects use. PrimGenerator is the type of generator
  * upped primitives use.
  *
  * @author Wolfgang De Meuter (Programming technology Lab).
@@ -82,7 +82,7 @@ public abstract class MethodsGenerator extends Generator {
     /**
      * Installs a new attribute in the methods table of this generator.
      *
-     * @param pattern   The new agora.runtime pattern serving as a key in the hashtable.
+     * @param pattern   The new runtime pattern serving as a key in the hashtable.
      * @param attribute The attribute that will be the value associated to the pattern.
      */
     public void installPattern(Pattern pattern, Attribute attribute) {

@@ -23,16 +23,16 @@ abstract public class ReifPattern extends Pattern {
             if (Category.contains(context.getCategory(), Category.flags))
                 return AgoraGlobals.glob.up.up(
                         new FormalsAndPattern(
-                                this.makeFormals(context),
-                                this.makePattern(context),
+                                makeFormals(context),
+                                makePattern(context),
                                 Category.emptyCategory
                         )
                 );
 
             // Patterns in Other Categories Denote Accesses in the Local Part of An Object
-            var client = this.makeClient(context, AgoraGlobals.glob.up.up(context));
+            var client = makeClient(context, AgoraGlobals.glob.up.up(context));
             client.actualsUp();
-            return (AgoraObject) context.getPrivate().delegate(this.makePattern(context), client, context).down();
+            return (AgoraObject) context.getPrivate().delegate(makePattern(context), client, context).down();
             //The result of downing the result is surely an Agora object. This is where the dynamic
             //typing of Agora meets the static typing of Java => Impossible to remove the cast.
         } catch (AgoraError ex) {
@@ -52,8 +52,8 @@ abstract public class ReifPattern extends Pattern {
     @Unary(value = "SUPER")
     @Reified
     public AgoraObject superReifier(Context context) throws AgoraError {
-        var client = this.makeClient(context, AgoraGlobals.glob.up.up(context));
-        var pattern = this.makePattern(context);
+        var client = makeClient(context, AgoraGlobals.glob.up.up(context));
+        var pattern = makePattern(context);
         client.actualsUp();
         return context.getParent().delegate(pattern, client, context);
     }

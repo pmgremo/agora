@@ -8,7 +8,7 @@ package agora.patterns;
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:50 am
  */
-public record UnaryPattern(String pattern) implements Pattern {
+public record UnaryReifierPattern(String pattern) implements Pattern, Reifier {
     /**
      * Creates a keyword pattern with one keyword with the same string but with a colon added.
      * This is used when a variable named x is declared. In that case, a write slot is
