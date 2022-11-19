@@ -20,4 +20,12 @@ public class AgoraTest {
         var expression = parser.parseExpression();
         assertEquals("Illegal Argument for +", assertThrows(ProgramError.class, expression::defaultEval).getMessage());
     }
+
+    @Test
+    public void shouldCondition() throws IOException {
+        AgoraGlobals.glob = new AgoraGlobals(null, null);
+        var parser = new Parser(new Scanner(new StringReader("1 > 5 IFTRUE: \"hello\" IFFALSE: \"bye\"")));
+        var expression = parser.parseExpression();
+        assertEquals("bye", expression.defaultEval().down());
+    }
 }

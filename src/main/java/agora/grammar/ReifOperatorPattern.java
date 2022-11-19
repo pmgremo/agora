@@ -4,7 +4,6 @@ import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
 import agora.patterns.OperatorReifierPattern;
-import agora.patterns.Pattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
@@ -44,7 +43,7 @@ public class ReifOperatorPattern extends ReifPattern {
         return context.newReifierClient(actuals);
     }
 
-    public Pattern makePattern(Context context) {
+    public OperatorReifierPattern makePattern(Context context) {
         return new OperatorReifierPattern(operator);
     }
 

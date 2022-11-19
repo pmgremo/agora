@@ -3,13 +3,12 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
-import agora.patterns.Pattern;
 import agora.patterns.OperatorPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
 /**
- * This class represents user operator agora.patterns like + 4 or +arg.
+ * This class represents user operator patterns like + 4 or +arg.
  *
  * @author Wolfgang De Meuter (Programming technology Lab).
  * Last change:  E    16 Nov 97    1:42 am
@@ -72,14 +71,14 @@ public class UserOperatorPattern extends UserPattern {
     }
 
     /**
-     * Create a new agora.runtime version of this syntactic pattern.
+     * Create a new runtime version of this syntactic pattern.
      *
      * @param context The context in which this pattern is to be sent (usually the context
      *                of a message expression).
-     * @return The agora.runtime variant of this syntactic pattern.
+     * @return The runtime variant of this syntactic pattern.
      */
-    public Pattern makePattern(Context context) {
-        return (new OperatorPattern(this.operator));
+    public OperatorPattern makePattern(Context context) {
+        return new OperatorPattern(this.operator);
     }
 
     /**

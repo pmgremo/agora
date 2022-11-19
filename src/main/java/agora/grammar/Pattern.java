@@ -6,7 +6,7 @@ import agora.runtime.Client;
 import agora.runtime.Context;
 
 /**
- * Abstract class denoting Agora agora.patterns, i.e. pattern kinds together with actual arguments.
+ * Abstract class denoting Agora patterns, i.e. pattern kinds together with actual arguments.
  *
  * @author Wolfgang De Meuter(Programming Technology Lab)
  * Last change:  E    16 Nov 97    1:38 am
@@ -24,11 +24,11 @@ abstract public class Pattern extends Expression {
     public abstract Client makeClient(Context context, AgoraObject receiver);
 
     /**
-     * This method constructs the agora.runtime patter associated to the name of this syntactic
+     * This method constructs the runtime patter associated to the name of this syntactic
      * pattern.
      *
      * @param context The evaluation context when the pattern is needed (right before sending.)
-     * @return A new agora.runtime pattern that can be used for send or delegate.
+     * @return A new runtime pattern that can be used for send or delegate.
      */
     public abstract agora.patterns.Pattern makePattern(Context context);
 

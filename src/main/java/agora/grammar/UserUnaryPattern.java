@@ -2,7 +2,6 @@ package agora.grammar;
 
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
-import agora.patterns.Pattern;
 import agora.patterns.UnaryPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
@@ -65,7 +64,7 @@ public class UserUnaryPattern extends UserPattern {
      *                before send or delegate.
      * @return A new runtime pattern representing this syntactic pattern.
      */
-    public Pattern makePattern(Context context) {
+    public UnaryPattern makePattern(Context context) {
         return new UnaryPattern(this.unary);
     }
 

@@ -2,13 +2,12 @@ package agora.grammar;
 
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
-import agora.patterns.Pattern;
 import agora.patterns.UnaryReifierPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
 /**
- * This class represents reifier unary agora.patterns like SELF.
+ * This class represents reifier unary patterns like SELF.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:43 am
@@ -46,7 +45,7 @@ public class ReifUnaryPattern extends ReifPattern {
     }
 
     /**
-     * Creates a new client object that can be used to send the agora.runtime variant of
+     * Creates a new client object that can be used to send the runtime variant of
      * this syntactic pattern. The client object will contain zero arguments because
      * it concerns a unary reifier.
      *
@@ -60,13 +59,13 @@ public class ReifUnaryPattern extends ReifPattern {
     }
 
     /**
-     * Construct a new agora.runtime pattern associated to this syntactic pattern.
+     * Construct a new runtime pattern associated to this syntactic pattern.
      *
-     * @param context The evaluation context that is used to evaluated the message
+     * @param context The evaluation context that is used to evaluate the message
      *                expression that uses this pattern.
      */
-    public Pattern makePattern(Context context) {
-        return new UnaryReifierPattern(this.unary);
+    public UnaryReifierPattern makePattern(Context context) {
+        return new UnaryReifierPattern(unary);
     }
 
     /**
