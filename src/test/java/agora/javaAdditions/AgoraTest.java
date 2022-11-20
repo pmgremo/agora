@@ -1,5 +1,6 @@
 package agora.javaAdditions;
 
+import agora.errors.AgoraHalt;
 import agora.errors.ProgramError;
 import agora.grammar.Parser;
 import agora.grammar.Scanner;
@@ -27,5 +28,13 @@ public class AgoraTest {
         var parser = new Parser(new Scanner(new StringReader("1 > 5 IFTRUE: \"hello\" IFFALSE: \"bye\"")));
         var expression = parser.parseExpression();
         assertEquals("bye", expression.defaultEval().down());
+    }
+
+    @Test
+    public void shouldHalt() throws IOException {
+        AgoraGlobals.glob = new AgoraGlobals(null, null);
+        var parser = new Parser(new Scanner(new StringReader("\"Test Halt\" HALT")));
+        var expression = parser.parseExpression();
+        assertEquals("Test Halt", assertThrows(AgoraHalt.class, expression::defaultEval).getMessage());
     }
 }

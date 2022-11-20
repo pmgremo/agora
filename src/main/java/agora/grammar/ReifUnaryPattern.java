@@ -13,14 +13,14 @@ import agora.runtime.Context;
  * Last change:  E    16 Nov 97    1:43 am
  */
 public class ReifUnaryPattern extends ReifPattern {
-    protected String unary;
+    private final UnaryReifierPattern unary;
 
     /**
      * Create a new reifier unary pattern.
      *
      * @param unary The String representing the unary pattern (e.g. "SELF").
      */
-    public ReifUnaryPattern(String unary) {
+    public ReifUnaryPattern(UnaryReifierPattern unary) {
         super();
         this.unary = unary;
     }
@@ -31,7 +31,7 @@ public class ReifUnaryPattern extends ReifPattern {
      * @return The internal string representation.
      */
     public String getUnary() {
-        return this.unary;
+        return unary.pattern();
     }
 
     /**
@@ -41,7 +41,7 @@ public class ReifUnaryPattern extends ReifPattern {
      * @return The string representation of this reifier unary patttern.
      */
     public String unparse(int hor) {
-        return " ".repeat(hor) + this.unary;
+        return " ".repeat(hor) + unary.pattern();
     }
 
     /**
@@ -55,7 +55,7 @@ public class ReifUnaryPattern extends ReifPattern {
      * @return A new Client object containing zero actual arguments.
      */
     public Client makeClient(Context context, AgoraObject receiver) {
-        return context.newReifierClient(new Object[0]);
+        return context.newReifierClient();
     }
 
     /**
@@ -65,7 +65,7 @@ public class ReifUnaryPattern extends ReifPattern {
      *                expression that uses this pattern.
      */
     public UnaryReifierPattern makePattern(Context context) {
-        return new UnaryReifierPattern(unary);
+        return unary;
     }
 
     /**

@@ -15,18 +15,18 @@ import agora.runtime.Context;
  * Last change:  E    16 Nov 97    2:16 pm
  */
 public class ReifOperatorPattern extends ReifPattern {
-    protected String operator;
+    protected OperatorReifierPattern operator;
 
     protected Expression operand;
 
-    public ReifOperatorPattern(String operator, Expression arg) {
+    public ReifOperatorPattern(OperatorReifierPattern operator, Expression arg) {
         super();
         this.operator = operator;
         this.operand = arg;
     }
 
     public String getOperator() {
-        return operator;
+        return operator.operator();
     }
 
     public Expression getOperand() {
@@ -34,17 +34,15 @@ public class ReifOperatorPattern extends ReifPattern {
     }
 
     public String unparse(int hor) {
-        return " ".repeat(hor) + operator + " " + operand.unparse(0);
+        return " ".repeat(hor) + operator.operator() + " " + operand.unparse(0);
     }
 
     public Client makeClient(Context context, AgoraObject receiver) {
-        var actuals = new Object[1];
-        actuals[0] = this.operand;
-        return context.newReifierClient(actuals);
+        return context.newReifierClient(operand);
     }
 
     public OperatorReifierPattern makePattern(Context context) {
-        return new OperatorReifierPattern(operator);
+        return operator;
     }
 
     /**

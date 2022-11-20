@@ -253,13 +253,13 @@ public class Scanner implements Serializable {
         var allCaps = caps();
         result.append(lastChar);
         nextChar();
-        while (letter() || digit() || (lastChar == '_')) {
+        while (letter() || digit() || lastChar == '_') {
             result.append(lastChar);
             allCaps = allCaps && caps();
             nextChar();
         }
         var keyword = false;
-        if ((lastChar) == ':') {
+        if (lastChar == ':') {
             result.append(lastChar);
             nextChar();
             keyword = true;

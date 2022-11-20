@@ -2,10 +2,7 @@ package agora.reflection;
 
 import agora.attributes.*;
 import agora.errors.AgoraError;
-import agora.javaAdditions.JV_Boolean;
-import agora.javaAdditions.JV_Float;
-import agora.javaAdditions.JV_Integer;
-import agora.javaAdditions.JV_Nil;
+import agora.javaAdditions.*;
 import agora.objects.AgoraObject;
 import agora.objects.PrimGenerator;
 import agora.objects.PrimIdentityGenerator;

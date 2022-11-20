@@ -3,7 +3,6 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
 import agora.runtime.Context;
-import agora.awt.AwtIo;
 
 /**
  * This class represents user messages in Agora. Each UserMessage contains an

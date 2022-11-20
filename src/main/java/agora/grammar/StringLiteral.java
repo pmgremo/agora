@@ -30,9 +30,9 @@ public class StringLiteral extends Literal<String> {
      * @return An agora object indicating the result (is never returned because an error is thrown)
      * @throws agora.errors.AgoraError The exception that will terminate the program.
      */
-    @Unary(value = "halt")
+    @Unary(value = "HALT")
     @Reified
     public AgoraObject halt(Context context) throws AgoraError {
-        throw new AgoraHalt((String) eval(context).down());
+        throw new AgoraHalt(eval(context).down());
     }
 }

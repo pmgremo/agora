@@ -3,7 +3,6 @@ package agora.grammar;
 import agora.errors.AgoraError;
 import agora.objects.AgoraObject;
 import agora.runtime.Context;
-import agora.awt.AwtIo;
 import agora.tools.AgoraGlobals;
 
 /**
@@ -30,14 +29,16 @@ public class ReifierMessage extends Message {
      */
     public AgoraObject eval(Context context) throws AgoraError {
         try {
-            AwtIo.checkEscape();
-            var receiver = AgoraGlobals.glob.up.up(this.receiver);
-            var client = this.pattern.makeClient(context, receiver);
-            var pattern = this.pattern.makePattern(context);
+            var target = AgoraGlobals.glob.up.up(receiver);
+            var client = pattern.makeClient(
+                    context,
+                    target
+            );
             client.actualsUp();
-            return (AgoraObject) receiver.send(pattern, client).down();
-            //The result of downing the result is surely an Agora object. This is where the dynamic
-            //typing of Agora meets the static typing of Java => Impossible to remove the cast.
+            return target.send(
+                    pattern.makePattern(context),
+                    client
+            ).down();
         } catch (AgoraError ex) {
             ex.setCode(this);
             throw ex;

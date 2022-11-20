@@ -14,14 +14,14 @@ import agora.runtime.Context;
  * Last change:  E    16 Nov 97    1:42 am
  */
 public class UserUnaryPattern extends UserPattern {
-    protected String unary;
+    protected UnaryPattern unary;
 
     /**
      * Creates a new user unary pattern.
      *
      * @param unary The string indicating the pattern.
      */
-    public UserUnaryPattern(String unary) {
+    public UserUnaryPattern(UnaryPattern unary) {
         super();
         this.unary = unary;
     }
@@ -32,7 +32,7 @@ public class UserUnaryPattern extends UserPattern {
      * @return The internal string representation of the user unary pattern,e.g. "abs"
      */
     public String getUnary() {
-        return this.unary;
+        return unary.pattern();
     }
 
     /**
@@ -42,7 +42,7 @@ public class UserUnaryPattern extends UserPattern {
      * @return The user unary pattern as a string.
      */
     public String unparse(int hor) {
-        return " ".repeat(hor) + this.unary;
+        return " ".repeat(hor) + unary.pattern();
     }
 
     /**
@@ -65,7 +65,7 @@ public class UserUnaryPattern extends UserPattern {
      * @return A new runtime pattern representing this syntactic pattern.
      */
     public UnaryPattern makePattern(Context context) {
-        return new UnaryPattern(this.unary);
+        return unary;
     }
 
     /**

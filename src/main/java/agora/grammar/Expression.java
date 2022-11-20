@@ -190,7 +190,7 @@ abstract public class Expression implements Serializable {
     @Unary("ARRAY")
     @Reified
     public AgoraObject array(Context context) throws AgoraError {
-        var size = this.evalAsInteger(context);
+        var size = evalAsInteger(context);
         var theArray = new Vector<String>(size);
         for (var i = 0; i < size; i++) theArray.add("empty");
         return AgoraGlobals.glob.up.up(theArray);
@@ -863,7 +863,7 @@ abstract public class Expression implements Serializable {
      * @throws agora.errors.AgoraError When the receiver can not be evaluated to a string.
      */
     public String evalAsString(Context context) throws AgoraError {
-        var resValue = this.eval(context);
+        var resValue = eval(context);
         if (resValue.down() instanceof String s) return s;
         throw new ProgramError("String Expected !");
     }

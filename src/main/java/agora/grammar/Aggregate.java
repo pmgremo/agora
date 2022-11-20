@@ -7,6 +7,8 @@ import agora.patterns.Pattern;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
+import java.util.List;
+
 /**
  * This class represents the parse tree node for aggregates of Agora expressions.
  * These can be [] and {} expressions.
@@ -28,18 +30,18 @@ public class Aggregate extends Expression {
     /**
      * The array of expressions the aggregate contains
      */
-    protected Expression[] expressions;
+    protected List<Expression> expressions;
 
     /**
      * Constructor takes the number of expressions the aggregate contains, and the left and
      * right delimiting characters
      *
-     * @param sz    The initial number of expressions in the aggregate.
+     * @param expressions that make up the aggregate
      * @param left  The left delimiter of the aggregate.
      * @param right The right delimiter of the aggregate.
      */
-    public Aggregate(int sz, char left, char right) {
-        expressions = new Expression[sz];
+    public Aggregate(List<Expression> expressions, char left, char right) {
+        this.expressions = expressions;
         leftDel = left;
         rightDel = right;
     }
@@ -51,17 +53,7 @@ public class Aggregate extends Expression {
      * @return The expression residing at the specified position in the aggregate.
      */
     public Expression at(int index) {
-        return expressions[index];
-    }
-
-    /**
-     * To access the expressions of the aggregate.
-     *
-     * @param index      The position at which the aggregate must be updated.
-     * @param expression The new expression to be installed at the given position.
-     */
-    public void atPut(int index, Expression expression) {
-        expressions[index] = expression;
+        return expressions.get(index);
     }
 
     /**
@@ -116,10 +108,11 @@ public class Aggregate extends Expression {
         var padding = " ".repeat(hor);
         var result = new StringBuilder(padding)
                 .append(leftDel);
-        if (expressions.length != 0) {
-            for (var i = 0; i < expressions.length; i++) {
-                result.append(expressions[i].unparse(i == 0 ? hor : hor + 2));
-                if (i < expressions.length - 1) result.append(";\n");
+        if (!expressions.isEmpty()) {
+            for (int i = 0; i < expressions.size(); i++) {
+                Expression expression = expressions.get(i);
+                result.append(expression.unparse(i == 0 ? hor : hor + 2));
+                if (i < expressions.size() - 1) result.append(";\n");
             }
             result.append(padding);
         }

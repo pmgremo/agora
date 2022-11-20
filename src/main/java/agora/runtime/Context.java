@@ -113,7 +113,7 @@ public class Context implements Serializable {
      * @return A new Client object with the given actuals.
      */
     public Client newClient(Object... actuals) {
-        return new Client(actuals, this.currentException);
+        return new Client(actuals, currentException);
     }
 
     /**
@@ -126,7 +126,7 @@ public class Context implements Serializable {
      *                created reifier client.
      * @return A new ReifierClient with the given actuals.
      */
-    public ReifierClient newReifierClient(Object[] actuals) {
+    public ReifierClient newReifierClient(Object... actuals) {
         return new ReifierClient(actuals, this, currentException);
     }
 

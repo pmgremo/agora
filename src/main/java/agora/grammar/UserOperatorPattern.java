@@ -14,7 +14,7 @@ import agora.runtime.Context;
  * Last change:  E    16 Nov 97    1:42 am
  */
 public class UserOperatorPattern extends UserPattern {
-    protected String operator;
+    protected OperatorPattern operator;
 
     protected Expression operand;
 
@@ -24,7 +24,7 @@ public class UserOperatorPattern extends UserPattern {
      * @param operator A string indicating the operator pattern (e.g. "+").
      * @param argument The expression denoting the argument of the operator pattern.
      */
-    public UserOperatorPattern(String operator, Expression argument) {
+    public UserOperatorPattern(OperatorPattern operator, Expression argument) {
         this.operator = operator;
         this.operand = argument;
     }
@@ -35,7 +35,7 @@ public class UserOperatorPattern extends UserPattern {
      * @return The internal string representation of the operator pattern.
      */
     public String getOperator() {
-        return this.operator;
+        return operator.operator();
     }
 
     /**
@@ -44,7 +44,7 @@ public class UserOperatorPattern extends UserPattern {
      * @return The expression being the argument of the operator pattern.
      */
     public Expression getOperand() {
-        return this.operand;
+        return operand;
     }
 
     /**
@@ -54,7 +54,7 @@ public class UserOperatorPattern extends UserPattern {
      * @return A string that is the unparsed version of this expression.
      */
     public String unparse(int hor) {
-        return " ".repeat(hor) + operator + " " + operand.unparse(0);
+        return " ".repeat(hor) + operator.operator() + " " + operand.unparse(0);
     }
 
     /**
@@ -65,9 +65,7 @@ public class UserOperatorPattern extends UserPattern {
      * @return A new Client containing the (non-evaluated) actuals of this pattern.
      */
     public Client makeClient(Context context, AgoraObject receiver) {
-        var actuals = new Object[1];
-        actuals[0] = this.operand;
-        return (context.newClient(actuals));
+        return context.newClient(operand);
     }
 
     /**
@@ -78,7 +76,7 @@ public class UserOperatorPattern extends UserPattern {
      * @return The runtime variant of this syntactic pattern.
      */
     public OperatorPattern makePattern(Context context) {
-        return new OperatorPattern(this.operator);
+        return operator;
     }
 
     /**
