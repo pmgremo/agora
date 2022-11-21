@@ -32,7 +32,7 @@ public class Parser implements Serializable {
     }
 
     /**
-     * This is the parse routine. Either it succeedes, and returns a valid Agora
+     * This is the parse routine. Either it succeeds, and returns a valid Agora
      * parse tree, or it fails and returns 'null' as parse tree.
      *
      * @return The parsed expression. Parse errors are indicated by null as return value.
@@ -43,18 +43,6 @@ public class Parser implements Serializable {
 
     private void scan() throws IOException {
         lastToken = s.scan();
-    }
-
-    private ReifKeywordPattern makeReifierKeywordPattern(List<String> keys, List<Expression> values) {
-        return new ReifKeywordPattern(new KeywordReifierPattern(keys), values);
-    }
-
-    private UserKeywordPattern makeUserKeywordPattern(List<String> keys, List<Expression> values) {
-        return new UserKeywordPattern(keys, values);
-    }
-
-    private Aggregate makeAggregate(char l, char r, List<Expression> contents) {
-        return new Aggregate(contents, l, r);
     }
 
     private Expression parse_Rkeywordmessage() throws IOException {
@@ -168,7 +156,7 @@ public class Parser implements Serializable {
         scan();
         if (lastToken == _ERROR_ || lastToken == _EOFTOKEN_)
             return null;
-        var exps = parse_Expressionsequence();
+        var exps = parse_ExpressionSequence();
         if (exps == null)
             return null;
         if (begin == _LBRACK_ && lastToken != _RBRACK_)
@@ -176,28 +164,29 @@ public class Parser implements Serializable {
         if (begin == _LBRACE_ && lastToken != _RBRACE_)
             return null;
         scan();
-        return begin == _LBRACK_ ? makeAggregate('[', ']', exps) : makeAggregate('{', '}', exps);
+        return begin == _LBRACK_ ?
+                new Aggregate(exps, '[', ']') :
+                new Aggregate(exps, '{', '}');
     }
 
-    private List<Expression> parse_Expressionsequence() throws IOException {
+    private List<Expression> parse_ExpressionSequence() throws IOException {
         var q = new LinkedList<Expression>();
         while (!(this.lastToken == _RBRACE_ ||
                 this.lastToken == _RBRACK_)) {
             var exp = parseExpression();
-            if (exp == null)
-                return null;
+            if (exp == null) return null;
             q.offer(exp);
-            if (lastToken != _SEMI_) {
-                if (lastToken != _RBRACE_ &&
-                        lastToken != _RBRACK_)
-                    return null;
-            } else {
+            if (lastToken == _SEMI_) {
                 while (lastToken == _SEMI_)
                     scan();
                 if (lastToken == _RBRACE_ ||
                         lastToken == _RBRACK_ ||
                         lastToken == _ERROR_ ||
                         lastToken == _EOFTOKEN_)
+                    return null;
+            } else {
+                if (lastToken != _RBRACE_ &&
+                        lastToken != _RBRACK_)
                     return null;
             }
         }
@@ -212,7 +201,7 @@ public class Parser implements Serializable {
         if (exp == null) return null;
         keys.add(key);
         values.add(exp);
-        return lastToken == _MKEYWORD_ ? parse_Rkeywordpattern(keys, values) : makeReifierKeywordPattern(keys, values);
+        return lastToken == _MKEYWORD_ ? parse_Rkeywordpattern(keys, values) : new ReifKeywordPattern(new KeywordReifierPattern(keys), values);
     }
 
     private ReifKeywordPattern parse_Rkeywordpattern() throws IOException {
@@ -248,7 +237,7 @@ public class Parser implements Serializable {
         var exp = parse_Operatormessage();
         if (exp == null) return null;
         values.add(exp);
-        if (lastToken != _KEYWORD_) return makeUserKeywordPattern(keys, values);
+        if (lastToken != _KEYWORD_) return new UserKeywordPattern(keys, values);
         return parse_Keywordpattern(keys, values);
     }
 

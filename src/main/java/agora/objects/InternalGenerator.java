@@ -12,6 +12,8 @@ import agora.tools.AgoraGlobals;
 import java.io.Serializable;
 import java.util.Hashtable;
 
+import static java.util.stream.Collectors.toMap;
+
 /**
  * An internal generator is a frame of methods for ex-nihilo created objects
  * Such a generator contains a method table, a link to a private part and a parent part.
@@ -55,7 +57,7 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
         var d = new Inspector(
                 AgoraGlobals.glob.window,
                 name,
-                theMethodTable,
+                methods,
                 privPart,
                 parent,
                 this,
@@ -120,7 +122,7 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
     public AgoraObject delegate(Pattern msg,
                                 Client client,
                                 Context context) throws AgoraError {
-        var lookupResult = this.theMethodTable.get(msg);
+        var lookupResult = this.methods.get(msg);
         if (lookupResult == null) return parent.delegate(msg, client, context);
         return lookupResult.doAttributeValue(
                 msg,
@@ -141,13 +143,13 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
      * @return A deep copy of the receiver.
      */
     public InternalGenerator copy(Hashtable<Object, Object> cache) {
-        var existing = (InternalGenerator) cache.get(this);
-        if (existing != null) return existing;
-        var result = new InternalGenerator(getFrameName(), null, null, null);
+        var existing = cache.get(this);
+        if (existing != null) return (InternalGenerator) existing;
+        var result = new InternalGenerator(name(), null, null, null);
         cache.put(this, result);
-        result.parent = parent.copy(cache);
-        result.theMethodTable = new Hashtable<>(theMethodTable.size());
-        theMethodTable.forEach((key, value) -> result.theMethodTable.put(key.copy(cache), value.copy(cache)));
+        result.parent = (Generator) parent.copy(cache);
+        result.methods = methods.entrySet().stream()
+                .collect(toMap(x -> (Pattern) x.getKey().copy(cache), x -> (Attribute) x.getValue().copy(cache)));
         result.privPart = privPart.copy(cache);
         return result;
     }

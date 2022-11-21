@@ -45,23 +45,20 @@ public class ReifierMethodAttribute extends MethAttribute {
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
     public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
-        var localPriv = this.bind(client.getActuals(), context.getPrivate());
+        var localPriv = bind(client.getActuals(), context.getPrivate());
         var localPub = context.getPub().funcAddLayer("Formals-Actuals Frame");
         localPub.setPrivate(localPriv);
-        localPriv.installPattern(this.contextPattern,
+        localPriv.installPattern(contextPattern,
                 new VarGetAttribute(new VariableContainer(AgoraGlobals.glob.up.up(client.newContext()))));
         // We ask the client for a context. Because this is a reifier method, the client
         // is a reifier client, and thus client.newContext() is the context of invocation
-        var result = this.methodCode.eval(context.setMultiple(context.getSelf(),
+        var result = methodCode.eval(context.setMultiple(context.getSelf(),
                 localPriv,
                 localPub,
                 context.getCategory(),
                 context.getParent()));
-        if (result.down() instanceof AgoraObject) {
-            return result;
-        } else {
-            throw new ProgramError("Result of reifier method would yield an invalid base-level object");
-        }
+        if (result.down() instanceof AgoraObject) return result;
+        throw new ProgramError("Result of reifier method would yield an invalid base-level object");
     }
 
     /**

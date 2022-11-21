@@ -10,6 +10,7 @@ import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * A PrimGenerator is a kind of methods frame used for primitive object
@@ -30,7 +31,7 @@ public class PrimGenerator extends MethodsGenerator {
      * @param table       The initial value of the methods hashtable. This table links
      *                    patterns to their corresponding agora.attributes.
      */
-    public PrimGenerator(String nameOfFrame, Hashtable<Pattern, Attribute> table) {
+    public PrimGenerator(String nameOfFrame, Map<Pattern, Attribute> table) {
         super(nameOfFrame, table, null);
     }
 
@@ -47,10 +48,10 @@ public class PrimGenerator extends MethodsGenerator {
      *                                 during evaluation of the method associated to the pattern.
      */
     public AgoraObject delegate(Pattern msg, Client client, Context context) throws AgoraError {
-        var lookupResult = this.theMethodTable.get(msg);
+        var lookupResult = methods.get(msg);
         return lookupResult == null ?
                 parent.delegate(msg, client, context) :
-                lookupResult.doAttributeValue(msg, client, context.setParent(this.parent));
+                lookupResult.doAttributeValue(msg, client, context.setParent(parent));
     }
 
     /**
@@ -65,7 +66,7 @@ public class PrimGenerator extends MethodsGenerator {
         var d = new Inspector(
                 AgoraGlobals.glob.window,
                 name,
-                theMethodTable,
+                methods,
                 null,
                 parent,
                 null,

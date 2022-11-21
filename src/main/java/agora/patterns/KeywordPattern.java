@@ -1,6 +1,5 @@
 package agora.patterns;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,11 +13,6 @@ import java.util.List;
  * Last change:  E    16 Nov 97    1:50 am
  */
 public record KeywordPattern(List<String> keywords) implements Pattern {
-
-    public static KeywordPattern keywordPattern(String... words) {
-        return new KeywordPattern(Arrays.asList(words));
-    }
-
     /**
      * Converts the keyword pattern to a string by concatenating all the
      * keywords of the pattern.

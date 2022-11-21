@@ -88,7 +88,7 @@ abstract public class IdentityGenerator extends Generator {
     }
 
     /**
-     * Returns the public part contained in the object idenity.
+     * Returns the public part contained in the object identity.
      *
      * @return A pointer to the first method frame of the object represented by this
      * identity.

@@ -36,9 +36,9 @@ public class PrimVarSetAttribute extends PrimAttribute {
             var nme = (String) stream.readObject();
             f = decl.getDeclaredField(nme);
         } catch (NoSuchFieldException e) {
-            System.out.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchfield)");
+            System.err.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchfield)");
         } catch (ClassNotFoundException error) {
-            System.out.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchclass)");
+            System.err.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchclass)");
         }
     }
 

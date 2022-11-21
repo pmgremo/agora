@@ -56,9 +56,9 @@ public class PrimMethAttribute extends PrimAttribute {
             }
             m = decl.getMethod(metName, sig);
         } catch (NoSuchMethodException error) {
-            java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING METHOD(nosuchmethod:PrimMethAttribute)");
+            System.err.println("NATIVE SYSTEM ERROR IN READING METHOD(nosuchmethod:PrimMethAttribute)");
         } catch (ClassNotFoundException error) {
-            java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING METHOD(nosuchclass:PrimMethAttribute)");
+            System.err.println("NATIVE SYSTEM ERROR IN READING METHOD(nosuchclass:PrimMethAttribute)");
         }
     }
 

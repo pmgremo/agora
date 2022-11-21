@@ -5,6 +5,7 @@ import agora.errors.AgoraError;
 import agora.patterns.Pattern;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * MethodsGenerator is the abstract class of internal method frames of agora.objects. Currently,
@@ -19,7 +20,7 @@ public abstract class MethodsGenerator extends Generator {
     /**
      * Each methodsGenerator has a hashtable that links patterns to agora.attributes.
      */
-    protected Hashtable<Pattern, Attribute> theMethodTable;
+    protected Map<Pattern, Attribute> methods;
     /**
      * Each methodsGenerator is linked to another generator, which is the next generator
      * in the inheritance chain.
@@ -30,16 +31,16 @@ public abstract class MethodsGenerator extends Generator {
      * Create a new method generator.
      *
      * @param nameOfFrame The name of the methodsgenerator to be used in inspectors.
-     * @param table       The initial hashtable of the methodsgenerator.
+     * @param methods       The initial hashtable of the methodsgenerator.
      * @param parent      The initial parent link of the MethodsGenerator.
      */
     public MethodsGenerator(
             String nameOfFrame,
-            Hashtable<Pattern, Attribute> table,
+            Map<Pattern, Attribute> methods,
             Generator parent
     ) {
         super(nameOfFrame);
-        this.theMethodTable = table;
+        this.methods = methods;
         this.parent = parent;
     }
 
@@ -66,8 +67,8 @@ public abstract class MethodsGenerator extends Generator {
      *
      * @return A hashtable being the internal table of (pattern,attribute) bindings.
      */
-    public Hashtable<Pattern, Attribute> getHashTable() {
-        return this.theMethodTable;
+    public Map<Pattern, Attribute> getHashTable() {
+        return this.methods;
     }
 
     /**
@@ -76,7 +77,7 @@ public abstract class MethodsGenerator extends Generator {
      * @param newTable The new hashtable after doing the re-assigning.
      */
     public void setHashTable(Hashtable<Pattern, Attribute> newTable) {
-        this.theMethodTable = newTable;
+        this.methods = newTable;
     }
 
     /**
@@ -86,7 +87,7 @@ public abstract class MethodsGenerator extends Generator {
      * @param attribute The attribute that will be the value associated to the pattern.
      */
     public void installPattern(Pattern pattern, Attribute attribute) {
-        this.theMethodTable.put(pattern, attribute);
+        this.methods.put(pattern, attribute);
     }
 
     /**

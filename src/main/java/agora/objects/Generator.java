@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:49 am
  */
-public abstract class Generator implements Serializable, Copyable<Generator> {
+public abstract class Generator implements Serializable, Copyable {
 
     /**
      * This variable is a string that gives a name to a generator. An example
@@ -31,10 +31,10 @@ public abstract class Generator implements Serializable, Copyable<Generator> {
     /**
      * Creates a new generator with a given name.
      *
-     * @param nameOfFrame The name to be used in inspectors for this generator frame.
+     * @param name The name to be used in inspectors for this generator frame.
      */
-    public Generator(String nameOfFrame) {
-        this.name = nameOfFrame;
+    public Generator(String name) {
+        this.name = name;
     }
 
     /**
@@ -50,17 +50,14 @@ public abstract class Generator implements Serializable, Copyable<Generator> {
      * @throws agora.errors.AgoraError When the message is not understood or when an error occurs
      *                                 during evaluation of the method associated to the pattern.
      */
-    public abstract AgoraObject delegate(Pattern msg,
-                                         Client client,
-                                         Context context) throws AgoraError;
-
+    public abstract AgoraObject delegate(Pattern msg, Client client, Context context) throws AgoraError;
     /**
      * To access the name of the generator.
      *
      * @return The name of the generator to be used in inspectors.
      */
-    public String getFrameName() {
-        return this.name;
+    public String name() {
+        return name;
     }
 
     /**

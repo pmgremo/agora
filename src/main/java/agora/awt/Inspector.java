@@ -10,6 +10,7 @@ import agora.runtime.Context;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.Hashtable;
+import java.util.Map;
 
 import static java.awt.FlowLayout.CENTER;
 import static java.awt.TextArea.SCROLLBARS_BOTH;
@@ -33,7 +34,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class Inspector extends Dialog implements Serializable {
 
-    protected Hashtable<Pattern, Attribute> myPart;
+    protected Map<Pattern, Attribute> myPart;
     protected InternalGenerator privPart;
     protected Generator parentPart;
     protected MethodsGenerator methods;
@@ -42,7 +43,7 @@ public class Inspector extends Dialog implements Serializable {
     public Inspector(
             Frame parent,
             String title,
-            Hashtable<Pattern, Attribute> myPart,
+            Map<Pattern, Attribute> myPart,
             InternalGenerator privPart,
             Generator parentPart,
             MethodsGenerator methods,

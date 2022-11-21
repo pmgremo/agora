@@ -13,8 +13,7 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Hashtable;
-import java.util.LinkedList;
+import java.util.*;
 
 import static java.lang.reflect.Modifier.*;
 
@@ -35,7 +34,7 @@ public class Up implements Serializable {
      * Java class names onto generators that contain the method tables for the
      * associated class.
      */
-    private final Hashtable<String, PrimGenerator> cache = new Hashtable<>(30);
+    private final Map<String, PrimGenerator> cache = new HashMap<>(30);
 
     private final AgoraObject nil;
 
@@ -85,7 +84,7 @@ public class Up implements Serializable {
             type = JV_Boolean.class;
             superType = c;
         }
-        return createGeneratorFor(type, superType, isInstance);
+        return generatorFor(type, superType, isInstance);
     }
 
     /**
@@ -94,17 +93,17 @@ public class Up implements Serializable {
      * the generator for the subclasses. The generator for 'java.lang.Object' is linked
      * to the root of the Agora system.
      */
-    private PrimGenerator createGeneratorFor(Class<?> type, Class<?> superType, boolean isInstance) throws AgoraError {
+    private PrimGenerator generatorFor(Class<?> type, Class<?> superType, boolean isInstance) throws AgoraError {
         var name = type.getName();
         if (!isInstance) name += " CLASS";
 
         var generator = cache.get(name);
         if (generator != null) return generator;
 
-        generator = buildGenerator(type);
+        generator = buildAnnotatedGeneratorFor(type);
 
         if (generator == null)
-            generator = constructGeneratorFor(type, isInstance);
+            generator = buildReflectedGeneratorFor(type, isInstance);
 
         cache.put(name, generator);
 
@@ -117,12 +116,12 @@ public class Up implements Serializable {
             return generator;
         }
 
-        generator.setParent(createGeneratorFor(superType, superType.getSuperclass(), isInstance));
+        generator.setParent(generatorFor(superType, superType.getSuperclass(), isInstance));
 
         return generator;
     }
 
-    private static PrimGenerator buildGenerator(Class<?> type) {
+    private static PrimGenerator buildAnnotatedGeneratorFor(Class<?> type) {
         var table = new Hashtable<Pattern, Attribute>(5);
         for (var x : type.getDeclaredMethods()) {
             var reified = x.getAnnotation(Reified.class);
@@ -174,8 +173,8 @@ public class Up implements Serializable {
      * The procedure creates a generator for a single class. It is called by 'createGeneratorFor'
      * for every class in the hierarchy.
      */
-    private PrimGenerator constructGeneratorFor(Class<?> c, boolean isInstance) throws AgoraError {
-        var theTable = new Hashtable<Pattern, Attribute>();
+    private PrimGenerator buildReflectedGeneratorFor(Class<?> c, boolean isInstance) throws AgoraError {
+        var theTable = new HashMap<Pattern, Attribute>();
         putFieldsInQueue(c, theTable, isInstance);                       // Insert patterns and fields
         putMethodsInQueue(c, theTable, isInstance);                      // Insert patterns and methods
         putConstructorsInQueue(c, theTable, isInstance);                 // Insert patterns and constructors
@@ -187,7 +186,7 @@ public class Up implements Serializable {
      * It creates appropriate read and write Agora attributes and puts them
      * all in a queue.
      */
-    private void putFieldsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
+    private void putFieldsInQueue(Class<?> c, Map<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
         for (var field : c.getDeclaredFields()) {
             if (!isPublic(field.getModifiers()) ||
                     isAbstract(field.getModifiers()) ||
@@ -208,7 +207,7 @@ public class Up implements Serializable {
      * Agora attribute and puts a pattern for the methods together with the attribute in
      * a queue.
      */
-    private void putMethodsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
+    private void putMethodsInQueue(Class<?> c, Map<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
         for (var method : c.getDeclaredMethods()) {
             if (!isPublic(method.getModifiers()) ||
                     isAbstract(method.getModifiers()) ||
@@ -226,7 +225,7 @@ public class Up implements Serializable {
      * a pattern 'new' is created and the appropriate Agora attribute is constructed.
      * All the patterns and the attributes are gathered together in a queue.
      */
-    private void putConstructorsInQueue(Class<?> c, Hashtable<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
+    private void putConstructorsInQueue(Class<?> c, Map<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
         for (var constructor : c.getDeclaredConstructors()) {
             if (!isPublic(constructor.getModifiers()) ||
                     isNative(constructor.getModifiers()) ||
@@ -257,7 +256,7 @@ public class Up implements Serializable {
      * Creates a variable write pattern for a field f, i.e. the name of f with a colon.
      */
     private Pattern createVariableWritePatFor(Field f) {
-        return KeywordPattern.keywordPattern(decaps(f.getName()) + ":");
+        return new KeywordPattern(List.of(new String[]{decaps(f.getName()) + ":"}));
     }
 
     /**

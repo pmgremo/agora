@@ -10,5 +10,5 @@ import java.io.Serializable;
  * @author Wolfgang De Meuter
  * Last change:  E    16 Nov 97    1:50 am
  */
-public interface Pattern extends Serializable, Copyable<Pattern> {
+public interface Pattern extends Serializable, Copyable {
 }

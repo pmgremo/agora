@@ -55,9 +55,9 @@ public class PrimCloningAttribute extends PrimAttribute {
             }
             c = decl.getConstructor(sig);
         } catch (NoSuchMethodException error) {
-            System.out.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchconstructor)");
+            System.err.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchconstructor)");
         } catch (ClassNotFoundException error) {
-            System.out.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchclass");
+            System.err.println("NATIVE SYSTEM ERROR IN READING CONSTRUCTOR(nosuchclass");
         }
     }
 

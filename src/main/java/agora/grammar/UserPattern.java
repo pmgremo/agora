@@ -11,6 +11,8 @@ import agora.runtime.Category;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
+import java.util.List;
+
 /**
  * This abstract class represents agora.patterns for ordinary messages. It has subclasses
  * for unary, operator and keyword agora.patterns.
@@ -57,7 +59,7 @@ abstract public class UserPattern extends Pattern {
     @Unary(value = "RAISE")
     @Reified
     public AgoraObject raise(Context context) throws AgoraError {
-        var agoraError = KeywordPattern.keywordPattern("agoraError:");
+        var agoraError = new KeywordPattern(List.of(new String[]{"agoraError:"}));
         var pattern = makePattern(context);
         var client = makeClient(context, null);
         client.actualsEval(context);

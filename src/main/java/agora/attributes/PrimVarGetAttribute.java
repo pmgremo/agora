@@ -14,6 +14,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serial;
 import java.lang.reflect.Field;
 
+import static java.lang.System.*;
+
 /**
  * A PrimVarGetAttribute is an 'Agorification' of a corresponding Java Field.
  * Last change:  E    16 Nov 97    8:22 pm
@@ -35,9 +37,9 @@ public class PrimVarGetAttribute extends PrimAttribute {
             var nme = (String) stream.readObject();
             f = decl.getDeclaredField(nme);
         } catch (NoSuchFieldException e) {
-            java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchfield)");
+            System.err.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchfield)");
         } catch (ClassNotFoundException error) {
-            java.lang.System.out.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchclass)");
+            System.err.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchclass)");
         }
     }
 

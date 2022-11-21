@@ -7,6 +7,7 @@ import agora.errors.ProgramError;
 import agora.errors.ReifierMisused;
 import agora.objects.AgoraObject;
 import agora.objects.FormalsAndPattern;
+import agora.patterns.KeywordPattern;
 import agora.patterns.Reifier;
 import agora.patterns.UnaryPattern;
 import agora.reflection.Keyword;
@@ -17,9 +18,8 @@ import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Vector;
-
-import static agora.patterns.KeywordPattern.keywordPattern;
 
 /**
  * This is the abstract class representing nodes in Agora parse trees. All other
@@ -699,7 +699,7 @@ abstract public class Expression implements Serializable {
             var attribute = new MethAttribute(formals, catchcode);
             return attribute.doAttributeValue(actualPattern, actuals, context);
         } catch (AgoraError ex) {
-            var agoraError = keywordPattern("agoraError:");
+            var agoraError = new KeywordPattern(List.of(new String[]{"agoraError:"}));
             var formalPattern = pat.makePattern(context);
             if (!formalPattern.equals(agoraError)) throw ex;
             var formals = pat.makeFormals(context);

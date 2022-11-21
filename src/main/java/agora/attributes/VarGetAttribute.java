@@ -66,11 +66,11 @@ public class VarGetAttribute implements Attribute {
      * @return A clone of this attribute.
      */
     public VarGetAttribute copy(Hashtable<Object, Object> cache) {
-        var exist = (VarGetAttribute) cache.get(this);
-        if (exist != null) return exist;
+        var exist = cache.get(this);
+        if (exist != null) return (VarGetAttribute) exist;
         var result = new VarGetAttribute(null);
         cache.put(this, result);
-        result.theContents = this.theContents.copy(cache);
+        result.theContents = theContents.copy(cache);
         return result;
     }
 }

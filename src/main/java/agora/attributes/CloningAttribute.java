@@ -43,7 +43,7 @@ public class CloningAttribute extends MethAttribute {
         if (Category.contains(context.getCategory(), Category.dontClone))
             return methodCode.eval(context);
         var cloningMap = new Hashtable<>(3);
-        // Prevent root from beeing cloned
+        // Prevent root from being cloned
         cloningMap.put(AgoraGlobals.glob.rootParent, AgoraGlobals.glob.rootParent);
         cloningMap.put(AgoraGlobals.glob.rootPrivate, AgoraGlobals.glob.rootPrivate);
         cloningMap.put(AgoraGlobals.glob.rootIdentity, AgoraGlobals.glob.rootIdentity);

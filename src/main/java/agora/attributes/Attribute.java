@@ -16,7 +16,7 @@ import agora.objects.*;
    @author Wolfgang De Meuter(Programming Technology Lab).
 	Last change:  E    16 Nov 97    1:34 am
 */
-public interface Attribute extends Serializable, Copyable<Attribute>
+public interface Attribute extends Serializable, Copyable
 {
   /**
      Each attribute must implement how 'to do itself'. For example, doing methods

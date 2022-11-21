@@ -10,6 +10,7 @@ import agora.tools.AgoraGlobals;
 
 import java.io.Serializable;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * This class of empty generators is the closing generator of all object generators.
@@ -92,15 +93,15 @@ public class EmptyGenerator extends Generator implements Serializable {
      * Makes a deep clone of the generator by copying all the constituents of the
      * identity. The parameter is a clone map such that a thing is not copied twice.
      *
-     * @param cloneMap A table of already-copied-things such that nothing gets copied twice.
+     * @param cache A table of already-copied-things such that nothing gets copied twice.
      * @return A deep copy of the receiver.
      */
-    public EmptyGenerator copy(Hashtable<Object, Object> cloneMap) {
-        var myclone = (EmptyGenerator) cloneMap.get(this);
-        if (myclone != null) return myclone;
-        var newclone = new EmptyGenerator(this.getFrameName());
-        cloneMap.put(this, newclone);
-        return newclone;
+    public EmptyGenerator copy(Map<Object, Object> cache) {
+        var existing = cache.get(this);
+        if (existing != null) return (EmptyGenerator) existing;
+        var result = new EmptyGenerator(name());
+        cache.put(this, result);
+        return result;
     }
 
 }

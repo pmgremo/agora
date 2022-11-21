@@ -67,9 +67,9 @@ public class UserIdentityGenerator extends IdentityGenerator {
      * @return A deep copy of the receiver.
      */
     public UserIdentityGenerator copy(Hashtable<Object, Object> cache) {
-        var existing = (UserIdentityGenerator) cache.get(this);
-        if (existing != null) return existing;
-        var result = new UserIdentityGenerator(getFrameName(), null, null);
+        var existing = cache.get(this);
+        if (existing != null) return (UserIdentityGenerator) existing;
+        var result = new UserIdentityGenerator(name(), null, null);
         cache.put(this, result);
         result.myMethods = (MethodsGenerator) myMethods.copy(cache);
         return result;

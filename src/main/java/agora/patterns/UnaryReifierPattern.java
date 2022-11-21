@@ -1,5 +1,7 @@
 package agora.patterns;
 
+import java.util.List;
+
 /**
  * This class represents runtime unary agora.patterns. A unary pattern is essentially nothing but
  * a string with the appropriate comparision methods defined on it.
@@ -19,7 +21,7 @@ public record UnaryReifierPattern(String pattern) implements Pattern, Reifier {
      * read-pattern.
      */
     public KeywordPattern makeWritePattern() {
-        return KeywordPattern.keywordPattern(pattern + ":");
+        return new KeywordPattern(List.of(new String[]{pattern + ":"}));
     }
 
     /**
