@@ -32,13 +32,15 @@ abstract public class UserPattern extends Pattern {
      */
     public AgoraObject eval(Context context) throws AgoraError {
         try {
-            // Patterns in Flags Category Must Be Declared: Just Return a new pattern
             if (Category.contains(context.getCategory(), Category.flags))
-                return AgoraGlobals.glob.up.up(new FormalsAndPattern(makeFormals(context),
-                        makePattern(context),
-                        Category.emptyCategory));
+                return AgoraGlobals.glob.up.up(
+                        new FormalsAndPattern(
+                                makeFormals(context),
+                                makePattern(context),
+                                Category.emptyCategory
+                        )
+                );
 
-            // Patterns in Other Categories Denote Accesses in the Local Part of An Object
             var client = makeClient(context, context.getSelf().wrap());
             client.actualsEval(context);
             return context.getPrivate().delegate(makePattern(context), client, context);
@@ -59,7 +61,7 @@ abstract public class UserPattern extends Pattern {
     @Unary(value = "RAISE")
     @Reified
     public AgoraObject raise(Context context) throws AgoraError {
-        var agoraError = new KeywordPattern(List.of(new String[]{"agoraError:"}));
+        var agoraError = new KeywordPattern(List.of("agoraError:"));
         var pattern = makePattern(context);
         var client = makeClient(context, null);
         client.actualsEval(context);
@@ -75,7 +77,7 @@ abstract public class UserPattern extends Pattern {
     }
 
     /**
-     * Implementation of the SUPER reifier defined on user agora.patterns.
+     * Implementation of the SUPER reifier defined on user patterns.
      *
      * @param context The evaluation context where SUPER was sent.
      * @return The result of sending the SUPER reifier.
@@ -84,8 +86,8 @@ abstract public class UserPattern extends Pattern {
     @Unary(value = "SUPER")
     @Reified
     public AgoraObject superReifier(Context context) throws AgoraError {
-        var client = makeClient(context, context.getSelf().wrap());
         var pattern = makePattern(context);
+        var client = makeClient(context, context.getSelf().wrap());
         client.actualsEval(context);
         return context.getParent().delegate(pattern, client, context);
     }

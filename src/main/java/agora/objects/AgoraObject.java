@@ -32,7 +32,6 @@ public class AgoraObject implements Serializable {
      *           This object is merely a wrapper to encapsulate this id.
      */
     public AgoraObject(IdentityGenerator id) {
-        super();
         this.objectID = id;
     }
 

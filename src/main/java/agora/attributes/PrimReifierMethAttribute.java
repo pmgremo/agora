@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serial;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * A primitive reifier method is a reifier method whose implementation is in some
@@ -22,40 +23,22 @@ import java.lang.reflect.Method;
  * Last change:  E    17 Nov 97    1:30 am
  */
 public class PrimReifierMethAttribute extends PrimAttribute {
-    protected Method m;
+    protected Method method;
 
     @Serial
     private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.writeObject(m.getDeclaringClass().getName());
-        stream.writeObject(m.getName());
-        var types = m.getParameterTypes();
-        stream.writeInt(types.length);
-        for (var type : types) stream.writeObject(type.getName());
+        stream.writeObject(method.getDeclaringClass());
+        stream.writeUTF(method.getName());
+        stream.writeObject(method.getParameterTypes());
     }
 
     @Serial
     private void readObject(ObjectInputStream stream) throws IOException {
         try {
-            var decl = Class.forName((String) stream.readObject());
-            var metName = (String) stream.readObject();
-            var ln = stream.readInt();
-            var sig = new Class[ln];
-            for (var i = 0; i < ln; i++) {
-                var argName = (String) stream.readObject();
-                sig[i] = switch (argName) {
-                    case "int" -> Integer.TYPE;
-                    case "boolean" -> Boolean.TYPE;
-                    case "char" -> Character.TYPE;
-                    case "short" -> Short.TYPE;
-                    case "byte" -> Byte.TYPE;
-                    case "float" -> Float.TYPE;
-                    case "long" -> Long.TYPE;
-                    case "double" -> Double.TYPE;
-                    case "void" -> Void.TYPE;
-                    default -> Class.forName(argName);
-                };
-            }
-            m = decl.getMethod(metName, sig);
+            var owner = (Class<?>) stream.readObject();
+            var name = stream.readUTF();
+            var types = (Class<?>[]) stream.readObject();
+            method = owner.getMethod(name, types);
         } catch (NoSuchMethodException error) {
             System.err.println("NATIVE SYSTEM ERROR IN READING METHOD(nosuchmethod)");
         } catch (ClassNotFoundException error) {
@@ -72,7 +55,7 @@ public class PrimReifierMethAttribute extends PrimAttribute {
      *                   the context of invocation will be passed to the implementation of the reifier.
      */
     public PrimReifierMethAttribute(Method javaMethod) {
-        m = javaMethod;
+        method = javaMethod;
     }
 
     /**
@@ -87,7 +70,7 @@ public class PrimReifierMethAttribute extends PrimAttribute {
      */
     public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         try {
-            return AgoraGlobals.glob.up.up(this.m.invoke(context, client.makeNativeArguments()));
+            return AgoraGlobals.glob.up.up(method.invoke(context, client.makeNativeArguments()));
         } catch (IllegalAccessException e) {
             throw new ProgramError("Illegal Access Exception while accessing a primitive method");
         } catch (InvocationTargetException e) {
@@ -112,5 +95,17 @@ public class PrimReifierMethAttribute extends PrimAttribute {
      */
     public String inspect(Context context) throws AgoraError {
         return "Primitive Reifier (Context Dependent Method)";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PrimReifierMethAttribute that)) return false;
+        return Objects.equals(method, that.method);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(method);
     }
 }

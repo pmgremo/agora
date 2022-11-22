@@ -67,7 +67,7 @@ public class VarSetAttribute implements Attribute {
      * Converts the attribute to a string.
      */
     public String toString() {
-        return "             VARGET:";
+        return "             VARSET:";
     }
 
     /**

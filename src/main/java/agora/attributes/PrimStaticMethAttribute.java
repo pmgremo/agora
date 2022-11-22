@@ -45,9 +45,9 @@ public class PrimStaticMethAttribute extends PrimMethAttribute {
             Context context
     ) throws AgoraError {
         try {
-            return AgoraGlobals.glob.up.up(this.m.invoke(null, client.makeNativeArguments()));
+            return AgoraGlobals.glob.up.up(this.method.invoke(null, client.makeNativeArguments()));
         } catch (IllegalAccessException e) {
-            throw new ProgramError("IllegalAccesException while accessing a primitive static method");
+            throw new ProgramError("IllegalAccessException while accessing a primitive static method");
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof AgoraError a) throw a;
             throw new PrimException(e.getTargetException(), "PrimStaticMethAttribute::doAttributeValue");

@@ -17,59 +17,41 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * This class represents a primitive public (non static) method in Java.
+ * This class represents a primitive public (non-static) method in Java.
  * Last change:  E    17 Nov 97    1:30 am
  */
 public class PrimMethAttribute extends PrimAttribute {
-    protected Method m;
+    protected Method method;
 
     @Serial
     private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.writeObject(m.getDeclaringClass().getName());
-        stream.writeObject(m.getName());
-        var types = m.getParameterTypes();
-        stream.writeInt(types.length);
-        for (var type : types) stream.writeObject(type.getName());
+        stream.writeObject(method.getDeclaringClass());
+        stream.writeUTF(method.getName());
+        stream.writeObject(method.getParameterTypes());
     }
 
     @Serial
     private void readObject(ObjectInputStream stream) throws IOException {
         try {
-            var decl = Class.forName((String) stream.readObject());
-            var metName = (String) stream.readObject();
-            var ln = stream.readInt();
-            var sig = new Class[ln];
-            for (var i = 0; i < ln; i++) {
-                var argName = (String) stream.readObject();
-                sig[i] = switch (argName) {
-                    case "int" -> Integer.TYPE;
-                    case "boolean" -> Boolean.TYPE;
-                    case "char" -> Character.TYPE;
-                    case "short" -> Short.TYPE;
-                    case "byte" -> Byte.TYPE;
-                    case "float" -> Float.TYPE;
-                    case "long" -> Long.TYPE;
-                    case "double" -> Double.TYPE;
-                    case "void" -> Void.TYPE;
-                    default -> Class.forName(argName);
-                };
-            }
-            m = decl.getMethod(metName, sig);
+            var owner = (Class<?>) stream.readObject();
+            var name = stream.readUTF();
+            var types = (Class<?>[]) stream.readObject();
+            method = owner.getMethod(name, types);
         } catch (NoSuchMethodException error) {
-            System.err.println("NATIVE SYSTEM ERROR IN READING METHOD(nosuchmethod:PrimMethAttribute)");
+            System.err.println("NATIVE SYSTEM ERROR IN READING METHOD(nosuchmethod)");
         } catch (ClassNotFoundException error) {
-            System.err.println("NATIVE SYSTEM ERROR IN READING METHOD(nosuchclass:PrimMethAttribute)");
+            System.err.println("NATIVE SYSTEM ERROR IN READING METHOD(nosuchclass)");
         }
     }
 
     /**
-     * Creates a new PrimMethAttribute given the (non static) java method as argument.
+     * Creates a new PrimMethAttribute given the (non-static) java method as argument.
      *
      * @param javaMethod The Java method to which this attribute is associated.
      */
     public PrimMethAttribute(Method javaMethod) {
         super();
-        this.m = javaMethod;
+        this.method = javaMethod;
     }
 
     /**
@@ -84,7 +66,7 @@ public class PrimMethAttribute extends PrimAttribute {
      */
     public AgoraObject doAttributeValue(Pattern msg, Client client, Context context) throws AgoraError {
         try {
-            return AgoraGlobals.glob.up.up(m.invoke(context.getSelf().down(), client.makeNativeArguments()));
+            return AgoraGlobals.glob.up.up(method.invoke(context.getSelf().down(), client.makeNativeArguments()));
         } catch (IllegalAccessException e) {
             throw new ProgramError("Illegal Access Exception while accessing a primitive method");
         } catch (InvocationTargetException e) {
@@ -108,6 +90,6 @@ public class PrimMethAttribute extends PrimAttribute {
      * @throws agora.errors.AgoraError When something goes wrong while inspecting.
      */
     public String inspect(Context context) throws AgoraError {
-        return "Primitive Java method: " + this.m.toString();
+        return "Primitive Java method: " + method.toString();
     }
 }

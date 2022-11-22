@@ -9,7 +9,6 @@ import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
 import java.io.Serializable;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -43,7 +42,7 @@ public class EmptyGenerator extends Generator implements Serializable {
      *                                 thrown.
      */
     public Generator funcAddLayer(String NameOfFrame) throws AgoraError {
-        //Should never ocur
+        //Should never occur
         return null;
     }
 

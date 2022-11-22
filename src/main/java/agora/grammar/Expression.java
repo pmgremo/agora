@@ -29,6 +29,7 @@ import java.util.Vector;
  * Last change:  E    16 Nov 97    1:58 pm
  */
 abstract public class Expression implements Serializable {
+
     /**
      * Constructor does nothing but calling the super.
      */
@@ -118,15 +119,14 @@ abstract public class Expression implements Serializable {
      */
     @Reified
     public AgoraObject variableColon(Context context, @Keyword("VARIABLE:") Expression value) throws AgoraError {
-        var left = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
+        var left = (FormalsAndPattern) eval(context.setCat(Category.flags)).down();
         var pattern = left.pattern;
         var cat = left.cat;
         if (!(pattern instanceof UnaryPattern getPat))
             throw new ReifierMisused("VARIABLE can only be sent to unary pattern");
         if (!Category.containsLessThan(cat, Category.local | Category.publik))
             throw new ReifierMisused("Illegal Adjectives Used With VARIABLE");
-        if (!Category.contains(cat, Category.local) &&
-                !Category.contains(cat, Category.publik))
+        if (!Category.contains(cat, Category.local) && !Category.contains(cat, Category.publik))
             cat |= Category.publik;
         var result = value.eval(context);
         var container = new VariableContainer(result);
@@ -607,7 +607,7 @@ abstract public class Expression implements Serializable {
     @Reified
     public AgoraObject whileTrue(Context context, @Keyword("WHILETRUE:") Expression body) throws AgoraError {
         var result = AgoraGlobals.glob.up.up(null);
-        while (this.evalAsBoolean(context))
+        while (evalAsBoolean(context))
             result = body.eval(context);
         return result;
     }
@@ -620,7 +620,7 @@ abstract public class Expression implements Serializable {
     @Reified
     public AgoraObject whileFalse(Context context, @Keyword("WHILEFALSE:") Expression body) throws AgoraError {
         var result = AgoraGlobals.glob.up.up(null);
-        while (!this.evalAsBoolean(context))
+        while (!evalAsBoolean(context))
             result = body.eval(context);
         return result;
     }
@@ -638,7 +638,7 @@ abstract public class Expression implements Serializable {
     public AgoraObject untilTrue(Context context, @Keyword("UNTILTRUE:") Expression testExp) throws AgoraError {
         var result = AgoraGlobals.glob.up.up(null);
         do {
-            result = this.eval(context);
+            result = eval(context);
         } while (!testExp.evalAsBoolean(context));
         return result;
     }
@@ -651,7 +651,7 @@ abstract public class Expression implements Serializable {
     @Reified
     public AgoraObject untilFalse(Context context, @Keyword("UNTILFALSE") Expression testExp) throws AgoraError {
         do {
-            this.eval(context);
+            eval(context);
         } while (testExp.evalAsBoolean(context));
         return AgoraGlobals.glob.up.up(null);
     }
@@ -699,7 +699,7 @@ abstract public class Expression implements Serializable {
             var attribute = new MethAttribute(formals, catchcode);
             return attribute.doAttributeValue(actualPattern, actuals, context);
         } catch (AgoraError ex) {
-            var agoraError = new KeywordPattern(List.of(new String[]{"agoraError:"}));
+            var agoraError = new KeywordPattern(List.of("agoraError:"));
             var formalPattern = pat.makePattern(context);
             if (!formalPattern.equals(agoraError)) throw ex;
             var formals = pat.makeFormals(context);
@@ -751,11 +751,8 @@ abstract public class Expression implements Serializable {
     @Unary("UNQUOTE")
     @Reified
     public AgoraObject unquote(Context context) throws AgoraError {
-        var code = eval(context).down();
-        if (code instanceof Expression e)
-            return e.eval(context);
-        else
-            throw new ProgramError("UNQUOTE can only be sent to a quoted expression");
+        if (eval(context).down() instanceof Expression e) return e.eval(context);
+        throw new ProgramError("UNQUOTE can only be sent to a quoted expression");
     }
 
     /**
@@ -785,8 +782,7 @@ abstract public class Expression implements Serializable {
     @Unary("down")
     @Reified
     public AgoraObject down(Context context) throws AgoraError {
-        var res = eval(context).down();
-        if (res instanceof AgoraObject a) return a;
+        if (eval(context).down() instanceof AgoraObject a) return a;
         throw new ProgramError("DOWN must yield a valid Agora Object");
     }
 
@@ -841,7 +837,7 @@ abstract public class Expression implements Serializable {
      * @throws agora.errors.AgoraError Is thrown when the receiver does not evaluate to an integer.
      */
     public int evalAsInteger(Context context) throws AgoraError {
-        var resValue = this.eval(context);
+        var resValue = eval(context);
         if (resValue.down() instanceof Integer i) return i;
         throw new ProgramError("Integer Expected !");
     }
@@ -852,7 +848,7 @@ abstract public class Expression implements Serializable {
      * @throws agora.errors.AgoraError When the receiver can not be evaluated to a boolean.
      */
     public boolean evalAsBoolean(Context context) throws AgoraError {
-        var resValue = this.eval(context);
+        var resValue = eval(context);
         if (resValue.down() instanceof Boolean b) return b;
         throw new ProgramError("Boolean Expected !");
     }

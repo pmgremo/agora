@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 
 /**
  * Some Agora methods are represented by Java static methods in which the receiver
- * is explicitely passed as an argument. This class represents these Agora methods.
+ * is explicitly passed as an argument. This class represents these Agora methods.
  * Examples are +, - and so on, defined on integers.
  * Last change:  E    16 Nov 97    1:43 pm
  */
@@ -53,7 +53,7 @@ public class PrimFunctionAttribute extends PrimMethAttribute {
             fakedActuals[0] = context.getSelf().down();
             for (var j = 0; j < realActuals.length; j++)
                 fakedActuals[j + 1] = ((AgoraObject) realActuals[j]).down();
-            return AgoraGlobals.glob.up.up(m.invoke(null, fakedActuals));
+            return AgoraGlobals.glob.up.up(method.invoke(null, fakedActuals));
         } catch (IllegalArgumentException e) {
             throw new ProgramError("Illegal Argument for " + msg.toString());
         } catch (IllegalAccessException e) {
