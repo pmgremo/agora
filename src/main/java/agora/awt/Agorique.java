@@ -126,8 +126,8 @@ public class Agorique implements Serializable {
                     var gis = new GZIPInputStream(fis);
                     var s = new ObjectInputStream(gis);
                     var newRoot = (SingleRoot) s.readObject();
-					AgoraGlobals.glob = newRoot.globalStructures;
-                    AgoraGlobals.glob.up = newRoot.reflectionWrappers;
+					AgoraGlobals.glob = newRoot.globalStructures();
+                    AgoraGlobals.glob.up = newRoot.reflectionWrappers();
 					s.close();
 					window.setCursor(oldCursor);
 					AgoraGlobals.glob.window = window;

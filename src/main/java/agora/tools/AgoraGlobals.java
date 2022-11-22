@@ -82,8 +82,6 @@ public class AgoraGlobals implements Serializable {
         up = new Up();
         this.window = window;
 
-        // Create heavily used constants (cache them for efficiency reasons)
-
         // Fill the ROOT object with the standard methods
         // java
         var java = new UnaryPattern("java");

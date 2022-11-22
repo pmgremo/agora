@@ -63,7 +63,9 @@ public class PrimIdentityGenerator extends IdentityGenerator {
                 this.myMethods.getParent(),
                 this.myMethods,
                 this.downedVersion,
-                context, this);
+                context,
+                this
+        );
         d.pack();
         d.setVisible(true);
     }

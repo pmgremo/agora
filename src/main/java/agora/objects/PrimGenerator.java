@@ -72,7 +72,8 @@ public class PrimGenerator extends MethodsGenerator {
                 null,
                 null,
                 context,
-                this);
+                this
+        );
         d.pack();
         d.setVisible(true);
     }

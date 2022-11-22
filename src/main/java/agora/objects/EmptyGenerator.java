@@ -83,7 +83,8 @@ public class EmptyGenerator extends Generator implements Serializable {
                 null,
                 null,
                 context,
-                this);
+                this
+        );
         d.pack();
         d.setVisible(true);
     }

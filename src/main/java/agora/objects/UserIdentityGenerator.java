@@ -23,7 +23,7 @@ public class UserIdentityGenerator extends IdentityGenerator {
      * @param nameOfFrame     The name of this generator to be used in inspectors.
      * @param theMethodTables A generator containing methods.
      * @param theContents     A downed version of the object corresponding to this userid. If this
-     *                        version is unknown, just pass null and it will be calculated the first time 'down' is sent.
+     *                        version is unknown, just pass null, and it will be calculated the first time 'down' is sent.
      */
     public UserIdentityGenerator(String nameOfFrame, MethodsGenerator theMethodTables, Object theContents) {
         super(nameOfFrame, theMethodTables, theContents);
@@ -56,7 +56,7 @@ public class UserIdentityGenerator extends IdentityGenerator {
      *                                 thrown. This would be a bug somewhere in the implementation.
      */
     public void inspect(Context context) throws AgoraError {
-        this.myMethods.inspect(context);
+        myMethods.inspect(context);
     }
 
     /**

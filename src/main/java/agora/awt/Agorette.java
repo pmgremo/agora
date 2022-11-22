@@ -129,8 +129,8 @@ public class Agorette extends java.applet.Applet {
                     var gis = new GZIPInputStream(fis);
                     var s = new ObjectInputStream(gis);
                     var newRoot = (SingleRoot) s.readObject();
-                    AgoraGlobals.glob = newRoot.globalStructures;
-                    AgoraGlobals.glob.up = newRoot.reflectionWrappers;
+                    AgoraGlobals.glob = newRoot.globalStructures();
+                    AgoraGlobals.glob.up = newRoot.reflectionWrappers();
                     s.close();
                     AgoraGlobals.glob.updateApplet(Agorette.this);
                     AgoraGlobals.glob.window = window;

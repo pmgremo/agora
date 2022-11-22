@@ -137,7 +137,7 @@ public class Context implements Serializable {
      * @return A new context in which everything is the same, but the given argument.
      */
     public Context setSelf(IdentityGenerator self) {
-        var newC = this.newContext(this);
+        var newC = newContext(this);
         newC.currentSelf = self;
         return newC;
     }
@@ -149,7 +149,7 @@ public class Context implements Serializable {
      * @return A new context in which everything is the same, but the given argument.
      */
     public Context setCat(int cat) {
-        var newC = this.newContext(this);
+        var newC = newContext(this);
         newC.currentCategory = cat;
         return newC;
     }
@@ -161,7 +161,7 @@ public class Context implements Serializable {
      * @return A new context in which everything is the same, but the given argument.
      */
     public Context setPub(MethodsGenerator pub) {
-        var newC = this.newContext(this);
+        var newC = newContext(this);
         newC.currentPub = pub;
         return newC;
     }
@@ -173,7 +173,7 @@ public class Context implements Serializable {
      * @return A new context in which everything is the same, but the given argument.
      */
     public Context setParent(Generator parent) {
-        var newC = this.newContext(this);
+        var newC = newContext(this);
         newC.currentParent = parent;
         return newC;
     }
@@ -185,7 +185,7 @@ public class Context implements Serializable {
      * @return A new context in which everything is the same, but the given argument.
      */
     public Context setPrivate(InternalGenerator priv) {
-        var newC = this.newContext(this);
+        var newC = newContext(this);
         newC.currentPriv = priv;
         return newC;
     }
@@ -197,7 +197,7 @@ public class Context implements Serializable {
      * @return A new context in which everything is the same, but the given argument.
      */
     public Context setException(AgoraException except) {
-        var newC = this.newContext(this);
+        var newC = newContext(this);
         newC.currentException = except;
         return newC;
     }
@@ -261,7 +261,7 @@ public class Context implements Serializable {
             InternalGenerator priv,
             Generator parent
     ) {
-        var newC = this.newContext(this);
+        var newC = newContext(this);
         newC.currentParent = parent;
         newC.currentPriv = priv;
         newC.currentSelf = self;
@@ -277,7 +277,7 @@ public class Context implements Serializable {
      * but the specified parameters.
      */
     public Context setMultiple(IdentityGenerator self, int cat) {
-        var newC = this.newContext(this);
+        var newC = newContext(this);
         newC.currentSelf = self;
         newC.currentCategory = cat;
         return newC;
@@ -297,7 +297,7 @@ public class Context implements Serializable {
             int cat,
             Generator parent
     ) {
-        var newC = this.newContext(this);
+        var newC = newContext(this);
         newC.currentPriv = priv;
         newC.currentParent = parent;
         newC.currentCategory = cat;
@@ -322,7 +322,7 @@ public class Context implements Serializable {
             int cat,
             Generator parent
     ) {
-        var newC = this.newContext(this);
+        var newC = newContext(this);
         newC.currentSelf = self;
         newC.currentPriv = priv;
         newC.currentPub = pub;
@@ -412,7 +412,7 @@ public class Context implements Serializable {
      *                                 (If this happens, it is a bug in the implementation).
      */
     public void inspectPrimitive() throws AgoraError {
-        this.currentSelf.inspect(this);
+        currentSelf.inspect(this);
     }
 
 }

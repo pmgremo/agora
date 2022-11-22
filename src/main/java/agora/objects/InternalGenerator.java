@@ -63,7 +63,8 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
                 this,
                 null,
                 context,
-                this);
+                this
+        );
         d.pack();
         d.setVisible(true);
     }
