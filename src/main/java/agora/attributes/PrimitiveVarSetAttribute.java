@@ -19,21 +19,21 @@ import java.lang.reflect.Field;
  * Java field.
  * Last change:  E    16 Nov 97    8:22 pm
  */
-public class PrimVarSetAttribute extends PrimAttribute {
+public class PrimitiveVarSetAttribute extends PrimitiveAttribute {
 
     protected Field f;
 
     @Serial
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.writeObject(f.getDeclaringClass());
-        stream.writeObject(f.getName());
+        stream.writeUTF(f.getName());
     }
 
     @Serial
     private void readObject(ObjectInputStream stream) throws IOException {
         try {
             var decl = (Class<?>) stream.readObject();
-            var nme = (String) stream.readObject();
+            var nme = stream.readUTF();
             f = decl.getDeclaredField(nme);
         } catch (NoSuchFieldException e) {
             System.err.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchfield)");
@@ -48,7 +48,7 @@ public class PrimVarSetAttribute extends PrimAttribute {
      * @param variable The field corresponding to this primitive variable
      *                 setter.
      */
-    public PrimVarSetAttribute(Field variable) {
+    public PrimitiveVarSetAttribute(Field variable) {
         super();
         f = variable;
     }

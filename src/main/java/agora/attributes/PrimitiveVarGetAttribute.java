@@ -14,27 +14,25 @@ import java.io.ObjectOutputStream;
 import java.io.Serial;
 import java.lang.reflect.Field;
 
-import static java.lang.System.*;
-
 /**
  * A PrimVarGetAttribute is an 'Agorification' of a corresponding Java Field.
  * Last change:  E    16 Nov 97    8:22 pm
  */
-public class PrimVarGetAttribute extends PrimAttribute {
+public class PrimitiveVarGetAttribute extends PrimitiveAttribute {
 
     protected Field f;
 
     @Serial
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.writeObject(f.getDeclaringClass());
-        stream.writeObject(f.getName());
+        stream.writeUTF(f.getName());
     }
 
     @Serial
     private void readObject(ObjectInputStream stream) throws IOException {
         try {
             var decl = (Class<?>) stream.readObject();
-            var nme = (String) stream.readObject();
+            var nme = stream.readUTF();
             f = decl.getDeclaredField(nme);
         } catch (NoSuchFieldException e) {
             System.err.println("NATIVE SYSTEM ERROR IN READING FIELD(nosuchfield)");
@@ -48,7 +46,7 @@ public class PrimVarGetAttribute extends PrimAttribute {
      *
      * @param variable The Java field corresponding to this primitive variable getter.
      */
-    public PrimVarGetAttribute(Field variable) {
+    public PrimitiveVarGetAttribute(Field variable) {
         super();
         this.f = variable;
     }

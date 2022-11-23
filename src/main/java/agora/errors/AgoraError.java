@@ -7,7 +7,7 @@ import agora.grammar.Expression;
 // A programming environment must be written!!!!!!!!!!!!!!!!
 
 /**
- * This abstract class is the root of the Agora error hierachy.
+ * This abstract class is the root of the Agora error hierarchy.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:46 am
@@ -15,7 +15,7 @@ import agora.grammar.Expression;
 
 public abstract class AgoraError extends RuntimeException {
     /**
-     * This variable is the (possible) code tree where the error occured.
+     * This variable is the (possible) code tree where the error occurred.
      */
     protected Expression code;
 
@@ -41,7 +41,7 @@ public abstract class AgoraError extends RuntimeException {
      * of Agora code it occured, it can tell this code to the error and rethrow
      * the error.
      *
-     * @param code The expression that was last evaluated	before the error occured.
+     * @param code The expression that was last evaluated	before the error occurred.
      */
     public void setCode(Expression code) {
         if (this.code == null) this.code = code;

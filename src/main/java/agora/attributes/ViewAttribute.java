@@ -8,14 +8,14 @@ import agora.runtime.Client;
 import agora.runtime.Context;
 
 /**
- * This class represents view agora.attributes (formerly known as functional mixin methods)
+ * This class represents view attributes (formerly known as functional mixin methods)
  * Evaluation of a view consists of creating a view on the public and the
  * local, and evaluating the body of the view method in the context of this view.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab)
  * Last change:  E    16 Nov 97    1:34 am
  */
-public class ViewAttribute extends MethAttribute {
+public class ViewAttribute extends MethodAttribute {
     /**
      * Create a new view attribute with an array of strings as formals parameter
      * and a given expression as the method body of the view.

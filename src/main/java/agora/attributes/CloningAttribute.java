@@ -17,7 +17,7 @@ import java.util.Hashtable;
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    2:09 pm
  */
-public class CloningAttribute extends MethAttribute {
+public class CloningAttribute extends MethodAttribute {
     /**
      * Creates a new cloning method with the array of strings as formal arguments and the
      * given expression as body of the cloning method.

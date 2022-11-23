@@ -1,7 +1,7 @@
 package agora.attributes;
 
 import agora.errors.AgoraError;
-import agora.errors.PrimException;
+import agora.errors.PrimitiveException;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
@@ -22,7 +22,7 @@ import java.util.Objects;
  * method hardcoded in the Context. An example is the SELF.
  * Last change:  E    17 Nov 97    1:30 am
  */
-public class PrimReifierMethAttribute extends PrimAttribute {
+public class PrimitiveReifierMethodAttribute extends PrimitiveAttribute {
     protected Method method;
 
     @Serial
@@ -54,7 +54,7 @@ public class PrimReifierMethAttribute extends PrimAttribute {
      *                   argument is supposed to be a context parameter. In this argument,
      *                   the context of invocation will be passed to the implementation of the reifier.
      */
-    public PrimReifierMethAttribute(Method javaMethod) {
+    public PrimitiveReifierMethodAttribute(Method javaMethod) {
         method = javaMethod;
     }
 
@@ -75,7 +75,7 @@ public class PrimReifierMethAttribute extends PrimAttribute {
             throw new ProgramError("Illegal Access Exception while accessing a primitive method");
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof AgoraError a) throw a;
-            throw new PrimException(e.getTargetException(), "PrimReifierMethAttribute::doAttributeValue");
+            throw new PrimitiveException(e.getTargetException(), "PrimReifierMethAttribute::doAttributeValue");
         }
     }
 
@@ -100,7 +100,7 @@ public class PrimReifierMethAttribute extends PrimAttribute {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PrimReifierMethAttribute that)) return false;
+        if (!(o instanceof PrimitiveReifierMethodAttribute that)) return false;
         return Objects.equals(method, that.method);
     }
 

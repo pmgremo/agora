@@ -14,7 +14,7 @@ import agora.tools.AgoraGlobals;
 import java.util.List;
 
 /**
- * This abstract class represents agora.patterns for ordinary messages. It has subclasses
+ * This abstract class represents patterns for ordinary messages. It has subclasses
  * for unary, operator and keyword agora.patterns.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab)

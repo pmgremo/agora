@@ -5,7 +5,7 @@ import agora.patterns.Pattern;
 import agora.patterns.Reifier;
 
 /**
- * This is the most occuring Agora error to indicate that a 'send'
+ * This is the most occurring Agora error to indicate that a 'send'
  * has been done with an undefined pattern.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab)

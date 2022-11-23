@@ -16,7 +16,7 @@ import agora.tools.AgoraGlobals;
  * @author Wolfgang De Meuter (Programming Technology Lab)
  * Last change:  E    17 Nov 97    1:03 am
  */
-public class PrimIdentityGenerator extends IdentityGenerator {
+public class PrimitiveIdentityGenerator extends IdentityGenerator {
 
     /**
      * To create a new primitive identity generator with a given name, a given public part (normally
@@ -29,7 +29,7 @@ public class PrimIdentityGenerator extends IdentityGenerator {
      * @param theContents     The original primitive object of which this generator is the Agora
      *                        identity.
      */
-    public PrimIdentityGenerator(String nameOfFrame, MethodsGenerator theMethodTables, Object theContents) {
+    public PrimitiveIdentityGenerator(String nameOfFrame, MethodsGenerator theMethodTables, Object theContents) {
         super(nameOfFrame, theMethodTables, theContents);
     }
 

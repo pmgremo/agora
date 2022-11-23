@@ -11,12 +11,12 @@ import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
 /**
- * This class represents reifier agora.attributes written by the Agora programmer.
+ * This class represents reifier attributes written by the Agora programmer.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    2:05 pm
  */
-public class ReifierMethodAttribute extends MethAttribute {
+public class ReifierMethodAttribute extends MethodAttribute {
     private final UnaryPattern contextPattern;
 
     /**
@@ -27,7 +27,7 @@ public class ReifierMethodAttribute extends MethAttribute {
      *
      * @param formals  The names of the formal arguments.
      * @param body     The body expression of the reifier.
-     * @param contName A unary pattern to which the agora.runtime context will be bound.
+     * @param contName A unary pattern to which the runtime context will be bound.
      */
     public ReifierMethodAttribute(String[] formals, Expression body, UnaryPattern contName) {
         super(formals, body);
@@ -49,7 +49,7 @@ public class ReifierMethodAttribute extends MethAttribute {
         var localPub = context.getPub().funcAddLayer("Formals-Actuals Frame");
         localPub.setPrivate(localPriv);
         localPriv.installPattern(contextPattern,
-                new VarGetAttribute(new VariableContainer(AgoraGlobals.glob.up.up(client.newContext()))));
+                new VariableGetAttribute(new VariableContainer(AgoraGlobals.glob.up.up(client.newContext()))));
         // We ask the client for a context. Because this is a reifier method, the client
         // is a reifier client, and thus client.newContext() is the context of invocation
         var result = methodCode.eval(context.setMultiple(context.getSelf(),

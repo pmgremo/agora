@@ -51,7 +51,7 @@ public class Agorette extends java.applet.Applet {
         this.setLayout(l);
         this.add("Center", textArea);
         this.add("South", p);
-        textArea.append("This is the 'agora' of Agora98!");
+        textArea.append("This is the 'agora' of Agora!");
         textArea.append("\n\nVersion of Sunday 16 November 1997");
         textArea.append("\n\nWritten by Wolfgang De Meuter");
         textArea.append("\nProgramming Technology Lab (c) - Vrije Universiteit Brussel");

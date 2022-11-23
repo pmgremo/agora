@@ -1,10 +1,10 @@
 package agora.tools;
 
-import agora.attributes.PrimReifierMethAttribute;
-import agora.attributes.VarGetAttribute;
+import agora.attributes.PrimitiveReifierMethodAttribute;
+import agora.attributes.VariableGetAttribute;
 import agora.attributes.VariableContainer;
 import agora.errors.AgoraError;
-import agora.errors.PrimException;
+import agora.errors.PrimitiveException;
 import agora.javaAdditions.JV_Package;
 import agora.objects.*;
 import agora.patterns.UnaryPattern;
@@ -86,37 +86,37 @@ public class AgoraGlobals implements Serializable {
         // java
         var java = new UnaryPattern("java");
         var javaPackage = new VariableContainer(up.up(new JV_Package("java")));
-        var javaReader = new VarGetAttribute(javaPackage);
+        var javaReader = new VariableGetAttribute(javaPackage);
         rootPrivate.installPattern(java, javaReader);
 
         //null
         var nil = new UnaryPattern("null");
         var nilObject = new VariableContainer(up.up(null));
-        var nilReader = new VarGetAttribute(nilObject);
+        var nilReader = new VariableGetAttribute(nilObject);
         rootPrivate.installPattern(nil, nilReader);
 
         //true
         var trueP = new UnaryPattern("true");
         var trueObject = new VariableContainer(up.up(true));
-        var trueReader = new VarGetAttribute(trueObject);
+        var trueReader = new VariableGetAttribute(trueObject);
         rootPrivate.installPattern(trueP, trueReader);
 
         //false
         var falseP = new UnaryPattern("false");
         var falseObject = new VariableContainer(up.up(false));
-        var falseReader = new VarGetAttribute(falseObject);
+        var falseReader = new VariableGetAttribute(falseObject);
         rootPrivate.installPattern(falseP, falseReader);
 
         //agora
         var agoraP = new UnaryPattern("agora");
         var agoraObject = new VariableContainer(rootIdentity.wrap());
-        var agoraReader = new VarGetAttribute(agoraObject);
+        var agoraReader = new VariableGetAttribute(agoraObject);
         rootPrivate.installPattern(agoraP, agoraReader);
 
         //applet
         var appletP = new UnaryPattern("applet");
         var appletObject = new VariableContainer(up.up(applet));
-        var appletReader = new VarGetAttribute(appletObject);
+        var appletReader = new VariableGetAttribute(appletObject);
         rootPrivate.installPattern(appletP, appletReader);
 
         //primitive
@@ -126,19 +126,19 @@ public class AgoraGlobals implements Serializable {
         //SELF
         try {
             var selfP = new UnaryReifierPattern("SELF");
-            var selfMeth = new PrimReifierMethAttribute(Context.class.getMethod("Self", Context.class));
+            var selfMeth = new PrimitiveReifierMethodAttribute(Context.class.getMethod("Self", Context.class));
             rootPrivate.installPattern(selfP, selfMeth);
         } catch (Throwable e) {
-            throw new PrimException(e, "AgoraGlobals::standardMethods");
+            throw new PrimitiveException(e, "AgoraGlobals::standardMethods");
         }
 
         // inspect
         try {
             var inspect = new UnaryPattern("inspect");
-            var inspectMeth = new PrimReifierMethAttribute(Context.class.getMethod("inspectPrimitive"));
+            var inspectMeth = new PrimitiveReifierMethodAttribute(Context.class.getMethod("inspectPrimitive"));
             rootPublic.installPattern(inspect, inspectMeth);
         } catch (Throwable e) {
-            throw new PrimException(e, "AgoraGlobals::standardMethods");
+            throw new PrimitiveException(e, "AgoraGlobals::standardMethods");
         }
     }
 
@@ -152,7 +152,7 @@ public class AgoraGlobals implements Serializable {
         try {
             var appletPat = new UnaryPattern("applet");
             var appletObject = new VariableContainer(up.up(applet));
-            var appletReader = new VarGetAttribute(appletObject);
+            var appletReader = new VariableGetAttribute(appletObject);
             rootPrivate.getHashTable().put(appletPat, appletReader);
         } catch (AgoraError ex) {
             java.lang.System.out.println("A SERIOUS SYSTEM ERROR HAS OCCURED:updateApplet");

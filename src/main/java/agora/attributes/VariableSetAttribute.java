@@ -10,13 +10,13 @@ import java.util.Hashtable;
 
 
 /**
- * An Agora variable gives rise to two slots: a VarSetAttribute and a VarGetAttribute.
+ * An Agora variable gives rise to two slots: a VariableSetAttribute and a VariableGetAttribute.
  * Both point to the same VariableContainer such that they stay consistent.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab)
  * Last change:  E    16 Nov 97    1:35 am
  */
-public class VarSetAttribute implements Attribute {
+public class VariableSetAttribute implements Attribute {
     protected VariableContainer theContents;
 
     /**
@@ -26,7 +26,7 @@ public class VarSetAttribute implements Attribute {
      * @param variable The container in which the variable resides. This indirection is necessary
      *                 to make sure write and read slots both point to the same object.
      */
-    public VarSetAttribute(VariableContainer variable) {
+    public VariableSetAttribute(VariableContainer variable) {
         this.theContents = variable;
     }
 
@@ -54,10 +54,10 @@ public class VarSetAttribute implements Attribute {
      * @param cache A table of already-copied-things such that nothing is copied twice.
      * @return A copy of this attribute.
      */
-    public VarSetAttribute copy(Hashtable<Object, Object> cache) {
+    public VariableSetAttribute copy(Hashtable<Object, Object> cache) {
         var existing = cache.get(this);
-        if (existing != null) return (VarSetAttribute) existing;
-        var result = new VarSetAttribute(null);
+        if (existing != null) return (VariableSetAttribute) existing;
+        var result = new VariableSetAttribute(null);
         cache.put(this, result);
         result.theContents = theContents.copy(cache);
         return result;

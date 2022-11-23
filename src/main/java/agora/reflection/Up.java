@@ -2,10 +2,13 @@ package agora.reflection;
 
 import agora.attributes.*;
 import agora.errors.AgoraError;
-import agora.javaAdditions.*;
+import agora.javaAdditions.JV_Boolean;
+import agora.javaAdditions.JV_Float;
+import agora.javaAdditions.JV_Integer;
+import agora.javaAdditions.JV_Nil;
 import agora.objects.AgoraObject;
-import agora.objects.PrimGenerator;
-import agora.objects.PrimIdentityGenerator;
+import agora.objects.PrimitiveGenerator;
+import agora.objects.PrimitiveIdentityGenerator;
 import agora.patterns.*;
 import agora.tools.AgoraGlobals;
 
@@ -34,7 +37,7 @@ public class Up implements Serializable {
      * Java class names onto generators that contain the method tables for the
      * associated class.
      */
-    private final Map<String, PrimGenerator> cache = new HashMap<>(30);
+    private final Map<String, PrimitiveGenerator> cache = new HashMap<>(30);
 
     private final AgoraObject nil;
 
@@ -58,8 +61,8 @@ public class Up implements Serializable {
         if (o == null) return nil;
 
         var result = o instanceof Class<?> c ?
-                new PrimIdentityGenerator(c.getSimpleName(), generatorFor(c, false), o) :
-                new PrimIdentityGenerator(Object.class.getSimpleName(), generatorFor(o.getClass(), true), o);
+                new PrimitiveIdentityGenerator(c.getSimpleName(), generatorFor(c, false), o) :
+                new PrimitiveIdentityGenerator(Object.class.getSimpleName(), generatorFor(o.getClass(), true), o);
         return result.wrap();
     }
 
@@ -71,7 +74,7 @@ public class Up implements Serializable {
      * argument indicates whether object attributes (apart from class attributes like constructors
      * and statics) should also be considered
      */
-    private PrimGenerator generatorFor(Class<?> c, boolean isInstance) throws AgoraError {
+    private PrimitiveGenerator generatorFor(Class<?> c, boolean isInstance) throws AgoraError {
         var type = c;
         var superType = c.getSuperclass();
         if (Integer.class.equals(c)) {
@@ -93,7 +96,7 @@ public class Up implements Serializable {
      * the generator for the subclasses. The generator for 'java.lang.Object' is linked
      * to the root of the Agora system.
      */
-    private PrimGenerator generatorFor(Class<?> type, Class<?> superType, boolean isInstance) throws AgoraError {
+    private PrimitiveGenerator generatorFor(Class<?> type, Class<?> superType, boolean isInstance) throws AgoraError {
         var name = type.getName();
         if (!isInstance) name += " CLASS";
 
@@ -111,7 +114,7 @@ public class Up implements Serializable {
             generator.setParent(AgoraGlobals.glob.rootIdentity);
             generator.installPattern(
                     new UnaryPattern("primitive"),
-                    new VarGetAttribute(new VariableContainer(up(true)))
+                    new VariableGetAttribute(new VariableContainer(up(true)))
             );
             return generator;
         }
@@ -121,11 +124,11 @@ public class Up implements Serializable {
         return generator;
     }
 
-    private static PrimGenerator buildAnnotatedGeneratorFor(Class<?> type) {
+    private static PrimitiveGenerator buildAnnotatedGeneratorFor(Class<?> type) {
         var table = new Hashtable<Pattern, Attribute>(5);
         for (var x : type.getDeclaredMethods()) {
             var reified = x.getAnnotation(Reified.class);
-            var attribute = isStatic(x.getModifiers()) ? new PrimFunctionAttribute(x) : new PrimMethAttribute(x);
+            var attribute = isStatic(x.getModifiers()) ? new PrimitiveFunctionAttribute(x) : new PrimitiveMethodAttribute(x);
             {
                 var annotation = x.getAnnotation(Operator.class);
                 if (annotation != null) {
@@ -165,7 +168,7 @@ public class Up implements Serializable {
         if (table.isEmpty()) return null;
         var frame = type.getAnnotation(Frame.class);
         var name = frame != null ? frame.value() : type.getSimpleName();
-        return new PrimGenerator(name, table);
+        return new PrimitiveGenerator(name, table);
     }
 
     /**
@@ -173,12 +176,12 @@ public class Up implements Serializable {
      * The procedure creates a generator for a single class. It is called by 'createGeneratorFor'
      * for every class in the hierarchy.
      */
-    private PrimGenerator buildReflectedGeneratorFor(Class<?> c, boolean isInstance) throws AgoraError {
+    private PrimitiveGenerator buildReflectedGeneratorFor(Class<?> c, boolean isInstance) throws AgoraError {
         var theTable = new HashMap<Pattern, Attribute>();
         putFieldsInQueue(c, theTable, isInstance);                       // Insert patterns and fields
         putMethodsInQueue(c, theTable, isInstance);                      // Insert patterns and methods
         putConstructorsInQueue(c, theTable, isInstance);                 // Insert patterns and constructors
-        return new PrimGenerator(c.getName(), theTable);    // Create a new generator with the members
+        return new PrimitiveGenerator(c.getName(), theTable);    // Create a new generator with the members
     }
 
     /**
@@ -249,7 +252,7 @@ public class Up implements Serializable {
      * Creates a variable read attribute for f.
      */
     private Attribute createVariableReadAttFor(Field f) {
-        return new PrimVarGetAttribute(f);
+        return new PrimitiveVarGetAttribute(f);
     }
 
     /**
@@ -264,7 +267,7 @@ public class Up implements Serializable {
      * the field is not final.
      */
     private Attribute createVariableWriteAttFor(Field f) {
-        return new PrimVarSetAttribute(f);
+        return new PrimitiveVarSetAttribute(f);
     }
 
     /**
@@ -287,7 +290,7 @@ public class Up implements Serializable {
      * Java implementation level method.
      */
     private Attribute createMethodAttFor(Method m) {
-        return new PrimMethAttribute(m);
+        return isStatic(m.getModifiers()) ? new PrimitiveStaticMethodAttribute(m) : new PrimitiveMethodAttribute(m);
     }
 
     /**
@@ -309,7 +312,7 @@ public class Up implements Serializable {
      * Creates a cloning method for the given constructor c.
      */
     private Attribute createConstructorAttFor(Constructor<?> c) {
-        return new PrimCloningAttribute(c);
+        return new PrimitiveCloningAttribute(c);
     }
 
     /**

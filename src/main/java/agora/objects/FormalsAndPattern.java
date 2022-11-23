@@ -16,28 +16,8 @@ import java.io.Serializable;
  * Last change:  E    16 Nov 97    1:49 am
  */
 
-public class FormalsAndPattern implements Serializable {
-    /**
-     * Formal arguments in a method declaration.
-     */
-    public String[] formals;
-    /**
-     * Pattern of a method declaration. This can be unary,
-     * keyword or operator.
-     */
-    public Pattern pattern;
-    /**
-     * Category of a method declaration. This is determined by the modifiers that
-     * associate the declaration, e.g. LOCAL, PUBLIC,...
-     */
-    public int cat;
-
-    /**
-     * Constructor for filling the record in one stroke.
-     */
-    public FormalsAndPattern(String[] f, Pattern p, int c) {
-        formals = f;
-        pattern = p;
-        cat = c;
+public record FormalsAndPattern(String[] formals, Pattern pattern, int cat) implements Serializable {
+    public FormalsAndPattern withCat(int cat) {
+        return new FormalsAndPattern(formals, pattern, cat);
     }
 }

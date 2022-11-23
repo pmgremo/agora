@@ -15,12 +15,12 @@ import java.util.Map;
 /**
  * A PrimGenerator is a kind of methods frame used for primitive object
  * wrapping. The difference between a PrimGenerator and an InternalGenerator
- * is that a PrimGenerator does not have a private part.
+ * is that a PrimitiveGenerator does not have a private part.
  *
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    17 Nov 97    1:02 am
  */
-public class PrimGenerator extends MethodsGenerator {
+public class PrimitiveGenerator extends MethodsGenerator {
     /**
      * Creates a new PrimGenerator. The String argument is the name of the frame.
      * This will be used to display the PrimGenerator in the inspector.
@@ -31,7 +31,7 @@ public class PrimGenerator extends MethodsGenerator {
      * @param table       The initial value of the methods hashtable. This table links
      *                    patterns to their corresponding agora.attributes.
      */
-    public PrimGenerator(String nameOfFrame, Map<Pattern, Attribute> table) {
+    public PrimitiveGenerator(String nameOfFrame, Map<Pattern, Attribute> table) {
         super(nameOfFrame, table, null);
     }
 

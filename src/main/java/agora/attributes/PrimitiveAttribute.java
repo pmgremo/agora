@@ -7,6 +7,6 @@ package agora.attributes;
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:34 am
  */
-public abstract class PrimAttribute implements Attribute {
+public abstract class PrimitiveAttribute implements Attribute {
 
 }

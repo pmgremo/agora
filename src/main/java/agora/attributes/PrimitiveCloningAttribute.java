@@ -1,7 +1,7 @@
 package agora.attributes;
 
 import agora.errors.AgoraError;
-import agora.errors.PrimException;
+import agora.errors.PrimitiveException;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
@@ -22,7 +22,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author Wolfgang De Meuter (Programming Technology Lab)
  * Last change:  E    17 Nov 97    0:01 am
  */
-public class PrimCloningAttribute extends PrimAttribute {
+public class PrimitiveCloningAttribute extends PrimitiveAttribute {
 
     protected Constructor<?> c;
 
@@ -66,7 +66,7 @@ public class PrimCloningAttribute extends PrimAttribute {
      *
      * @param c The native Java constructor corresponding to this attribute.
      */
-    public PrimCloningAttribute(Constructor<?> c) {
+    public PrimitiveCloningAttribute(Constructor<?> c) {
         super();
         this.c = c;
     }
@@ -87,7 +87,7 @@ public class PrimCloningAttribute extends PrimAttribute {
             throw new ProgramError("Illegal Access Exception when invoking constructor");
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof AgoraError a) throw a;
-            throw new PrimException(e.getTargetException(), "PrimCloningMethAttribute::doAttributeValue");
+            throw new PrimitiveException(e.getTargetException(), "PrimCloningMethAttribute::doAttributeValue");
         } catch (InstantiationException e) {
             throw new ProgramError("Primitive Cloning Method (constructor) could not instantiate");
         }

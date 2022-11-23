@@ -1,7 +1,7 @@
 package agora.attributes;
 
 import agora.errors.AgoraError;
-import agora.errors.PrimException;
+import agora.errors.PrimitiveException;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
  * This class represents a primitive public (non-static) method in Java.
  * Last change:  E    17 Nov 97    1:30 am
  */
-public class PrimMethAttribute extends PrimAttribute {
+public class PrimitiveMethodAttribute extends PrimitiveAttribute {
     protected Method method;
 
     @Serial
@@ -49,7 +49,7 @@ public class PrimMethAttribute extends PrimAttribute {
      *
      * @param javaMethod The Java method to which this attribute is associated.
      */
-    public PrimMethAttribute(Method javaMethod) {
+    public PrimitiveMethodAttribute(Method javaMethod) {
         super();
         this.method = javaMethod;
     }
@@ -71,7 +71,7 @@ public class PrimMethAttribute extends PrimAttribute {
             throw new ProgramError("Illegal Access Exception while accessing a primitive method");
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof AgoraError a) throw a;
-            throw new PrimException(e.getTargetException(), "PrimMethAttribute::doAttributeValue");
+            throw new PrimitiveException(e.getTargetException(), "PrimMethAttribute::doAttributeValue");
         }
     }
 

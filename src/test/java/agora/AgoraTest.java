@@ -1,4 +1,4 @@
-package agora.javaAdditions;
+package agora;
 
 import agora.errors.AgoraHalt;
 import agora.errors.ProgramError;

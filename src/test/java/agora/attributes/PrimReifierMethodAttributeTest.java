@@ -7,11 +7,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PrimReifierMethAttributeTest {
+class PrimReifierMethodAttributeTest {
     @Test
     public void shouldSerialize() throws NoSuchMethodException, IOException, ClassNotFoundException {
         var method = List.class.getMethod("get", int.class);
-        var expected = new PrimReifierMethAttribute(method);
+        var expected = new PrimitiveReifierMethodAttribute(method);
         var bytes = new ByteArrayOutputStream();
         var output = new ObjectOutputStream(bytes);
         output.writeObject(expected);

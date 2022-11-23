@@ -84,7 +84,7 @@ public class InternalGenerator extends MethodsGenerator implements Serializable 
     }
 
     /**
-     * Accesses the private part of the internal methods generator.
+     * Accesses the private part of the internal method generator.
      *
      * @return The private part of the generator.
      */

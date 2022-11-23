@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
- * When a variable is declared, a read and write slot are created. These two agora.attributes must point to
+ * When a variable is declared, a read and write slot are created. These two attributes must point to
  * the same structure such that they stay consistent. That's why they both point to a container like this.
  * Last change:  E    16 Nov 97    1:57 am
  */

@@ -29,14 +29,6 @@ import java.util.Vector;
  * Last change:  E    16 Nov 97    1:58 pm
  */
 abstract public class Expression implements Serializable {
-
-    /**
-     * Constructor does nothing but calling the super.
-     */
-    public Expression() {
-        super();
-    }
-
     /**
      * To unparse the expression towards a string. The integer parameter denotes the number of spaces
      * that must precede the expression.
@@ -85,8 +77,8 @@ abstract public class Expression implements Serializable {
     @Reified
     public AgoraObject variable(Context context) throws AgoraError {
         var left = eval(context.setCat(Category.flags)).<FormalsAndPattern>down();
-        var pattern = left.pattern;
-        var cat = left.cat;
+        var pattern = left.pattern();
+        var cat = left.cat();
         if (!(pattern instanceof UnaryPattern getPat))
             throw new ReifierMisused("VARIABLE can only be sent to unary patterns");
         if (!Category.containsLessThan(cat, Category.local | Category.publik))
@@ -94,8 +86,8 @@ abstract public class Expression implements Serializable {
         if (!Category.contains(cat, Category.local) && !Category.contains(cat, Category.publik))
             cat |= Category.publik;
         var container = new VariableContainer(AgoraGlobals.glob.up.up(0));
-        var setter = new VarSetAttribute(container);
-        var getter = new VarGetAttribute(container);
+        var setter = new VariableSetAttribute(container);
+        var getter = new VariableGetAttribute(container);
         if (Category.contains(cat, Category.publik)) {
             context.getPub().installPattern(getPat.makeWritePattern(), setter);
             context.getPub().installPattern(getPat, getter);
@@ -120,8 +112,8 @@ abstract public class Expression implements Serializable {
     @Reified
     public AgoraObject variableColon(Context context, @Keyword("VARIABLE:") Expression value) throws AgoraError {
         var left = (FormalsAndPattern) eval(context.setCat(Category.flags)).down();
-        var pattern = left.pattern;
-        var cat = left.cat;
+        var pattern = left.pattern();
+        var cat = left.cat();
         if (!(pattern instanceof UnaryPattern getPat))
             throw new ReifierMisused("VARIABLE can only be sent to unary pattern");
         if (!Category.containsLessThan(cat, Category.local | Category.publik))
@@ -130,8 +122,8 @@ abstract public class Expression implements Serializable {
             cat |= Category.publik;
         var result = value.eval(context);
         var container = new VariableContainer(result);
-        var setter = new VarSetAttribute(container);
-        var getter = new VarGetAttribute(container);
+        var setter = new VariableSetAttribute(container);
+        var getter = new VariableGetAttribute(container);
         if (Category.contains(cat, Category.publik)) {
             context.getPub().installPattern(getPat.makeWritePattern(), setter);
             context.getPub().installPattern(getPat, getter);
@@ -156,8 +148,8 @@ abstract public class Expression implements Serializable {
     @Reified
     public AgoraObject constColon(Context context, @Keyword("CONST:") Expression value) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
-        var theCat = leftside.cat;
+        var thePattern = leftside.pattern();
+        var theCat = leftside.cat();
         // Validate Pattern
         if (!(thePattern instanceof UnaryPattern getPat))
             throw new ReifierMisused("CONST can only be sent to unary patterns");
@@ -170,7 +162,7 @@ abstract public class Expression implements Serializable {
         // Install variable and initial value in the appropriate object part(s)
         var initValue = value.eval(context);
         var theVarCont = new VariableContainer(initValue);
-        var varGetAtt = new VarGetAttribute(theVarCont);
+        var varGetAtt = new VariableGetAttribute(theVarCont);
         if (Category.contains(theCat, Category.publik)) {
             context.getPub().installPattern(getPat, varGetAtt);
         }
@@ -226,9 +218,9 @@ abstract public class Expression implements Serializable {
     @Reified
     public AgoraObject methodColon(Context context, @Keyword("METHOD:") Expression body) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
-        var theCat = leftside.cat;
-        var formals = leftside.formals;
+        var thePattern = leftside.pattern();
+        var theCat = leftside.cat();
+        var formals = leftside.formals();
         // Validate Pattern
         if (!(Category.containsLessThan(theCat, Category.local | Category.publik)))
             throw new ReifierMisused("Illegal Adjectives Used With METHOD");
@@ -236,7 +228,7 @@ abstract public class Expression implements Serializable {
         if (!Category.contains(theCat, Category.local) &&
                 !Category.contains(theCat, Category.publik))
             theCat = theCat | Category.publik;
-        var methAtt = new MethAttribute(formals, body);
+        var methAtt = new MethodAttribute(formals, body);
         if (Category.contains(theCat, Category.publik)) {
             context.getPub().installPattern(thePattern, methAtt);
         }
@@ -258,9 +250,9 @@ abstract public class Expression implements Serializable {
     @Reified
     public AgoraObject mixinColon(Context context, @Keyword("MIXIN:") Expression body) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
-        var theCat = leftside.cat;
-        var formals = leftside.formals;
+        var thePattern = leftside.pattern();
+        var theCat = leftside.cat();
+        var formals = leftside.formals();
         // Validate Pattern
         if (!(Category.containsLessThan(theCat, Category.local | Category.publik)))
             throw new ReifierMisused("Illegal Adjectives Used With MIXIN");
@@ -290,9 +282,9 @@ abstract public class Expression implements Serializable {
     @Reified
     public AgoraObject viewColon(Context context, @Keyword("VIEW:") Expression body) throws AgoraError {
         var leftside = (FormalsAndPattern) eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
-        var theCat = leftside.cat;
-        var formals = leftside.formals;
+        var thePattern = leftside.pattern();
+        var theCat = leftside.cat();
+        var formals = leftside.formals();
         // Validate Pattern
         if (!(Category.containsLessThan(theCat, Category.local | Category.publik)))
             throw new ReifierMisused("Illegal Adjectives Used With VIEW");
@@ -323,9 +315,9 @@ abstract public class Expression implements Serializable {
     @Reified
     public AgoraObject cloningColon(Context context, @Keyword("CLONING:") Expression body) throws AgoraError {
         var leftside = (FormalsAndPattern) eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
-        var theCat = leftside.cat;
-        var formals = leftside.formals;
+        var thePattern = leftside.pattern();
+        var theCat = leftside.cat();
+        var formals = leftside.formals();
         // Validate Pattern
         if (!Category.containsLessThan(theCat, Category.local | Category.publik))
             throw new ReifierMisused("Illegal Adjectives Used With CLONING");
@@ -354,7 +346,7 @@ abstract public class Expression implements Serializable {
     @Reified
     public AgoraObject publik(Context context) throws AgoraError {
         var left = (FormalsAndPattern) eval(context).down();
-        left.cat = left.cat | Category.publik;
+        left = left.withCat(left.cat() | Category.publik);
         return AgoraGlobals.glob.up.up(left);
     }
 
@@ -368,8 +360,8 @@ abstract public class Expression implements Serializable {
     @Unary({"LOCAL", "LOC"})
     @Reified
     public AgoraObject local(Context context) throws AgoraError {
-        var left = (FormalsAndPattern) eval(context).down();
-        left.cat = left.cat | Category.local;
+        var left = eval(context).<FormalsAndPattern>down();
+        left = left.withCat(left.cat() | Category.local);
         return AgoraGlobals.glob.up.up(left);
     }
 
@@ -396,7 +388,7 @@ abstract public class Expression implements Serializable {
         var term = to.evalAsInteger(context);
         // Determine unary receiverless pattern
         var leftside = (FormalsAndPattern) eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
+        var thePattern = leftside.pattern();
         // Validate Pattern
         if (!(thePattern instanceof UnaryPattern))
             throw new ReifierMisused("FOR:TO:DO: can only be sent to unary patterns");
@@ -404,7 +396,7 @@ abstract public class Expression implements Serializable {
         var newPriv = context.getPrivate().funcAddLayer("FOR:TO:DO: scope");
         newPriv.setPrivate(newPriv);
         var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
-        var varGetAtt = new VarGetAttribute(theVarCont);
+        var varGetAtt = new VariableGetAttribute(theVarCont);
         var getPat = new UnaryPattern(((UnaryPattern) thePattern).pattern());
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
@@ -433,7 +425,7 @@ abstract public class Expression implements Serializable {
         var term = downto.evalAsInteger(context);
         // Determine unary receiverless pattern
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
+        var thePattern = leftside.pattern();
         // Validate Pattern
         if (!(thePattern instanceof UnaryPattern))
             throw new ReifierMisused("FOR:DOWNTO:DO: can only be sent to unary patterns");
@@ -441,7 +433,7 @@ abstract public class Expression implements Serializable {
         var newPriv = context.getPrivate().funcAddLayer("FOR:DOWNTO:DO: scope");
         newPriv.setPrivate(newPriv);
         var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
-        var varGetAtt = new VarGetAttribute(theVarCont);
+        var varGetAtt = new VariableGetAttribute(theVarCont);
         var getPat = new UnaryPattern(((UnaryPattern) thePattern).pattern());
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
@@ -478,7 +470,7 @@ abstract public class Expression implements Serializable {
         var step = by.evalAsInteger(context);
         // Determine unary receiverless pattern
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
+        var thePattern = leftside.pattern();
         // Validate Pattern
         if (!(thePattern instanceof UnaryPattern))
             throw new ReifierMisused("FOR:TO:BY:DO: can only be sent to unary patterns");
@@ -486,7 +478,7 @@ abstract public class Expression implements Serializable {
         var newPriv = context.getPrivate().funcAddLayer("FOR:TO:BY:DO: scope");
         newPriv.setPrivate(newPriv);
         var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
-        var varGetAtt = new VarGetAttribute(theVarCont);
+        var varGetAtt = new VariableGetAttribute(theVarCont);
         var getPat = new UnaryPattern(((UnaryPattern) thePattern).pattern());
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
@@ -517,7 +509,7 @@ abstract public class Expression implements Serializable {
         var step = by.evalAsInteger(context);
         // Determine unary receiverless pattern
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
+        var thePattern = leftside.pattern();
         // Validate Pattern
         if (!(thePattern instanceof UnaryPattern))
             throw new ReifierMisused("FOR:DOWNTO:BY:DO: can only be sent to unary patterns");
@@ -525,7 +517,7 @@ abstract public class Expression implements Serializable {
         var newPriv = context.getPrivate().funcAddLayer("FOR:DOWNTO:BY:DO: scope");
         newPriv.setPrivate(newPriv);
         var theVarCont = new VariableContainer(AgoraGlobals.glob.up.up(init));
-        var varGetAtt = new VarGetAttribute(theVarCont);
+        var varGetAtt = new VariableGetAttribute(theVarCont);
         var getPat = new UnaryPattern(((UnaryPattern) thePattern).pattern());
         newPriv.installPattern(getPat, varGetAtt);
         // Do the Looping
@@ -696,7 +688,7 @@ abstract public class Expression implements Serializable {
             if (!formalPattern.equals(actualPattern)) throw ex;
             var formals = pat.makeFormals(context);
             var actuals = ex.getClient();
-            var attribute = new MethAttribute(formals, catchcode);
+            var attribute = new MethodAttribute(formals, catchcode);
             return attribute.doAttributeValue(actualPattern, actuals, context);
         } catch (AgoraError ex) {
             var agoraError = new KeywordPattern(List.of("agoraError:"));
@@ -704,7 +696,7 @@ abstract public class Expression implements Serializable {
             if (!formalPattern.equals(agoraError)) throw ex;
             var formals = pat.makeFormals(context);
             var actuals = context.newClient(AgoraGlobals.glob.up.up(ex));
-            var attribute = new MethAttribute(formals, catchcode);
+            var attribute = new MethodAttribute(formals, catchcode);
             return attribute.doAttributeValue(agoraError, actuals, context);
         }
     }
@@ -804,9 +796,9 @@ abstract public class Expression implements Serializable {
             @Keyword("IS:") Expression bodyparameter
     ) throws AgoraError {
         var leftside = (FormalsAndPattern) this.eval(context.setCat(Category.flags)).down();
-        var thePattern = leftside.pattern;
-        var theCat = leftside.cat;
-        var formals = leftside.formals;
+        var thePattern = leftside.pattern();
+        var theCat = leftside.cat();
+        var formals = leftside.formals();
         // Validate Pattern
         if (!Category.containsLessThan(theCat, Category.local | Category.publik))
             throw new ReifierMisused("Illegal Adjectives Used With REIFIER:IS:");
@@ -815,7 +807,7 @@ abstract public class Expression implements Serializable {
         if (!(contextParameter instanceof UserUnaryPattern))
             throw new ReifierMisused("Context parameter of REIFIER:IS: should be an ordinary identifier");
         var contextNamePattern
-                = (UnaryPattern) ((FormalsAndPattern) contextParameter.eval(context.setCat(Category.flags)).down()).pattern;
+                = (UnaryPattern) ((FormalsAndPattern) contextParameter.eval(context.setCat(Category.flags)).down()).pattern();
         // Fill In Default Values
         if (!Category.contains(theCat, Category.local) && !Category.contains(theCat, Category.publik))
             theCat = theCat | Category.publik;

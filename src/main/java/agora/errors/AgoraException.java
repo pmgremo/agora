@@ -31,12 +31,12 @@ public class AgoraException extends AgoraError {
 
     /**
      * To create a new Agora exception with the given expression.
-     * This is the expression to be executed when the exception is thrownby RAISE.
+     * This is the expression to be executed when the exception is thrown by RAISE.
      *
      * @param c The catch-code to be executed when the exception happens.
      */
     public AgoraException(Expression c) {
-        super("Uncaught Agora96 Exception.\n\n");
+        super("Uncaught Agora Exception.\n\n");
         this.pattern = null;
         this.client = null;
         this.toCatch = c;

@@ -1,7 +1,7 @@
 package agora.attributes;
 
 import agora.errors.AgoraError;
-import agora.errors.PrimException;
+import agora.errors.PrimitiveException;
 import agora.errors.ProgramError;
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
@@ -18,17 +18,17 @@ import java.lang.reflect.Method;
  * Examples are +, - and so on, defined on integers.
  * Last change:  E    16 Nov 97    1:43 pm
  */
-public class PrimFunctionAttribute extends PrimMethAttribute {
+public class PrimitiveFunctionAttribute extends PrimitiveMethodAttribute {
     /**
      * This constructor makes a method that corresponds to the given Java
      * function (i.e.e static method). Hence, the argument is supposed to be
      * a static Java method that takes the receiver as a first argument.
      *
-     * @param javaMethod The Java method acting as a function. It's first argument
+     * @param method The Java method acting as a function. It's first argument
      *                   is supposed to be the receiver of this attribute invocation.
      */
-    public PrimFunctionAttribute(Method javaMethod) {
-        super(javaMethod);
+    public PrimitiveFunctionAttribute(Method method) {
+        super(method);
     }
 
     /**
@@ -37,13 +37,13 @@ public class PrimFunctionAttribute extends PrimMethAttribute {
      * The other arguments are the downed Agora arguments. The result is upped
      * into Agora again.
      *
-     * @param msg     The message whose delegation gave rise to the invocation.
+     * @param pattern     The message whose delegation gave rise to the invocation.
      * @param client  The client object containing the actual arguments.
      * @param context The context of the object in which this attribute resides.
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
     public AgoraObject doAttributeValue(
-            Pattern msg,
+            Pattern pattern,
             Client client,
             Context context
     ) throws AgoraError {
@@ -55,12 +55,12 @@ public class PrimFunctionAttribute extends PrimMethAttribute {
                 fakedActuals[j + 1] = ((AgoraObject) realActuals[j]).down();
             return AgoraGlobals.glob.up.up(method.invoke(null, fakedActuals));
         } catch (IllegalArgumentException e) {
-            throw new ProgramError("Illegal Argument for " + msg.toString());
+            throw new ProgramError("Illegal Argument for " + pattern);
         } catch (IllegalAccessException e) {
-            throw new ProgramError("IllegalAccesException while accessing a primitive function method");
+            throw new ProgramError("IllegalAccessException while accessing a primitive function method");
         } catch (InvocationTargetException e) {
             if (e.getTargetException() instanceof AgoraError a) throw a;
-            throw new PrimException(e.getTargetException(), "PrimFunctionAttribute::doAttributeValue");
+            throw new PrimitiveException(e.getTargetException(), "PrimFunctionAttribute::doAttributeValue");
         }
     }
 
