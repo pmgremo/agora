@@ -2,7 +2,6 @@ package agora.errors;
 
 import agora.objects.AgoraObject;
 import agora.patterns.Pattern;
-import agora.patterns.Reifier;
 
 /**
  * This is the most occurring Agora error to indicate that a 'send'
@@ -58,8 +57,6 @@ public class MessageNotUnderstood extends AgoraError {
 
     @Override
     public String getMessage() {
-        var x = "";
-        if (msg instanceof Reifier) x = "Reifier ";
-        return x + "Message Not Understood: \n\n" + msg.toString();
+        return msg.toString();
     }
 }

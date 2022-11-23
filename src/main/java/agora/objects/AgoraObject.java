@@ -23,16 +23,16 @@ public class AgoraObject implements Serializable {
      * encapsulate this structure. It is the only part of the object that will be visible
      * to programmers.
      */
-    protected IdentityGenerator objectID;
+    private final IdentityGenerator objectID;
 
     /**
      * Given an identity generator, a new Agora object of that identity is created.
      *
-     * @param id The identity generator that is the object identity of this object.
+     * @param objectID The identity generator that is the object identity of this object.
      *           This object is merely a wrapper to encapsulate this id.
      */
-    public AgoraObject(IdentityGenerator id) {
-        this.objectID = id;
+    public AgoraObject(IdentityGenerator objectID) {
+        this.objectID = objectID;
     }
 
     /**

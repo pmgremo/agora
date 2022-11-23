@@ -171,8 +171,8 @@ public class Parser implements Serializable {
 
     private List<Expression> parse_ExpressionSequence() throws IOException {
         var q = new LinkedList<Expression>();
-        while (!(this.lastToken == _RBRACE_ ||
-                this.lastToken == _RBRACK_)) {
+        while (!(lastToken == _RBRACE_ ||
+                lastToken == _RBRACK_)) {
             var exp = parseExpression();
             if (exp == null) return null;
             q.offer(exp);
