@@ -28,7 +28,7 @@ public class Parser implements Serializable {
      */
     public Parser(Scanner scanner) throws IOException {
         this.s = scanner;
-        this.lastToken = this.s.scan();
+        scan();
     }
 
     /**
@@ -38,76 +38,76 @@ public class Parser implements Serializable {
      * @return The parsed expression. Parse errors are indicated by null as return value.
      */
     public Expression parseExpression() throws IOException {
-        return lastToken == _ERROR_ || lastToken == _EOFTOKEN_ ? null : parse_Rkeywordmessage();
+        return lastToken == _ERROR_ || lastToken == _EOFTOKEN_ ? null : parseRkeywordMessage();
     }
 
     private void scan() throws IOException {
         lastToken = s.scan();
     }
 
-    private Expression parse_Rkeywordmessage() throws IOException {
-        if (lastToken == _MKEYWORD_) return parse_Rkeywordpattern();
-        var opmsg = parse_Roperatormessage();
+    private Expression parseRkeywordMessage() throws IOException {
+        if (lastToken == _MKEYWORD_) return parseRkeywordPattern();
+        var opmsg = parseRoperatorMessage();
         if (opmsg == null) return null;
         if (lastToken != _MKEYWORD_) return opmsg;
-        return new ReifierMessage(opmsg, parse_Rkeywordpattern());
+        return new ReifierMessage(opmsg, parseRkeywordPattern());
     }
 
-    private Expression parse_Roperatormessage() throws IOException {
-        if (lastToken == _MOPERATOR_) return parse_Roperatorpattern();
-        var unarymsg = parse_Runarymessage();
+    private Expression parseRoperatorMessage() throws IOException {
+        if (lastToken == _MOPERATOR_) return parseRoperatorPattern();
+        var unarymsg = parseRunaryMessage();
         if (unarymsg == null) return null;
         while (lastToken == _MOPERATOR_) {
-            var pat = parse_Roperatorpattern();
+            var pat = parseRoperatorPattern();
             if (pat == null) return null;
             unarymsg = new ReifierMessage(unarymsg, pat);
         }
         return unarymsg;
     }
 
-    private Expression parse_Runarymessage() throws IOException {
-        var keywordmsg = parse_Keywordmessage();
+    private Expression parseRunaryMessage() throws IOException {
+        var keywordmsg = parseKeywordMessage();
         if (keywordmsg == null) return null;
         while (lastToken == _MUNARY_) {
-            var pat = parse_Runarypattern();
+            var pat = parseRunaryPattern();
             if (pat == null) return null;
             keywordmsg = new ReifierMessage(keywordmsg, pat);
         }
         return keywordmsg;
     }
 
-    private Expression parse_Keywordmessage() throws IOException {
-        if (lastToken == _KEYWORD_) return parse_Keywordpattern();
-        var opmsg = parse_Operatormessage();
+    private Expression parseKeywordMessage() throws IOException {
+        if (lastToken == _KEYWORD_) return parseKeywordPattern();
+        var opmsg = parseOperatorMessage();
         if (opmsg == null) return null;
-        if (lastToken == _KEYWORD_) return new UserMessage(opmsg, parse_Keywordpattern());
+        if (lastToken == _KEYWORD_) return new UserMessage(opmsg, parseKeywordPattern());
         else return opmsg;
     }
 
-    private Expression parse_Operatormessage() throws IOException {
-        if (lastToken == _OPERATOR_) return parse_Operatorpattern();
-        var unarymsg = parse_Unarymessage();
+    private Expression parseOperatorMessage() throws IOException {
+        if (lastToken == _OPERATOR_) return parseOperatorPattern();
+        var unarymsg = parseUnaryMessage();
         if (unarymsg == null) return null;
         while (lastToken == _OPERATOR_) {
-            var pat = this.parse_Operatorpattern();
+            var pat = this.parseOperatorPattern();
             if (pat == null) return null;
             unarymsg = new UserMessage(unarymsg, pat);
         }
         return unarymsg;
     }
 
-    private Expression parse_Unarymessage() throws IOException {
-        var factor = parse_Factor();
+    private Expression parseUnaryMessage() throws IOException {
+        var factor = parseFactor();
         if (factor == null) return null;
         while (lastToken == _UNARY_) {
-            var pat = parse_Unarypattern();
+            var pat = parseUnaryPattern();
             if (pat == null) return null;
             factor = new UserMessage(factor, pat);
         }
         return factor;
     }
 
-    private Expression parse_Factor() throws IOException {
+    private Expression parseFactor() throws IOException {
         if (lastToken == _ERROR_ || lastToken == _EOFTOKEN_)
             return null;
         if (lastToken == _LPAR_) {
@@ -121,15 +121,15 @@ public class Parser implements Serializable {
             return exp;
         }
         if (lastToken == _LBRACK_ || lastToken == _LBRACE_)
-            return parse_Aggregate();
+            return parseAggregate();
         if (lastToken == _MUNARY_)
-            return parse_Runarypattern();
+            return parseRunaryPattern();
         if (lastToken == _UNARY_)
-            return parse_Unarypattern();
-        return parse_Literal();
+            return parseUnaryPattern();
+        return parseLiteral();
     }
 
-    private Expression parse_Literal() throws IOException {
+    private Expression parseLiteral() throws IOException {
         if (lastToken == _STRING_) {
             var lit = s.lastString;
             scan();
@@ -151,12 +151,12 @@ public class Parser implements Serializable {
         }
     }
 
-    private Expression parse_Aggregate() throws IOException {
+    private Expression parseAggregate() throws IOException {
         var begin = lastToken;
         scan();
         if (lastToken == _ERROR_ || lastToken == _EOFTOKEN_)
             return null;
-        var exps = parse_ExpressionSequence();
+        var exps = parseExpressionSequence();
         if (exps == null)
             return null;
         if (begin == _LBRACK_ && lastToken != _RBRACK_)
@@ -164,12 +164,10 @@ public class Parser implements Serializable {
         if (begin == _LBRACE_ && lastToken != _RBRACE_)
             return null;
         scan();
-        return begin == _LBRACK_ ?
-                new Aggregate(exps, '[', ']') :
-                new Aggregate(exps, '{', '}');
+        return begin == _LBRACK_ ? new Aggregate(exps) : new Block(exps);
     }
 
-    private List<Expression> parse_ExpressionSequence() throws IOException {
+    private List<Expression> parseExpressionSequence() throws IOException {
         var q = new LinkedList<Expression>();
         while (!(lastToken == _RBRACE_ ||
                 lastToken == _RBRACK_)) {
@@ -193,66 +191,66 @@ public class Parser implements Serializable {
         return q;
     }
 
-    private ReifKeywordPattern parse_Rkeywordpattern(List<String> keys, List<Expression> values) throws IOException {
+    private ReifKeywordPattern parseRkeywordPattern(List<String> keys, List<Expression> values) throws IOException {
         var key = s.lastRKeyword;
         scan();
         if (lastToken == _ERROR_ || lastToken == _EOFTOKEN_) return null;
-        var exp = parse_Roperatormessage();
+        var exp = parseRoperatorMessage();
         if (exp == null) return null;
         keys.add(key);
         values.add(exp);
-        return lastToken == _MKEYWORD_ ? parse_Rkeywordpattern(keys, values) : new ReifKeywordPattern(new KeywordReifierPattern(keys), values);
+        return lastToken == _MKEYWORD_ ? parseRkeywordPattern(keys, values) : new ReifKeywordPattern(new KeywordReifierPattern(keys), values);
     }
 
-    private ReifKeywordPattern parse_Rkeywordpattern() throws IOException {
+    private ReifKeywordPattern parseRkeywordPattern() throws IOException {
         var keys = new LinkedList<String>();
         var values = new LinkedList<Expression>();
-        return parse_Rkeywordpattern(keys, values);
+        return parseRkeywordPattern(keys, values);
     }
 
-    private ReifUnaryPattern parse_Runarypattern() throws IOException {
+    private ReifUnaryPattern parseRunaryPattern() throws IOException {
         if (lastToken != _MUNARY_) return null;
         var result = new ReifUnaryPattern(new UnaryReifierPattern(s.lastRUnary));
         scan();
         return result;
     }
 
-    private ReifOperatorPattern parse_Roperatorpattern() throws IOException {
+    private ReifOperatorPattern parseRoperatorPattern() throws IOException {
         if (lastToken != _MOPERATOR_) return null;
         var result = s.lastROperator;
         scan();
-        var runarymsg = parse_Runarymessage();
+        var runarymsg = parseRunaryMessage();
         if (runarymsg == null) return null;
         return new ReifOperatorPattern(new OperatorReifierPattern(result), runarymsg);
     }
 
-    private UserKeywordPattern parse_Keywordpattern() throws IOException {
-        return parse_Keywordpattern(new LinkedList<>(), new LinkedList<>());
+    private UserKeywordPattern parseKeywordPattern() throws IOException {
+        return parseKeywordPattern(new LinkedList<>(), new LinkedList<>());
     }
 
-    private UserKeywordPattern parse_Keywordpattern(List<String> keys, List<Expression> values) throws IOException {
+    private UserKeywordPattern parseKeywordPattern(List<String> keys, List<Expression> values) throws IOException {
         keys.add(s.lastUKeyword);
         scan();
         if (lastToken == _ERROR_ || lastToken == _EOFTOKEN_) return null;
-        var exp = parse_Operatormessage();
+        var exp = parseOperatorMessage();
         if (exp == null) return null;
         values.add(exp);
         if (lastToken != _KEYWORD_) return new UserKeywordPattern(keys, values);
-        return parse_Keywordpattern(keys, values);
+        return parseKeywordPattern(keys, values);
     }
 
-    private UserUnaryPattern parse_Unarypattern() throws IOException {
+    private UserUnaryPattern parseUnaryPattern() throws IOException {
         if (lastToken != _UNARY_) return null;
         var result = new UserUnaryPattern(new UnaryPattern(s.lastUUnary));
         scan();
         return result;
     }
 
-    private UserOperatorPattern parse_Operatorpattern() throws IOException {
+    private UserOperatorPattern parseOperatorPattern() throws IOException {
         if (lastToken != _OPERATOR_) return null;
         var result = s.lastUOperator;
         scan();
-        var unarymsg = parse_Unarymessage();
+        var unarymsg = parseUnaryMessage();
         if (unarymsg == null) return null;
         return new UserOperatorPattern(new OperatorPattern(result), unarymsg);
     }

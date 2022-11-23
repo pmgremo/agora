@@ -9,14 +9,7 @@ import agora.tools.AgoraGlobals;
 
 import java.util.List;
 
-/**
- * This class represents the parse tree node for aggregates of Agora expressions.
- * These can be [] and {} expressions.
- *
- * @author Wolfgang De Meuter
- * Last change:  E    16 Nov 97    2:25 pm
- */
-public class Aggregate extends Expression {
+public class Block extends Expression {
     /**
      * The array of expressions the aggregate contains
      */
@@ -28,7 +21,7 @@ public class Aggregate extends Expression {
      *
      * @param expressions that make up the aggregate
      */
-    public Aggregate(List<Expression> expressions) {
+    public Block(List<Expression> expressions) {
         this.expressions = expressions;
     }
 
@@ -50,19 +43,9 @@ public class Aggregate extends Expression {
      * @throws agora.errors.AgoraError When something goes wrong during evaluation.
      */
     public AgoraObject eval(Context context) throws AgoraError {
-        var exnihiloSelf = AgoraGlobals.glob.rootIdentity.funcAddLayer("public of ex nihilo");
-        var exnihiloPriv = context.getPrivate().funcAddLayer("private of ex nihilo");
-        exnihiloSelf.getMe().setPrivate(exnihiloPriv);
-        exnihiloPriv.setPrivate(exnihiloPriv);
-        var exnihiloCont = context.setMultiple(
-                exnihiloSelf,
-                exnihiloPriv,
-                exnihiloSelf.getMe(),
-                context.getCategory(),
-                AgoraGlobals.glob.rootIdentity
-        );
-        for (var expression : expressions) expression.eval(exnihiloCont);
-        return exnihiloSelf.wrap();
+        var result = AgoraGlobals.glob.up.up(null);
+        for (var expression : expressions) result = expression.eval(context);
+        return result;
     }
 
     /**
@@ -75,7 +58,7 @@ public class Aggregate extends Expression {
      * @return The operator pattern corresponding to this [] or {} expression.
      */
     public Pattern makePattern(Context context) {
-        return new OperatorReifierPattern("[]");
+        return new OperatorReifierPattern("{}");
     }
 
     /**
@@ -88,7 +71,7 @@ public class Aggregate extends Expression {
     public String unparse(int hor) {
         var padding = " ".repeat(hor);
         var result = new StringBuilder(padding)
-                .append("[");
+                .append("{");
         if (!expressions.isEmpty()) {
             for (int i = 0; i < expressions.size(); i++) {
                 Expression expression = expressions.get(i);
@@ -97,7 +80,7 @@ public class Aggregate extends Expression {
             }
             result.append(padding);
         }
-        result.append("]");
+        result.append("}");
         return result.toString();
     }
 }
