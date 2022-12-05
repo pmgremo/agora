@@ -5,6 +5,8 @@ import agora.objects.AgoraObject;
 import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
+import java.util.Objects;
+
 /**
  * This class represents the abstract class for Agora literals. Currently, this class
  * contains no methods.
@@ -43,6 +45,25 @@ abstract public class Literal<T> extends Expression {
      */
     public String unparse(int hor) {
         return " ".repeat(hor) + value();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Literal<?> literal)) return false;
+        return Objects.equals(value, literal.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+                "value=" + value +
+                '}';
     }
 }
 
