@@ -1,11 +1,11 @@
-{ pkgs ? import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/2e5b0b553ab52b963052a3ed76c166fd74eabbfd.tar.gz") {}
+{ pkgs ? import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/6bc6f77cb171a74001033d94f17f49043a9f1804.tar.gz") {}
 }:let
 
 in pkgs.mkShell {
 
   buildInputs = with pkgs; [
     git
-    jdk17_headless
+    jdk19_headless
     maven
   ];
 

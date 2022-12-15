@@ -7,6 +7,8 @@ import agora.patterns.OperatorPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
+import java.util.Objects;
+
 /**
  * This class represents user operator patterns like + 4 or +arg.
  *
@@ -94,5 +96,17 @@ public class UserOperatorPattern extends UserPattern {
         var ex = new ProgramError("Formal parameters must be identifiers");
         ex.setCode(this);
         throw ex;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserOperatorPattern that)) return false;
+        return Objects.equals(operator, that.operator) && Objects.equals(operand, that.operand);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(operator, operand);
     }
 }

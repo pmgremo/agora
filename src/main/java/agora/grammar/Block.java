@@ -8,6 +8,7 @@ import agora.runtime.Context;
 import agora.tools.AgoraGlobals;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Block extends Expression {
     /**
@@ -82,5 +83,17 @@ public class Block extends Expression {
         }
         result.append("}");
         return result.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Block block)) return false;
+        return Objects.equals(expressions, block.expressions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(expressions);
     }
 }

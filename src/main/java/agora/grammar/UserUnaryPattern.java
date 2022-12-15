@@ -6,6 +6,8 @@ import agora.patterns.UnaryPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
+import java.util.Objects;
+
 /**
  * A UserUnaryPattern is an Agora expression denoting ordinary unary agora.patterns.
  * Examples are 'abs' or other identifiers.
@@ -80,5 +82,17 @@ public class UserUnaryPattern extends UserPattern {
      */
     public String[] makeFormals(Context context) throws AgoraError {
         return new String[0];
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserUnaryPattern that)) return false;
+        return Objects.equals(unary, that.unary);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(unary);
     }
 }

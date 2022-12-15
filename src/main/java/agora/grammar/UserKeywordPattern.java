@@ -8,6 +8,7 @@ import agora.runtime.Client;
 import agora.runtime.Context;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class represents user keyword patterns like at:3 put:5 or at:i put:thing.
@@ -86,5 +87,17 @@ public class UserKeywordPattern extends UserPattern {
             formals[i] = u.getUnary();
         }
         return formals;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserKeywordPattern that)) return false;
+        return Objects.equals(pattern, that.pattern) && Objects.equals(arguments, that.arguments);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pattern, arguments);
     }
 }
