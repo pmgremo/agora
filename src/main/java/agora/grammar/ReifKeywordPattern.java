@@ -8,6 +8,7 @@ import agora.runtime.Client;
 import agora.runtime.Context;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class represents reifier keyword agora.patterns like METHOD:{}
@@ -83,5 +84,17 @@ public class ReifKeywordPattern extends ReifPattern {
             formals[i] = u.getUnary();
         }
         return formals;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReifKeywordPattern that)) return false;
+        return Objects.equals(pattern, that.pattern) && Objects.equals(arguments, that.arguments);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pattern, arguments);
     }
 }

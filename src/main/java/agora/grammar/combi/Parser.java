@@ -126,11 +126,16 @@ public interface Parser<T> {
     }
 
     default Parser<String> flatten() {
-        return map(x -> switch (x) {
-            case Collection<?> i -> i.stream().map(Objects::toString).collect(joining());
-            case String c -> c;
-            default -> Objects.toString(x);
-        });
+        return map(Parser::flatten);
+    }
+
+    private static String flatten(Object x) {
+        return switch (x) {
+            case Collection<?> i -> i.stream().map(Parser::flatten).collect(joining());
+            case Cell<?, ?> c -> flatten(c.first()) + flatten(c.second());
+            case String s -> s;
+            default -> Objects.toString(x, null);
+        };
     }
 
     default Parser<T> not() {
@@ -152,5 +157,9 @@ public interface Parser<T> {
             if (b instanceof Result.Failure<U> fb) return b.context().failure(fb.reason());
             return b.context().success(new Cell<>(a.get(), b.get()));
         };
+    }
+
+    default Parser<T> optional(){
+        return x -> parse(x) instanceof Result.Success<T> s ? s : x.success(null);
     }
 }

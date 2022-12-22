@@ -9,10 +9,10 @@ public record Context(String buffer, int position) {
     }
 
     public <T> Result<T> success(T result){
-        return success(position, result);
+        return new Success<>(this, result);
     }
 
     public <T> Result<T> failure(String reason) {
-        return new Failure<>(new Context(buffer, position), reason);
+        return new Failure<>(this, reason);
     }
 }

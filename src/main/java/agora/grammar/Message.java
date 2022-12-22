@@ -1,5 +1,7 @@
 package agora.grammar;
 
+import java.util.Objects;
+
 /**
  * Abstract class representing Agora message expressions. This class normally has
  * two subclasses representing ordinary messages and reifier messages.
@@ -56,5 +58,22 @@ public abstract class Message extends Expression {
      */
     public String unparse(int hor) {
         return " ".repeat(hor) + receiver.unparse(hor) + " " + pattern.unparse(0);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Message message)) return false;
+        return Objects.equals(receiver, message.receiver) && Objects.equals(pattern, message.pattern);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(receiver, pattern);
+    }
+
+    @Override
+    public String toString() {
+        return unparse(0);
     }
 }

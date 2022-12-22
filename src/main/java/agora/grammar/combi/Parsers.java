@@ -3,11 +3,16 @@ package agora.grammar.combi;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 
 public class Parsers {
+    public static <T> Parser<T> parser(Supplier<Parser<T>> supplier){
+        return x -> supplier.get().parse(x);
+    }
+
     public static SkipParser skip(Parser<?> parser) {
         return new SkipParser(parser);
     }
@@ -38,6 +43,10 @@ public class Parsers {
         };
     }
 
+    public static Parser<Character> any(String chars) {
+        return character(x -> chars.indexOf(x) > -1, "one of [" + chars + "] expected");
+    }
+
     public static Parser<String> string(String string) {
         return string(string, string + " expected");
     }
@@ -51,10 +60,6 @@ public class Parsers {
             var target = buffer.substring(start, end);
             return string.equals(target) ? x.success(end, target) : x.failure(message);
         };
-    }
-
-    public static Parser<Character> any(String chars) {
-        return character(x -> chars.indexOf(x) > -1, "one of [" + chars + "] expected");
     }
 
     @SafeVarargs

@@ -235,7 +235,7 @@ public class Parser implements Serializable {
         var exp = parseOperatorMessage();
         if (exp == null) return null;
         values.add(exp);
-        if (lastToken != _KEYWORD_) return new UserKeywordPattern(keys, values);
+        if (lastToken != _KEYWORD_) return new UserKeywordPattern(new KeywordPattern(keys), values);
         return parseKeywordPattern(keys, values);
     }
 

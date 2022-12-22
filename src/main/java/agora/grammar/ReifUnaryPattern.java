@@ -6,6 +6,8 @@ import agora.patterns.UnaryReifierPattern;
 import agora.runtime.Client;
 import agora.runtime.Context;
 
+import java.util.Objects;
+
 /**
  * This class represents reifier unary patterns like SELF.
  *
@@ -80,5 +82,17 @@ public class ReifUnaryPattern extends ReifPattern {
      */
     public String[] makeFormals(Context context) throws AgoraError {
         return new String[0];
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReifUnaryPattern that)) return false;
+        return Objects.equals(unary, that.unary);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(unary);
     }
 }

@@ -20,9 +20,9 @@ public class UserKeywordPattern extends UserPattern {
     private final KeywordPattern pattern;
     private final List<Expression> arguments;
 
-    public UserKeywordPattern(List<String> keys, List<Expression> values){
-        pattern = new KeywordPattern(keys);
-        arguments = values;
+    public UserKeywordPattern(KeywordPattern pattern, List<Expression> arguments) {
+        this.pattern = pattern;
+        this.arguments = arguments;
     }
 
     /**
