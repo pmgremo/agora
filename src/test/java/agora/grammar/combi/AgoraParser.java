@@ -47,16 +47,16 @@ public class AgoraParser {
             .or(() -> AgoraParser.userUnary)
             .or(() -> AgoraParser.literal)
             .trim();
-
-    private static final Parser<Expression> userOperator = any("!@#$%^&*-=+<>/.,|?").plus().flatten().map(OperatorPattern::new).then(expression)
-            .map(x -> new UserOperatorPattern(x.first(), x.second()));
-
     private static final Parser<Cell<Character, List<Character>>> userIdentifier = character(Character::isLetter, "expected java letter")
             .then(word().star());
     private static final Parser<Expression> userUnary = userIdentifier
             .flatten()
             .map(UnaryPattern::new)
             .map(UserUnaryPattern::new);
+    private static final Parser<Expression> userOperator = any("!@#$%^&*-=+<>/.,|?").plus().flatten()
+            .map(OperatorPattern::new)
+            .then(choice(factor, userMessage(userUnary)))
+            .map(x -> new UserOperatorPattern(x.first(), x.second()));
 
     private static Parser<Expression> userMessage(Parser<Expression> parser) {
         return factor.then(parser).map(x -> new UserMessage(x.first(), (UserPattern) x.second()));
@@ -95,8 +95,6 @@ public class AgoraParser {
             .map(Aggregate::new);
     private static final Parser<Expression> block = skip(character('{')).then(expressions).skip(character('}'))
             .map(Block::new);
-
     private static final Parser<Expression> parenthesized = skip(character('(')).then(expression).skip(character(')'));
-
     public static final Parser<Expression> parser = expression.end();
 }
