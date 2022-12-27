@@ -5,7 +5,7 @@ in pkgs.mkShell {
 
   buildInputs = with pkgs; [
     git
-    jdk19_headless
+    jdk19
     maven
   ];
 
