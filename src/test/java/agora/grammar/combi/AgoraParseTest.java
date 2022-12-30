@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ChoiceParseTest {
+public class AgoraParseTest {
     @Test
     public void shouldParseLiteral() {
         assertEquals(new StringLiteral("hello\n"), AgoraParser.parser.parse("\"hello\n\"").get());

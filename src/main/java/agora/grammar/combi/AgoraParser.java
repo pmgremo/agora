@@ -9,7 +9,7 @@ import java.util.Map;
 import static agora.grammar.combi.Parsers.*;
 
 public class AgoraParser {
-    private static final Map<Character, Character> table = Map.of(
+    private static final Map<Character, Character> escapes = Map.of(
             '\\', '\\',
             '/', '/',
             '"', '"',
@@ -20,7 +20,7 @@ public class AgoraParser {
             't', '\t'
     );
     public static Parser<Character> anyCharacter = choice(
-            seq(character('\''), character(table::containsKey, "expected escape character")).pick(1).map(table::get),
+            seq(character('\''), character(escapes::containsKey, "expected escape character")).pick(1).map(escapes::get),
             any("\"\\").not().seq(character(x -> true, "")).pick(0)
     );
     private static final Parser<Expression> stringLiteral = skip(character('\"')).then(anyCharacter.star().flatten()).skip(character('\"'))
