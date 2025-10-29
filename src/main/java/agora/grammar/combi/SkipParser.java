@@ -1,11 +1,6 @@
 package agora.grammar.combi;
 
-public class SkipParser {
-    private final Parser<?> skipper;
-
-    public SkipParser(Parser<?> skipper) {
-        this.skipper = skipper;
-    }
+public record SkipParser(Parser<?> skipper) {
 
     public <U> Parser<U> then(Parser<U> parser) {
         return x -> {

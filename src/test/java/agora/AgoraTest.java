@@ -90,7 +90,7 @@ public class AgoraTest {
                     SELF x: "bye";
                     (java . "lang.System") out printString: (SELF x)
                 ]
-                        """);
+                """);
         assertEquals("bye", captureOut(expression::defaultEval));
     }
 

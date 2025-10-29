@@ -42,15 +42,15 @@ abstract public class Expression implements Serializable {
      *
      * @param context The evaluation context.
      * @return The value associated to the expression.
-     * @throws agora.errors.AgoraError Errors occured during evaluation.
+     * @throws agora.errors.AgoraError Errors occurred during evaluation.
      */
     public abstract AgoraObject eval(Context context) throws AgoraError;
 
     /**
      * To evaluate the expression in the root context.
      *
-     * @return The value of the expresssion in the root context.
-     * @throws agora.errors.AgoraError Errors occuring during evaluation.
+     * @return The value of the expression in the root context.
+     * @throws agora.errors.AgoraError Errors occurring during evaluation.
      */
     public AgoraObject defaultEval() throws AgoraError {
         return eval(

@@ -49,7 +49,7 @@ public class CloningAttribute extends MethodAttribute {
         cloningMap.put(AgoraGlobals.glob.rootIdentity, AgoraGlobals.glob.rootIdentity);
         // clone object and temporary scopes (may be added to the object in the method body)
         var clone = (IdentityGenerator) context.getSelf().copy(cloningMap);
-        var privclone = (InternalGenerator) context.getPrivate().copy(cloningMap);
+        var privclone = context.getPrivate().copy(cloningMap);
         var pubclone = (MethodsGenerator) context.getPub().copy(cloningMap);
         var superclone = (Generator) context.getParent().copy(cloningMap);
         // actual parameters binding

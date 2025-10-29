@@ -24,7 +24,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class PrimitiveCloningAttribute extends PrimitiveAttribute {
 
-    protected Constructor<?> c;
+    private Constructor<?> c;
 
     @Serial
     private void writeObject(ObjectOutputStream stream) throws IOException {

@@ -56,7 +56,8 @@ public class PrimitiveIdentityGenerator extends IdentityGenerator {
      *                                 thrown. This would be a bug somewhere in the implementation.
      */
     public void inspect(Context context) throws AgoraError {
-        var d = new Inspector(AgoraGlobals.glob.window,
+        var d = new Inspector(
+                AgoraGlobals.glob.window,
                 this.name,
                 this.myMethods.getHashTable(),
                 null,

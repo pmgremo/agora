@@ -4,6 +4,7 @@ import agora.errors.AgoraError;
 import agora.patterns.Pattern;
 import agora.runtime.Category;
 import agora.runtime.Client;
+import agora.runtime.ReifierClient;
 
 import java.io.Serializable;
 
@@ -13,28 +14,14 @@ import java.io.Serializable;
  * methods understood by the objects of this class. This is why Agora is the
  * language with the simplest MOP in the world.
  *
+ * @param objectID A reference to the identity generator being the identity of this object. This object
+ *                 is merely a wrapper around a much richer structure of generators. AgoraObject's
+ *                 encapsulate this structure. It is the only part of the object that will be visible
+ *                 to programmers.
  * @author Wolfgang De Meuter (Programming Technology Lab).
  * Last change:  E    16 Nov 97    1:49 am
  */
-public class AgoraObject implements Serializable {
-    /**
-     * A reference to the identity generator being the identity of this object. This object
-     * is merely a wrapper around a much richer structure of generators. AgoraObject's
-     * encapsulate this structure. It is the only part of the object that will be visible
-     * to programmers.
-     */
-    private final IdentityGenerator objectID;
-
-    /**
-     * Given an identity generator, a new Agora object of that identity is created.
-     *
-     * @param objectID The identity generator that is the object identity of this object.
-     *           This object is merely a wrapper to encapsulate this id.
-     */
-    public AgoraObject(IdentityGenerator objectID) {
-        this.objectID = objectID;
-    }
-
+public record AgoraObject(IdentityGenerator objectID) implements Serializable {
     /**
      * Send a message to the Agora object. The client parameter contains
      * the actual arguments.
@@ -44,10 +31,10 @@ public class AgoraObject implements Serializable {
      *               client can also contain a hidden context argument if the message is a reifier message
      * @return The Result of sending the message is an Agora object, just like the arguments
      * in the client ought to be agora objects.
-     * @throws agora.errors.AgoraError If inside the object an error occurs (e.g. message not understood
-     *                                 or an error while evaluating a method), this exception is thrown.
-     * @see agora.runtime.Client
-     * @see agora.runtime.ReifierClient
+     * @throws AgoraError If inside the object an error occurs (e.g. message not understood
+     *                    or an error while evaluating a method), this exception is thrown.
+     * @see Client
+     * @see ReifierClient
      */
     public AgoraObject send(Pattern msg, Client client) throws AgoraError {
         return objectID.delegate(

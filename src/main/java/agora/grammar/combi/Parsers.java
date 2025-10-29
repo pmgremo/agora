@@ -44,11 +44,11 @@ public class Parsers {
     }
 
     public static Parser<Character> any(String chars) {
-        return character(x -> chars.indexOf(x) > -1, "one of [" + chars + "] expected");
+        return character(x -> chars.indexOf(x) > -1, "one of [%s] expected".formatted(chars));
     }
 
     public static Parser<String> string(String string) {
-        return string(string, string + " expected");
+        return string(string, "%s expected".formatted(string));
     }
 
     public static Parser<String> string(String string, String message) {

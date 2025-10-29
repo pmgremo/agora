@@ -125,16 +125,16 @@ public class Up implements Serializable {
     }
 
     private static PrimitiveGenerator buildAnnotatedGeneratorFor(Class<?> type) {
-        var table = new Hashtable<Pattern, Attribute>(5);
+        var table = new HashMap<Pattern, Attribute>(5);
         for (var x : type.getDeclaredMethods()) {
-            var reified = x.getAnnotation(Reified.class);
+            var reified = x.getAnnotation(Reified.class) != null;
             var attribute = isStatic(x.getModifiers()) ? new PrimitiveFunctionAttribute(x) : new PrimitiveMethodAttribute(x);
             {
                 var annotation = x.getAnnotation(Operator.class);
                 if (annotation != null) {
                     for (var name : annotation.value()) {
                         table.put(
-                                reified == null ? new OperatorPattern(name) : new OperatorReifierPattern(name),
+                                reified ? new OperatorPattern(name) : new OperatorReifierPattern(name),
                                 attribute
                         );
                     }
@@ -145,7 +145,7 @@ public class Up implements Serializable {
                 if (annotation != null) {
                     for (var name : annotation.value()) {
                         table.put(
-                                reified == null ? new UnaryPattern(name) : new UnaryReifierPattern(name),
+                                reified ? new UnaryPattern(name) : new UnaryReifierPattern(name),
                                 attribute
                         );
                     }
@@ -157,9 +157,9 @@ public class Up implements Serializable {
                     var annotation = parameter.getAnnotation(Keyword.class);
                     if (annotation != null) words.add(annotation.value());
                 }
-                if (words.size() > 0) {
+                if (!words.isEmpty()) {
                     table.put(
-                            reified == null ? new KeywordPattern(words) : new KeywordReifierPattern(words),
+                            reified ? new KeywordPattern(words) : new KeywordReifierPattern(words),
                             attribute
                     );
                 }
@@ -191,10 +191,11 @@ public class Up implements Serializable {
      */
     private void putFieldsInQueue(Class<?> c, Map<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and an attribute for every publically accessible field
         for (var field : c.getDeclaredFields()) {
-            if (!isPublic(field.getModifiers()) ||
-                    isAbstract(field.getModifiers()) ||
-                    isInterface(field.getModifiers()) ||
-                    !(isInstance | isStatic(field.getModifiers()))) // not isInstance -> isStatic
+            var modifiers = field.getModifiers();
+            if (!isPublic(modifiers) ||
+                    isAbstract(modifiers) ||
+                    isInterface(modifiers) ||
+                    !(isInstance | isStatic(modifiers))) // not isInstance -> isStatic
             {
                 continue;
             }
@@ -212,10 +213,11 @@ public class Up implements Serializable {
      */
     private void putMethodsInQueue(Class<?> c, Map<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a method attribute for every publically accessible method
         for (var method : c.getDeclaredMethods()) {
-            if (!isPublic(method.getModifiers()) ||
-                    isAbstract(method.getModifiers()) ||
-                    isInterface(method.getModifiers()) ||
-                    !(isInstance | isStatic(method.getModifiers()))) // not isInstance -> isStatic
+            var modifiers = method.getModifiers();
+            if (!isPublic(modifiers) ||
+                    isAbstract(modifiers) ||
+                    isInterface(modifiers) ||
+                    !(isInstance | isStatic(modifiers))) // not isInstance -> isStatic
             {
                 continue;
             }
@@ -230,10 +232,11 @@ public class Up implements Serializable {
      */
     private void putConstructorsInQueue(Class<?> c, Map<Pattern, Attribute> q, boolean isInstance) { // Create a pattern and a cloning method for every publically accessible constructor
         for (var constructor : c.getDeclaredConstructors()) {
-            if (!isPublic(constructor.getModifiers()) ||
-                    isNative(constructor.getModifiers()) ||
-                    isAbstract(constructor.getModifiers()) ||
-                    isInterface(constructor.getModifiers()) ||
+            var modifiers = constructor.getModifiers();
+            if (!isPublic(modifiers) ||
+                    isNative(modifiers) ||
+                    isAbstract(modifiers) ||
+                    isInterface(modifiers) ||
                     isInstance) {
                 continue;
             }

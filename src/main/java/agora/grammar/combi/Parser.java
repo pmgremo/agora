@@ -75,7 +75,7 @@ public interface Parser<T> {
         return x -> {
             var result = new LinkedList<T>();
             var next = parse(x);
-            if (next instanceof Result.Failure<T> f) return f.context().failure(f.reason());
+            if (next instanceof Failure<T>(Context context, String reason)) return context.failure(reason);
             result.add(next.get());
             while (true) {
                 var sep = separator.parse(next.context());
@@ -91,7 +91,7 @@ public interface Parser<T> {
         return x -> {
             var result = new LinkedList<T>();
             var next = parse(x);
-            if (next instanceof Result.Failure<T> f) return f.context().failure(f.reason());
+            if (next instanceof Failure<T>(Context context, String reason)) return context.failure(reason);
             result.add(next.get());
             while (true) {
                 next = parse(next.context());

@@ -1,6 +1,6 @@
 package agora.grammar.combi;
 
-public interface Result<T> {
+sealed public interface Result<T> {
     Context context();
 
     T get();

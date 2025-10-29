@@ -15,18 +15,7 @@ import agora.reflection.Operator;
  * @author Wolfgang De Meuter (Programming technology Lab).
  * Last change:  E    15 Nov 97   11:52 pm
  */
-public class JV_Package {
-    protected String packageName;
-
-    /**
-     * Creates a new package with the given name.
-     *
-     * @param packageName The name of the package, e.g. "java.lang"
-     */
-    public JV_Package(String packageName) {
-        this.packageName = packageName;
-    }
-
+public record JV_Package(String packageName) {
     /**
      * This method takes a string. It is added to the package string after a dot.
      * If the result is a valid class, the class is returned, otherwise a new
